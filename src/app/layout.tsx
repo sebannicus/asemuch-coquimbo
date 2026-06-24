@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans, Source_Sans_3 } from "next/font/google";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -18,9 +20,12 @@ const sourceSans3 = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "ASEMUCH | Confederación Nacional de Funcionarios Municipales de Chile",
+  title: {
+    default: "ASEMUCH Coquimbo | Sede Región de Coquimbo",
+    template: "%s | ASEMUCH Coquimbo",
+  },
   description:
-    "Organización sindical que agrupa a las y los trabajadores municipales del país, representándolos y defendiendo sus derechos laborales.",
+    "Asociación de Empleados Municipales — Sede Región de Coquimbo. Defendemos los derechos laborales de los funcionarios municipales de las 15 comunas de la IV Región.",
 };
 
 export default function RootLayout({
@@ -33,7 +38,11 @@ export default function RootLayout({
       lang="es"
       className={`${openSans.variable} ${sourceSans3.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }

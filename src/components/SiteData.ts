@@ -1,158 +1,300 @@
 import type { NavItem, NewsCard, HeroSlide } from "@/types";
 
+// ─── Navegación ────────────────────────────────────────────────────────────────
 export const NAV_ITEMS: NavItem[] = [
-  {
-    label: "La Asemuch",
-    href: "/inicio",
-    children: [
-      { label: "¿Quiénes Somos?", href: "/quienes-somos" },
-      { label: "Directorio Nacional", href: "/directorio-nacional" },
-      { label: "Historia", href: "/breve-historia" },
-      { label: "Estatutos", href: "/estatutos" },
-    ],
-  },
+  { label: "Inicio", href: "/" },
+  { label: "Quiénes Somos", href: "/quienes-somos" },
+  { label: "Directiva", href: "/directiva" },
   { label: "Noticias", href: "/noticias" },
-  { label: "Comunicados", href: "/comunicados" },
-  { label: "Convenios", href: "/convenios" },
-  {
-    label: "Biblioteca",
-    href: "/biblioteca",
-    children: [
-      { label: "Buscador", href: "/biblioteca/buscador" },
-      { label: "Dictámenes", href: "/biblioteca/dictamenes" },
-      { label: "Guías", href: "/biblioteca/guias" },
-      { label: "Leyes", href: "/leyes" },
-      { label: "Manuales", href: "/manuales" },
-    ],
-  },
-  { label: "Tesorería", href: "/tesoreria" },
-  {
-    label: "Comisiones",
-    href: "#",
-    children: [
-      { label: "Difusión y Comunicaciones", href: "/comision-difusion-y-comunicaciones" },
-      { label: "Capacitación y Formación Gremial", href: "/comision-de-capacitacion-y-formacion-gremial" },
-      { label: "Negociación y Asuntos Laborales", href: "/comision-de-negociacion-y-asuntos-laborales" },
-      { label: "Cultura, Deporte y Recreación", href: "/comision-cultura-deporte-y-recreacion" },
-      { label: "Estudios Técnicos", href: "/comision-de-estudios-tecnicos" },
-      { label: "Asuntos de la Mujer", href: "/comision-asuntos-de-la-mujer" },
-      { label: "Higiene y Seguridad", href: "/comision-higiene-y-seguridad" },
-      { label: "Bienestar Social y Salud", href: "/comision-bienestar-social-y-salud" },
-      { label: "Previsión Social", href: "/comision-prevision-social" },
-    ],
-  },
+  { label: "Dictámenes", href: "/dictamenes" },
+  { label: "Documentos", href: "/documentos" },
+  { label: "Contacto", href: "/contacto" },
 ];
 
+// ─── Hero slides ───────────────────────────────────────────────────────────────
 export const HERO_SLIDES: HeroSlide[] = [
   {
     type: "fondo",
-    heading: "80 años de historia",
-    subheading: "Unidad y compromiso con los municipales de Chile",
+    heading: "Representando a los funcionarios municipales de la Región de Coquimbo",
+    subheading: "ASEMUCH Coquimbo — Sede Regional",
     description:
-      "Confederación Nacional de Funcionarios Municipales de Chile. Defendemos tus derechos desde 1946.",
+      "Defendemos los derechos laborales de más de 1.200 funcionarios municipales en las 15 comunas de la región, con más de 80 años de historia gremial.",
     href: "/quienes-somos",
-    cta: "Conoce nuestra historia",
+    cta: "Conócenos",
   },
   {
     type: "fondo",
-    heading: "Centro de documentación",
-    subheading: "La Biblioteca documental, ahora buscable",
+    heading: "Accede a dictámenes, guías y documentos legales",
+    subheading: "Centro de documentación regional",
     description:
-      "Dictámenes de Contraloría, leyes, guías y manuales — filtrables por materia y año, en un solo lugar.",
-    href: "/biblioteca/buscador",
-    cta: "Ir a la Biblioteca",
+      "Resoluciones de Contraloría, circulares, actas y guías prácticas sobre el Estatuto Municipal — organizados y buscables para ti.",
+    href: "/dictamenes",
+    cta: "Ir a Dictámenes",
   },
   {
     type: "caja",
-    heading: "Convenios, capacitación y asesoría para ti",
-    subheading: "Seminario Nacional en Frutillar sobre Modernización y Probidad Municipal",
+    heading: "Tu directiva regional trabaja por ti",
+    subheading: "Directiva ASEMUCH Coquimbo 2024–2026",
     description:
-      "Participación, formación y defensa funcionaria en todo Chile.",
-    href: "/convenios",
-    cta: "Ver convenios",
+      "Un equipo comprometido con la representación y defensa de todos los funcionarios municipales de la Región de Coquimbo.",
+    href: "/directiva",
+    cta: "Conoce a la directiva",
   },
 ];
 
+// ─── Estadísticas institucionales ─────────────────────────────────────────────
+export const STATS = [
+  { value: "+1.200", label: "Funcionarios afiliados" },
+  { value: "15", label: "Comunas representadas" },
+  { value: "80", label: "Años de historia" },
+  { value: "IV", label: "Región de Coquimbo" },
+];
+
+// ─── Accesos rápidos ───────────────────────────────────────────────────────────
+export const QUICK_ACCESS_ITEMS = [
+  {
+    label: "Dictámenes",
+    href: "/dictamenes",
+    description: "Resoluciones de Contraloría",
+    icon: "⚖️",
+  },
+  {
+    label: "Noticias",
+    href: "/noticias",
+    description: "Últimas novedades regionales",
+    icon: "📰",
+  },
+  {
+    label: "Documentos",
+    href: "/documentos",
+    description: "Circulares, actas y guías",
+    icon: "📄",
+  },
+  {
+    label: "Contacto",
+    href: "/contacto",
+    description: "Comunícate con nosotros",
+    icon: "✉️",
+  },
+];
+
+// ─── Noticias ─────────────────────────────────────────────────────────────────
 export const NEWS_CARDS: NewsCard[] = [
   {
     id: 1,
-    date: "16/06/2026",
-    title: "ASEMUCH Chile se reúne con Seremi del Trabajo de la Región Metropolitana",
+    date: "20/06/2026",
+    title: "ASEMUCH Coquimbo se reúne con alcaldes de la región para presentar agenda laboral 2026",
     excerpt:
-      "Reunión clave con la Seremi del Trabajo para abordar las condiciones laborales de los funcionarios municipales.",
+      "La directiva regional sostuvo una reunión con los alcaldes de La Serena, Coquimbo y Ovalle para exponer las demandas laborales de los funcionarios municipales y establecer una hoja de ruta para el segundo semestre.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/asemuch15-768x576.jpg",
-    href: "/noticias/asemuch-chile-se-reune-con-seremi-del-trabajo",
+    href: "/noticias/reunion-alcaldes-agenda-laboral-2026",
   },
   {
     id: 2,
-    date: "16/06/2026",
-    title: "Invitación Taller ASEMUCH «PLANTAS MUNICIPALES» 18-06-2026",
+    date: "15/06/2026",
+    title: "Exitoso taller de capacitación sobre Estatuto Administrativo Municipal en La Serena",
     excerpt:
-      "La Confederación Nacional de Funcionarios Municipales de Chile invita a participar en este taller.",
+      "Más de 80 funcionarios participaron en el taller sobre derechos y obligaciones según el Estatuto Municipal, dictado por la abogada especialista Claudia Herrera. El próximo módulo se realizará en Ovalle.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/Taller1-768x464.jpg",
-    href: "/noticias/invitacion-taller-asemuch-plantas-municipales",
+    href: "/noticias/taller-estatuto-administrativo-la-serena",
   },
   {
     id: 3,
-    date: "11/06/2026",
-    title: "Comunicado Público ASEMUCH N°17 del 10-06-2026 — Bases Campeonato de Cueca 2026",
+    date: "10/06/2026",
+    title: "ASEMUCH Coquimbo informa sobre aplicación del bono zona territorial en municipios de la región",
     excerpt:
-      "ASEMUCH comunica las bases oficiales del Campeonato de Cueca 2026 para todos sus asociados.",
+      "La presidencia regional emite comunicado aclarando los criterios para la aplicación del bono de zona territorial en los municipios de la IV Región, en respuesta a consultas de afiliados.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/com17-768x268.png",
-    href: "/comunicados/comunicado-publico-asemuch-n17",
+    href: "/noticias/bono-zona-territorial-municipios-coquimbo",
   },
   {
     id: 4,
-    date: "08/06/2026",
-    title: "ASEMUCH anuncia el 3er módulo presencial del Seminario Nacional",
+    date: "05/06/2026",
+    title: "Asamblea ordinaria junio 2026: acuerdos adoptados y próximos pasos",
     excerpt:
-      "Tercer módulo del Seminario Nacional de Gestión Estratégica, Probidad y Defensa Funcionaria.",
+      "La asamblea ordinaria del mes de junio contó con la participación de representantes de 11 comunas. Se aprobaron los estados financieros y se establecieron las prioridades para el segundo semestre 2026.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/asemuch15-768x576.jpg",
-    href: "/noticias/asemuch-anuncia-tercer-modulo-seminario-nacional",
+    href: "/noticias/asamblea-ordinaria-junio-2026",
   },
   {
     id: 5,
-    date: "05/06/2026",
-    title: "Fortaleciendo la Defensa Funcionaria en las Municipalidades de Chile",
+    date: "01/06/2026",
+    title: "Comunicado oficial: proceso de calificaciones municipales 2026",
     excerpt:
-      "ASEMUCH continúa su trabajo de representación y defensa de los derechos laborales municipales.",
+      "ASEMUCH Coquimbo recuerda a los afiliados los plazos y procedimientos para el proceso de calificaciones 2026, instando a los funcionarios a conocer sus derechos en esta materia.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/Taller1-768x464.jpg",
-    href: "/noticias/fortaleciendo-defensa-funcionaria",
+    href: "/noticias/proceso-calificaciones-municipales-2026",
   },
   {
     id: 6,
-    date: "04/06/2026",
-    title: "Comunicado Público ASEMUCH N°16 de 2026",
+    date: "25/05/2026",
+    title: "Nuevo convenio de salud: beneficios extendidos para afiliados y grupo familiar",
     excerpt:
-      "Comunicado oficial de la Confederación Nacional sobre materias de interés gremial.",
+      "ASEMUCH Coquimbo firma convenio con red de clínicas y laboratorios de la región, ofreciendo descuentos de hasta 40% en prestaciones de salud para afiliados y su grupo familiar directo.",
     imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/com17-768x268.png",
-    href: "/comunicados/comunicado-publico-asemuch-n16",
+    href: "/noticias/convenio-salud-afiliados-region-coquimbo",
   },
 ];
 
-export const QUICK_ACCESS_ITEMS = [
+// ─── Directiva ────────────────────────────────────────────────────────────────
+export const DIRECTIVA = [
   {
-    label: "Biblioteca",
-    href: "/biblioteca/buscador",
-    description: "Dictámenes, guías y leyes",
-    icon: "📚",
+    nombre: "Carlos Andrés Muñoz Vera",
+    cargo: "Presidente Regional",
+    municipio: "Municipalidad de La Serena",
+    iniciales: "CM",
+    color: "#0c71c3",
   },
   {
-    label: "Convenios",
-    href: "/convenios",
-    description: "Beneficios para afiliados",
-    icon: "🤝",
+    nombre: "María Elena Soto Gutiérrez",
+    cargo: "Vicepresidenta",
+    municipio: "Municipalidad de Coquimbo",
+    iniciales: "MS",
+    color: "#10498a",
   },
   {
-    label: "Comunicados",
-    href: "/comunicados",
-    description: "Posiciones oficiales",
-    icon: "📢",
+    nombre: "Ana Patricia López Ríos",
+    cargo: "Secretaria General",
+    municipio: "Municipalidad de Ovalle",
+    iniciales: "AL",
+    color: "#0c71c3",
   },
   {
-    label: "Comisiones",
-    href: "/comision-difusion-y-comunicaciones",
-    description: "Áreas de trabajo gremial",
-    icon: "👥",
+    nombre: "Ricardo Eduardo Fuentes Díaz",
+    cargo: "Tesorero",
+    municipio: "Municipalidad de La Serena",
+    iniciales: "RF",
+    color: "#10498a",
+  },
+  {
+    nombre: "Pedro José Villalobos Castro",
+    cargo: "Director",
+    municipio: "Municipalidad de Illapel",
+    iniciales: "PV",
+    color: "#0c2340",
+  },
+  {
+    nombre: "Carmen Rosa González Palma",
+    cargo: "Directora",
+    municipio: "Municipalidad de La Serena",
+    iniciales: "CG",
+    color: "#0c71c3",
+  },
+  {
+    nombre: "Jorge Luis Alfaro Medina",
+    cargo: "Director",
+    municipio: "Municipalidad de Coquimbo",
+    iniciales: "JA",
+    color: "#10498a",
   },
 ];
+
+// ─── Dictámenes ───────────────────────────────────────────────────────────────
+export const DICTAMENES = [
+  {
+    id: 1,
+    numero: "E123.456/2026",
+    año: "2026",
+    materia: "Asignación Municipal — Procedimiento de cálculo ante ausencia temporal del funcionario",
+    organismo: "Municipio de La Serena",
+    categoria: "Remuneraciones",
+    href: "#",
+  },
+  {
+    id: 2,
+    numero: "E087.432/2026",
+    año: "2026",
+    materia: "Horas extraordinarias del personal municipal a contrata — Límites y condiciones de pago",
+    organismo: "Consulta general",
+    categoria: "Remuneraciones",
+    href: "#",
+  },
+  {
+    id: 3,
+    numero: "E063.218/2025",
+    año: "2025",
+    materia: "Proceso de calificaciones: plazos, notificaciones y recursos del funcionario municipal",
+    organismo: "Consulta general",
+    categoria: "Calificaciones",
+    href: "#",
+  },
+  {
+    id: 4,
+    numero: "E045.891/2025",
+    año: "2025",
+    materia: "Inamovilidad funcionaria y causales de cese en cargo municipal — Estatuto art. 89",
+    organismo: "Consulta general",
+    categoria: "Carrera Funcionaria",
+    href: "#",
+  },
+  {
+    id: 5,
+    numero: "E029.734/2024",
+    año: "2024",
+    materia: "Feriado legal en municipalidades — Cómputo de días hábiles y derecho a descanso",
+    organismo: "Consulta general",
+    categoria: "Derechos",
+    href: "#",
+  },
+];
+
+// ─── Documentos ───────────────────────────────────────────────────────────────
+export const DOCUMENTOS = [
+  {
+    id: 1,
+    tipo: "Circular",
+    numero: "N°14/2026",
+    nombre: "Procedimiento interno para tramitación de licencias médicas",
+    fecha: "18/06/2026",
+    formato: "PDF",
+    href: "#",
+  },
+  {
+    id: 2,
+    tipo: "Resolución",
+    numero: "N°7/2026",
+    nombre: "Aprobación presupuesto anual ASEMUCH Región de Coquimbo 2026",
+    fecha: "02/06/2026",
+    formato: "PDF",
+    href: "#",
+  },
+  {
+    id: 3,
+    tipo: "Acta",
+    numero: "Mayo 2026",
+    nombre: "Acta Asamblea Ordinaria — Mayo 2026",
+    fecha: "30/05/2026",
+    formato: "PDF",
+    href: "#",
+  },
+  {
+    id: 4,
+    tipo: "Guía",
+    numero: "Ed. 2026",
+    nombre: "Derechos y obligaciones del funcionario municipal — Guía práctica 2026",
+    fecha: "15/05/2026",
+    formato: "PDF",
+    href: "#",
+  },
+  {
+    id: 5,
+    tipo: "Convenio",
+    numero: "CENABAST 2026",
+    nombre: "Convenio de acceso a medicamentos con descuento para afiliados y grupo familiar",
+    fecha: "10/04/2026",
+    formato: "PDF",
+    href: "#",
+  },
+];
+
+// ─── Contacto ─────────────────────────────────────────────────────────────────
+export const CONTACT_INFO = {
+  nombre: "ASEMUCH — Sede Región de Coquimbo",
+  direccion: "Av. Francisco de Aguirre 456, Piso 3, La Serena",
+  region: "IV Región de Coquimbo, Chile",
+  telefono: "+56 51 2 345 678",
+  email: "coquimbo@asemuch.cl",
+  horario: "Lunes a Viernes, 09:00 – 17:30 hrs.",
+  facebook: "https://www.facebook.com/asemuch.cl",
+  instagram: "https://www.instagram.com/asemuchchileoficial/",
+};

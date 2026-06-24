@@ -3,13 +3,13 @@ import { QUICK_ACCESS_ITEMS } from "./SiteData";
 
 export default function QuickAccess() {
   return (
-    <section className="py-14 bg-white">
+    <section className="py-12 bg-white">
       <div className="container-site">
         <h2
-          className="text-center text-xl lg:text-2xl font-bold text-[#0c2340] mb-10"
+          className="text-center text-lg font-bold text-[#5d6675] mb-8 uppercase tracking-widest"
           style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
         >
-          Encuentra más rápido lo que buscas
+          Accesos rápidos
         </h2>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
@@ -17,16 +17,11 @@ export default function QuickAccess() {
             <Link
               key={item.href}
               href={item.href}
-              className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-[#e3e9f1] bg-white hover:bg-[#f5f9fc] hover:border-[#0c71c3]/30 hover:shadow-md transition-all duration-200"
+              className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-[#e3e9f1] bg-white hover:bg-[#f5f9fc] hover:border-[#0c71c3]/40 hover:shadow-lg transition-all duration-200"
             >
-              {/* Icon */}
               <div className="w-14 h-14 rounded-2xl bg-[#e7edf5] group-hover:bg-[#0c71c3] flex items-center justify-center text-2xl transition-colors duration-200">
-                <span role="img" aria-label={item.label}>
-                  {item.icon}
-                </span>
+                <span role="img" aria-label={item.label}>{item.icon}</span>
               </div>
-
-              {/* Label */}
               <div>
                 <p
                   className="font-bold text-[#0c2340] group-hover:text-[#0c71c3] transition-colors text-sm lg:text-base"
