@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-open-sans), Arial, sans-serif;
+  --font-heading: var(--font-source-sans), "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -46,75 +46,60 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ASEMUCH brand tokens */
+  --color-navy: var(--navy);
+  --color-navy-dark: var(--navy-dark);
+  --color-blue-primary: var(--blue-primary);
+  --color-blue-light: var(--blue-light);
+  --color-section-bg: var(--section-bg);
+  --color-footer-text: var(--footer-text);
+  --color-card-border: var(--card-border-color);
 }
 
 :root {
+  /* shadcn tokens — mapped to ASEMUCH palette */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.44 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.44 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.44 0 0);
+  --primary: oklch(0.52 0.168 252);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.93 0.018 241);
+  --secondary-foreground: oklch(0.20 0.069 248);
+  --muted: oklch(0.97 0.008 234);
+  --muted-foreground: oklch(0.44 0.022 245);
+  --accent: oklch(0.67 0.163 234);
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  --border: oklch(0.92 0.016 241);
+  --input: oklch(0.92 0.016 241);
+  --ring: oklch(0.52 0.168 252);
+  --chart-1: oklch(0.52 0.168 252);
+  --chart-2: oklch(0.67 0.163 234);
+  --chart-3: oklch(0.20 0.069 248);
+  --chart-4: oklch(0.44 0.022 245);
+  --chart-5: oklch(0.93 0.018 241);
+  --radius: 1rem;
+  --sidebar: oklch(0.97 0.008 234);
+  --sidebar-foreground: oklch(0.44 0 0);
+  --sidebar-primary: oklch(0.52 0.168 252);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.93 0.018 241);
+  --sidebar-accent-foreground: oklch(0.20 0.069 248);
+  --sidebar-border: oklch(0.92 0.016 241);
+  --sidebar-ring: oklch(0.52 0.168 252);
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* ASEMUCH brand tokens */
+  --navy: oklch(0.20 0.069 248);           /* #0C2340 */
+  --navy-dark: oklch(0.17 0.062 248);      /* #0A1F3C */
+  --blue-primary: oklch(0.52 0.168 252);   /* #0C71C3 */
+  --blue-light: oklch(0.67 0.163 234);     /* #2EA3F2 */
+  --section-bg: oklch(0.93 0.018 241);     /* #E7EDF5 */
+  --footer-text: oklch(0.856 0.030 236);   /* #CDD8E6 */
+  --card-border-color: oklch(0.922 0.016 241); /* #E3E9F1 */
 }
 
 @layer base {
@@ -123,8 +108,30 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-open-sans), Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
   }
-  html {
-    @apply font-sans;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-source-sans), "Segoe UI", system-ui, sans-serif;
+    color: oklch(0.20 0.069 248);
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* ASEMUCH utility classes */
+.container-site {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 1280px) {
+  .container-site {
+    padding-inline: 2rem;
   }
 }
