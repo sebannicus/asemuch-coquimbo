@@ -19,13 +19,57 @@ const sourceSans3 = Source_Sans_3({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://asemuch-coquimbo.vercel.app";
+const SITE_DESCRIPTION =
+  "Asociación de Empleados Municipales — Sede Región de Coquimbo. Defendemos los derechos laborales de los funcionarios municipales de las 15 comunas de la IV Región.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "ASEMUCH Coquimbo | Sede Región de Coquimbo",
     template: "%s | ASEMUCH Coquimbo",
   },
-  description:
-    "Asociación de Empleados Municipales — Sede Región de Coquimbo. Defendemos los derechos laborales de los funcionarios municipales de las 15 comunas de la IV Región.",
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "ASEMUCH",
+    "funcionarios municipales",
+    "Región de Coquimbo",
+    "La Serena",
+    "sindicato municipal",
+    "derechos laborales",
+    "estatuto municipal",
+  ],
+  authors: [{ name: "ASEMUCH Sede Regional Coquimbo" }],
+  openGraph: {
+    type: "website",
+    locale: "es_CL",
+    url: SITE_URL,
+    siteName: "ASEMUCH Coquimbo",
+    title: "ASEMUCH Coquimbo | Sede Región de Coquimbo",
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "ASEMUCH — Sede Región de Coquimbo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ASEMUCH Coquimbo | Sede Región de Coquimbo",
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.svg"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

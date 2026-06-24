@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a1f3c"/>
+      <stop offset="60%" stop-color="#0c2340"/>
+      <stop offset="100%" stop-color="#10498a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Shield icon -->
+  <g transform="translate(80, 180)">
+    <path d="M65 10L15 30v40c0 36 25.7 69.5 50 77.5C90.3 139.5 115 106 115 70V30L65 10z" fill="#0C71C3" opacity="0.9"/>
+    <text x="65" y="90" font-family="Arial, sans-serif" font-size="54" font-weight="800" text-anchor="middle" fill="white">A</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="220" y="260" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="white">ASEMUCH</text>
+  <text x="220" y="330" font-family="Arial, sans-serif" font-size="40" font-weight="400" fill="#8cb8e2">Sede Región de Coquimbo</text>
+
+  <!-- Divider -->
+  <rect x="220" y="360" width="80" height="4" rx="2" fill="#0C71C3"/>
+
+  <!-- Description -->
+  <text x="220" y="420" font-family="Arial, sans-serif" font-size="28" fill="#c8dcf0">Defendemos los derechos de los funcionarios</text>
+  <text x="220" y="460" font-family="Arial, sans-serif" font-size="28" fill="#c8dcf0">municipales de la IV Región de Chile</text>
+
+  <!-- Bottom badge -->
+  <rect x="220" y="510" width="280" height="48" rx="8" fill="#0C71C3" opacity="0.7"/>
+  <text x="360" y="542" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="white">+1.200 afiliados · 15 comunas</text>
+</svg>

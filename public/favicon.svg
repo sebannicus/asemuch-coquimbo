@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Shield background -->
+  <path d="M16 2L4 7v8c0 7.18 5.14 13.9 12 15.5C22.86 28.9 28 22.18 28 15V7L16 2z" fill="#0C2340"/>
+  <path d="M16 4.5L6 9v6c0 6.24 4.34 12.06 10 13.8C21.66 27.06 26 21.24 26 15V9L16 4.5z" fill="#0C71C3"/>
+  <!-- Letter A -->
+  <text x="16" y="22" font-family="Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="white" letter-spacing="-0.5">A</text>
+</svg>

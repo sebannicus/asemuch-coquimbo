@@ -4,13 +4,43 @@ import { useState } from "react";
 import PageHeader from "@/components/PageHeader";
 import { CONTACT_INFO } from "@/components/SiteData";
 
+// Reemplazar con el ID real de Formspree al crear el formulario en formspree.io
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "placeholder";
+
+type FormState = "idle" | "sending" | "success" | "error";
+
 export default function ContactoPage() {
-  const [sent, setSent] = useState(false);
+  const [state, setState] = useState<FormState>("idle");
   const [form, setForm] = useState({ nombre: "", email: "", municipio: "", mensaje: "" });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSent(true);
+    setState("sending");
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          nombre: form.nombre,
+          email: form.email,
+          municipio: form.municipio || "No indicado",
+          mensaje: form.mensaje,
+          _subject: `Consulta de ${form.nombre} — ASEMUCH Coquimbo`,
+        }),
+      });
+      if (res.ok) {
+        setState("success");
+      } else {
+        setState("error");
+      }
+    } catch {
+      setState("error");
+    }
+  }
+
+  function reset() {
+    setState("idle");
+    setForm({ nombre: "", email: "", municipio: "", mensaje: "" });
   }
 
   return (
@@ -25,7 +55,7 @@ export default function ContactoPage() {
         <div className="container-site">
           <div className="grid lg:grid-cols-2 gap-12">
 
-            {/* Formulario */}
+            {/* ── Formulario ── */}
             <div>
               <h2
                 className="text-2xl font-extrabold text-[#0c2340] mb-6"
@@ -34,7 +64,7 @@ export default function ContactoPage() {
                 Envíanos un mensaje
               </h2>
 
-              {sent ? (
+              {state === "success" ? (
                 <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
                   <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth={2.5} className="w-8 h-8">
@@ -44,23 +74,28 @@ export default function ContactoPage() {
                   <h3 className="text-xl font-bold text-[#0c2340]" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
                     ¡Mensaje enviado!
                   </h3>
-                  <p className="text-[#5d6675] max-w-sm">
-                    Gracias por contactarnos. Un representante de ASEMUCH Coquimbo te responderá dentro de 1–2 días hábiles.
+                  <p className="text-[#5d6675] max-w-sm text-sm">
+                    Gracias por contactarnos, <strong>{form.nombre}</strong>. Te responderemos al correo <strong>{form.email}</strong> dentro de 1–2 días hábiles.
                   </p>
-                  <button
-                    onClick={() => { setSent(false); setForm({ nombre: "", email: "", municipio: "", mensaje: "" }); }}
-                    className="mt-2 text-sm text-[#0c71c3] font-semibold hover:underline"
-                  >
+                  <button onClick={reset} className="mt-2 text-sm text-[#0c71c3] font-semibold hover:underline">
                     Enviar otro mensaje
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                  {state === "error" && (
+                    <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 shrink-0">
+                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      Hubo un error al enviar el mensaje. Por favor intenta nuevamente o escríbenos directamente a{" "}
+                      <a href={`mailto:${CONTACT_INFO.email}`} className="underline font-medium">{CONTACT_INFO.email}</a>.
+                    </div>
+                  )}
+
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">
-                        Nombre completo *
-                      </label>
+                      <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">Nombre completo *</label>
                       <input
                         required
                         type="text"
@@ -71,9 +106,7 @@ export default function ContactoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">
-                        Correo electrónico *
-                      </label>
+                      <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">Correo electrónico *</label>
                       <input
                         required
                         type="email"
@@ -84,10 +117,9 @@ export default function ContactoPage() {
                       />
                     </div>
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">
-                      Municipio donde trabaja
-                    </label>
+                    <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">Municipio donde trabaja</label>
                     <input
                       type="text"
                       value={form.municipio}
@@ -96,10 +128,9 @@ export default function ContactoPage() {
                       className="w-full px-4 py-2.5 rounded-xl border border-[#e3e9f1] text-sm text-[#0c2340] placeholder:text-[#5d6675]/50 focus:outline-none focus:border-[#0c71c3] focus:ring-1 focus:ring-[#0c71c3] transition"
                     />
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">
-                      Mensaje *
-                    </label>
+                    <label className="block text-sm font-semibold text-[#0c2340] mb-1.5">Mensaje *</label>
                     <textarea
                       required
                       rows={5}
@@ -109,11 +140,21 @@ export default function ContactoPage() {
                       className="w-full px-4 py-2.5 rounded-xl border border-[#e3e9f1] text-sm text-[#0c2340] placeholder:text-[#5d6675]/50 focus:outline-none focus:border-[#0c71c3] focus:ring-1 focus:ring-[#0c71c3] transition resize-none"
                     />
                   </div>
+
                   <button
                     type="submit"
-                    className="self-start px-8 py-3 rounded-xl bg-[#0c71c3] hover:bg-[#2ea3f2] text-white font-semibold text-sm transition-colors"
+                    disabled={state === "sending"}
+                    className="self-start inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#0c71c3] hover:bg-[#2ea3f2] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-colors"
                   >
-                    Enviar mensaje
+                    {state === "sending" ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        Enviando…
+                      </>
+                    ) : "Enviar mensaje"}
                   </button>
                   <p className="text-xs text-[#5d6675]">
                     * Campos obligatorios. Tu información es confidencial y no será compartida con terceros.
@@ -122,7 +163,7 @@ export default function ContactoPage() {
               )}
             </div>
 
-            {/* Info de contacto */}
+            {/* ── Info de contacto ── */}
             <div className="flex flex-col gap-6">
               <h2
                 className="text-2xl font-extrabold text-[#0c2340]"
@@ -141,6 +182,7 @@ export default function ContactoPage() {
                     ),
                     label: "Dirección",
                     value: `${CONTACT_INFO.direccion}, ${CONTACT_INFO.region}`,
+                    href: CONTACT_INFO.mapsUrl,
                   },
                   {
                     icon: (
@@ -158,7 +200,7 @@ export default function ContactoPage() {
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
                       </svg>
                     ),
-                    label: "Correo",
+                    label: "Correo electrónico",
                     value: CONTACT_INFO.email,
                     href: `mailto:${CONTACT_INFO.email}`,
                   },
@@ -179,7 +221,12 @@ export default function ContactoPage() {
                     <div>
                       <p className="text-xs font-bold text-[#5d6675] uppercase tracking-wide">{item.label}</p>
                       {item.href ? (
-                        <a href={item.href} className="text-sm text-[#0c2340] font-medium hover:text-[#0c71c3] transition-colors">
+                        <a
+                          href={item.href}
+                          target={item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="text-sm text-[#0c2340] font-medium hover:text-[#0c71c3] transition-colors"
+                        >
                           {item.value}
                         </a>
                       ) : (
@@ -190,8 +237,26 @@ export default function ContactoPage() {
                 ))}
               </div>
 
-              {/* Destacado afiliación */}
-              <div className="mt-4 p-6 rounded-2xl" style={{ backgroundColor: "#e7edf5", border: "0.8px solid #e3e9f1" }}>
+              {/* Mapa embed placeholder */}
+              <a
+                href={CONTACT_INFO.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full rounded-2xl overflow-hidden border border-[#e3e9f1] hover:border-[#0c71c3]/40 transition-colors"
+              >
+                <div
+                  className="w-full h-36 flex flex-col items-center justify-center gap-2 text-sm font-medium text-[#0c71c3]"
+                  style={{ backgroundColor: "#e7edf5" }}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-7 h-7">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+                  </svg>
+                  Ver en Google Maps — {CONTACT_INFO.direccion}
+                </div>
+              </a>
+
+              {/* CTA afiliación */}
+              <div className="p-6 rounded-2xl" style={{ backgroundColor: "#e7edf5", border: "0.8px solid #e3e9f1" }}>
                 <h3 className="font-bold text-[#0c2340] mb-2" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
                   ¿Eres funcionario municipal?
                 </h3>
@@ -199,7 +264,7 @@ export default function ContactoPage() {
                   Si trabajas en una municipalidad de la Región de Coquimbo, puedes afiliarte a ASEMUCH y acceder a todos nuestros servicios de representación y defensa.
                 </p>
                 <a
-                  href={`mailto:${CONTACT_INFO.email}?subject=Solicitud de afiliación`}
+                  href={`mailto:${CONTACT_INFO.email}?subject=Solicitud%20de%20afiliaci%C3%B3n%20ASEMUCH%20Coquimbo`}
                   className="inline-block px-5 py-2.5 rounded-xl bg-[#0c71c3] hover:bg-[#2ea3f2] text-white font-semibold text-sm transition-colors"
                 >
                   Solicitar información de afiliación

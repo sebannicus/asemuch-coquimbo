@@ -86,7 +86,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "ASEMUCH Coquimbo se reúne con alcaldes de la región para presentar agenda laboral 2026",
     excerpt:
       "La directiva regional sostuvo una reunión con los alcaldes de La Serena, Coquimbo y Ovalle para exponer las demandas laborales de los funcionarios municipales y establecer una hoja de ruta para el segundo semestre.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/asemuch15-768x576.jpg",
+    imageUrl: "https://picsum.photos/seed/asemuch1/768/432",
     href: "/noticias/reunion-alcaldes-agenda-laboral-2026",
   },
   {
@@ -95,7 +95,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "Exitoso taller de capacitación sobre Estatuto Administrativo Municipal en La Serena",
     excerpt:
       "Más de 80 funcionarios participaron en el taller sobre derechos y obligaciones según el Estatuto Municipal, dictado por la abogada especialista Claudia Herrera. El próximo módulo se realizará en Ovalle.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/Taller1-768x464.jpg",
+    imageUrl: "https://picsum.photos/seed/asemuch2/768/432",
     href: "/noticias/taller-estatuto-administrativo-la-serena",
   },
   {
@@ -104,7 +104,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "ASEMUCH Coquimbo informa sobre aplicación del bono zona territorial en municipios de la región",
     excerpt:
       "La presidencia regional emite comunicado aclarando los criterios para la aplicación del bono de zona territorial en los municipios de la IV Región, en respuesta a consultas de afiliados.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/com17-768x268.png",
+    imageUrl: "https://picsum.photos/seed/asemuch3/768/432",
     href: "/noticias/bono-zona-territorial-municipios-coquimbo",
   },
   {
@@ -113,7 +113,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "Asamblea ordinaria junio 2026: acuerdos adoptados y próximos pasos",
     excerpt:
       "La asamblea ordinaria del mes de junio contó con la participación de representantes de 11 comunas. Se aprobaron los estados financieros y se establecieron las prioridades para el segundo semestre 2026.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/asemuch15-768x576.jpg",
+    imageUrl: "https://picsum.photos/seed/asemuch4/768/432",
     href: "/noticias/asamblea-ordinaria-junio-2026",
   },
   {
@@ -122,7 +122,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "Comunicado oficial: proceso de calificaciones municipales 2026",
     excerpt:
       "ASEMUCH Coquimbo recuerda a los afiliados los plazos y procedimientos para el proceso de calificaciones 2026, instando a los funcionarios a conocer sus derechos en esta materia.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/Taller1-768x464.jpg",
+    imageUrl: "https://picsum.photos/seed/asemuch5/768/432",
     href: "/noticias/proceso-calificaciones-municipales-2026",
   },
   {
@@ -131,7 +131,7 @@ export const NEWS_CARDS: NewsCard[] = [
     title: "Nuevo convenio de salud: beneficios extendidos para afiliados y grupo familiar",
     excerpt:
       "ASEMUCH Coquimbo firma convenio con red de clínicas y laboratorios de la región, ofreciendo descuentos de hasta 40% en prestaciones de salud para afiliados y su grupo familiar directo.",
-    imageUrl: "https://asemuch.cl/wp-content/uploads/2026/06/com17-768x268.png",
+    imageUrl: "https://picsum.photos/seed/asemuch6/768/432",
     href: "/noticias/convenio-salud-afiliados-region-coquimbo",
   },
 ];
@@ -290,11 +290,12 @@ export const DOCUMENTOS = [
 // ─── Contacto ─────────────────────────────────────────────────────────────────
 export const CONTACT_INFO = {
   nombre: "ASEMUCH — Sede Región de Coquimbo",
-  direccion: "Av. Francisco de Aguirre 456, Piso 3, La Serena",
+  direccion: "Los Carrera 199, Piso 2, La Serena",
   region: "IV Región de Coquimbo, Chile",
-  telefono: "+56 51 2 345 678",
+  telefono: "+56 51 2 213 456",
   email: "coquimbo@asemuch.cl",
   horario: "Lunes a Viernes, 09:00 – 17:30 hrs.",
   facebook: "https://www.facebook.com/asemuch.cl",
   instagram: "https://www.instagram.com/asemuchchileoficial/",
+  mapsUrl: "https://maps.google.com/?q=Los+Carrera+199,+La+Serena,+Chile",
 };
