@@ -9,6 +9,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Dictámenes", href: "/dictamenes" },
   { label: "Documentos", href: "/documentos" },
   { label: "Contacto", href: "/contacto" },
+  { label: "Afiliarse", href: "/afiliarse", highlight: true },
 ];
 
 // ─── Hero slides ───────────────────────────────────────────────────────────────
@@ -53,16 +54,16 @@ export const STATS = [
 // ─── Accesos rápidos ───────────────────────────────────────────────────────────
 export const QUICK_ACCESS_ITEMS = [
   {
+    label: "Afiliarse",
+    href: "/afiliarse",
+    description: "Únete al gremio — es gratis",
+    icon: "🤝",
+  },
+  {
     label: "Dictámenes",
     href: "/dictamenes",
     description: "Resoluciones de Contraloría",
     icon: "⚖️",
-  },
-  {
-    label: "Noticias",
-    href: "/noticias",
-    description: "Últimas novedades regionales",
-    icon: "📰",
   },
   {
     label: "Documentos",

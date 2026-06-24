@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 
 export const metadata: Metadata = {
@@ -121,6 +122,43 @@ export default function QuienesSomosPage() {
                 <p className="text-sm text-[#5d6675] leading-relaxed">{v.descripcion}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Afiliarse */}
+      <section className="py-16" style={{ backgroundColor: "#0c2340" }}>
+        <div className="container-site">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+            <div className="max-w-lg">
+              <h2
+                className="text-3xl font-extrabold text-white mb-3"
+                style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+              >
+                ¿Trabajas en un municipio de la Región de Coquimbo?
+              </h2>
+              <p className="text-[#cdd8e6] leading-relaxed">
+                Afiliarte a ASEMUCH es gratuito y te da acceso a representación legal, capacitación permanente,
+                convenios de salud y una red de apoyo gremial sólida.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <Link
+                href="/afiliarse"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#0c71c3] hover:bg-[#2ea3f2] text-white font-bold text-sm transition-colors"
+              >
+                Quiero afiliarme
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                </svg>
+              </Link>
+              <Link
+                href="/contacto"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl border border-white/30 hover:border-white/60 text-white font-semibold text-sm transition-colors"
+              >
+                Tengo preguntas
+              </Link>
+            </div>
           </div>
         </div>
       </section>

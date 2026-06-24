@@ -99,6 +99,27 @@ export default function Header() {
           <ul className="flex items-center">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+              if (item.highlight) {
+                return (
+                  <li key={item.href} className="ml-2">
+                    <Link
+                      href={item.href}
+                      className={`flex items-center gap-1.5 my-1.5 px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                        isActive
+                          ? "bg-white text-[#0c71c3]"
+                          : "bg-[#0c71c3] text-white hover:bg-[#2ea3f2]"
+                      }`}
+                      style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                        <line x1="19" y1="8" x2="19" y2="14" /><line x1="22" y1="11" x2="16" y2="11" />
+                      </svg>
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              }
               return (
                 <li key={item.href}>
                   <Link
@@ -124,6 +145,23 @@ export default function Header() {
             <ul className="py-1">
               {NAV_ITEMS.map((item) => {
                 const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+                if (item.highlight) {
+                  return (
+                    <li key={item.href} className="px-4 py-2">
+                      <Link
+                        href={item.href}
+                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0c71c3] text-white text-sm font-bold"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                          <line x1="19" y1="8" x2="19" y2="14" /><line x1="22" y1="11" x2="16" y2="11" />
+                        </svg>
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                }
                 return (
                   <li key={item.href}>
                     <Link

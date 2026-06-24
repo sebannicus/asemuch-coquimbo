@@ -237,23 +237,19 @@ export default function ContactoPage() {
                 ))}
               </div>
 
-              {/* Mapa embed placeholder */}
-              <a
-                href={CONTACT_INFO.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full rounded-2xl overflow-hidden border border-[#e3e9f1] hover:border-[#0c71c3]/40 transition-colors"
-              >
-                <div
-                  className="w-full h-36 flex flex-col items-center justify-center gap-2 text-sm font-medium text-[#0c71c3]"
-                  style={{ backgroundColor: "#e7edf5" }}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-7 h-7">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-                  </svg>
-                  Ver en Google Maps — {CONTACT_INFO.direccion}
-                </div>
-              </a>
+              {/* Google Maps embed */}
+              <div className="rounded-2xl overflow-hidden border border-[#e3e9f1]" style={{ height: "220px" }}>
+                <iframe
+                  src="https://maps.google.com/maps?q=Los+Carrera+199+La+Serena+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="220"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación ASEMUCH Coquimbo"
+                />
+              </div>
 
               {/* CTA afiliación */}
               <div className="p-6 rounded-2xl" style={{ backgroundColor: "#e7edf5", border: "0.8px solid #e3e9f1" }}>
