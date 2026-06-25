@@ -16,10 +16,10 @@ export const NAV_ITEMS: NavItem[] = [
 export const HERO_SLIDES: HeroSlide[] = [
   {
     type: "fondo",
-    heading: "Representando a los funcionarios municipales de la Región de Coquimbo",
-    subheading: "ASEMUCH Coquimbo — Sede Regional",
+    heading: "Representando a los funcionarios municipales de la Municipalidad de Coquimbo",
+    subheading: "ASEMUCH Coquimbo",
     description:
-      "Defendemos los derechos laborales de más de 1.200 funcionarios municipales en las 15 comunas de la región, con más de 80 años de historia gremial.",
+      "Defendemos los derechos laborales de los funcionarios municipales de Coquimbo, con más de 100 años de historia gremial afiliada a la Confederación Nacional ASEMUCH.",
     href: "/quienes-somos",
     cta: "Conócenos",
   },
@@ -47,7 +47,7 @@ export const HERO_SLIDES: HeroSlide[] = [
 export const STATS = [
   { value: "+1.200", label: "Funcionarios afiliados" },
   { value: "15", label: "Comunas representadas" },
-  { value: "80", label: "Años de historia" },
+  { value: "+100", label: "Años de historia" },
   { value: "IV", label: "Región de Coquimbo" },
 ];
 
@@ -138,55 +138,28 @@ export const NEWS_CARDS: NewsCard[] = [
 ];
 
 // ─── Directiva ────────────────────────────────────────────────────────────────
+// Fuente: Certificado N°404/2025/436 Dirección del Trabajo — período 31/03/2025–31/03/2027
 export const DIRECTIVA = [
   {
-    nombre: "Carlos Andrés Muñoz Vera",
-    cargo: "Presidente Regional",
-    municipio: "Municipalidad de La Serena",
-    iniciales: "CM",
-    color: "#0c71c3",
-  },
-  {
-    nombre: "María Elena Soto Gutiérrez",
-    cargo: "Vicepresidenta",
+    nombre: "Cristian Tapia Zepeda",
+    cargo: "Presidente",
     municipio: "Municipalidad de Coquimbo",
-    iniciales: "MS",
-    color: "#10498a",
-  },
-  {
-    nombre: "Ana Patricia López Ríos",
-    cargo: "Secretaria General",
-    municipio: "Municipalidad de Ovalle",
-    iniciales: "AL",
+    iniciales: "CT",
     color: "#0c71c3",
   },
   {
-    nombre: "Ricardo Eduardo Fuentes Díaz",
-    cargo: "Tesorero",
-    municipio: "Municipalidad de La Serena",
-    iniciales: "RF",
+    nombre: "Rosa Elena Renney Rodríguez",
+    cargo: "Tesorera",
+    municipio: "Municipalidad de Coquimbo",
+    iniciales: "RR",
     color: "#10498a",
   },
   {
-    nombre: "Pedro José Villalobos Castro",
-    cargo: "Director",
-    municipio: "Municipalidad de Illapel",
-    iniciales: "PV",
+    nombre: "José Montalván López",
+    cargo: "Secretario",
+    municipio: "Municipalidad de Coquimbo",
+    iniciales: "JM",
     color: "#0c2340",
-  },
-  {
-    nombre: "Carmen Rosa González Palma",
-    cargo: "Directora",
-    municipio: "Municipalidad de La Serena",
-    iniciales: "CG",
-    color: "#0c71c3",
-  },
-  {
-    nombre: "Jorge Luis Alfaro Medina",
-    cargo: "Director",
-    municipio: "Municipalidad de Coquimbo",
-    iniciales: "JA",
-    color: "#10498a",
   },
 ];
 
@@ -290,13 +263,13 @@ export const DOCUMENTOS = [
 
 // ─── Contacto ─────────────────────────────────────────────────────────────────
 export const CONTACT_INFO = {
-  nombre: "ASEMUCH — Sede Región de Coquimbo",
-  direccion: "Los Carrera 199, Piso 2, La Serena",
+  nombre: "ASEMUCH — Asociación Comunal de Funcionarios Municipales de Coquimbo",
+  direccion: "Varela 1090, Coquimbo",
   region: "IV Región de Coquimbo, Chile",
-  telefono: "+56 51 2 213 456",
-  email: "coquimbo@asemuch.cl",
+  telefono: "+56 9 9189 9920",
+  email: "coquimbo.asemuch@gmail.com",
   horario: "Lunes a Viernes, 09:00 – 17:30 hrs.",
   facebook: "https://www.facebook.com/asemuch.cl",
   instagram: "https://www.instagram.com/asemuchchileoficial/",
-  mapsUrl: "https://maps.google.com/?q=Los+Carrera+199,+La+Serena,+Chile",
+  mapsUrl: "https://maps.google.com/?q=Varela+1090,+Coquimbo,+Chile",
 };

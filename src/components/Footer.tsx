@@ -13,20 +13,21 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://asemuch.cl/wp-content/uploads/2024/12/Logo_ASEMUCH_PIE.png"
-              alt="ASEMUCH"
-              width={80}
-              height={68}
-              className="h-14 w-auto"
+              src="/images/logo.png"
+              alt="ASEMUCH Coquimbo"
+              width={64}
+              height={64}
+              className="h-16 w-16 object-contain rounded-full"
             />
             <div>
               <p className="text-white font-bold text-sm" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
-                Sede Región de Coquimbo
+                Asociación Comunal de Funcionarios Municipales
               </p>
+              <p className="text-xs text-[#0c71c3] font-semibold mt-0.5">Municipalidad de Coquimbo</p>
               <p className="text-sm leading-relaxed text-[#cdd8e6]/80 mt-2 max-w-xs">
                 Representamos y defendemos los derechos laborales de los
-                funcionarios municipales de las 15 comunas de la IV Región de
-                Coquimbo, con más de 80 años de historia gremial.
+                funcionarios municipales de la IV Región de Coquimbo, con más
+                de 100 años de historia gremial.
               </p>
             </div>
           </div>
@@ -112,7 +113,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10 py-4">
         <div className="container-site flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#cdd8e6]/50">
-          <span>© 2026 ASEMUCH · Sede Región de Coquimbo</span>
+          <span>© 2026 ASEMUCH · Asociación Comunal de Funcionarios Municipales de Coquimbo</span>
           <span>{CONTACT_INFO.direccion} · {CONTACT_INFO.email}</span>
         </div>
       </div>

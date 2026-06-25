@@ -16,14 +16,16 @@ export default function Header() {
         <div className="container-site flex items-center justify-between py-1.5">
           <p className="text-xs text-white/60">
             <span className="text-[#2ea3f2] font-semibold">ASEMUCH</span>
-            {" "}· Sede Región de Coquimbo
+            {" "}· Municipalidad de Coquimbo
           </p>
           <div className="hidden sm:flex items-center gap-4 text-xs text-white/60">
+            <a href={`tel:${CONTACT_INFO.telefono.replace(/\s/g, "")}`} className="hover:text-white transition-colors">
+              {CONTACT_INFO.telefono}
+            </a>
+            <span className="opacity-30">|</span>
             <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-white transition-colors">
               {CONTACT_INFO.email}
             </a>
-            <span className="opacity-30">|</span>
-            <span>{CONTACT_INFO.horario}</span>
           </div>
         </div>
       </div>
@@ -34,18 +36,18 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://asemuch.cl/wp-content/uploads/2026/05/80-ASEMUCH.png"
-              alt="ASEMUCH"
-              width={160}
-              height={58}
-              className="h-12 w-auto"
+              src="/images/logo.png"
+              alt="ASEMUCH Coquimbo"
+              width={48}
+              height={48}
+              className="h-12 w-12 object-contain rounded-full"
             />
             <div className="hidden sm:block border-l border-[#e3e9f1] pl-3">
               <p className="text-xs font-bold text-[#0c2340] leading-tight">
-                Sede Regional
+                Asociación Comunal de
               </p>
               <p className="text-xs text-[#0c71c3] font-semibold leading-tight">
-                Región de Coquimbo
+                Funcionarios Municipales
               </p>
             </div>
           </Link>

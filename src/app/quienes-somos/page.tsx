@@ -32,20 +32,21 @@ export default function QuienesSomosPage() {
               className="mt-2 text-3xl font-extrabold text-[#0c2340]"
               style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
             >
-              Más de 80 años representando a los funcionarios municipales
+              Más de 100 años representando a los funcionarios municipales
             </h2>
             <div className="mt-6 prose prose-sm max-w-none text-[#5d6675] space-y-4">
               <p>
-                ASEMUCH — Asociación de Empleados Municipales — fue fundada en 1946 como organización nacional para
-                defender los derechos de los trabajadores de las municipalidades de Chile. Desde sus inicios, la
-                organización ha luchado por mejores condiciones laborales, estabilidad funcionaria y el reconocimiento
+                ASEMUCH — Confederación Nacional de Funcionarios Municipales de Chile — es una de las organizaciones
+                gremiales más antiguas del país, con personalidad jurídica vigente desde 1911, reconocida por la
+                Dirección del Trabajo. Su misión ha sido siempre defender los derechos de los trabajadores de las
+                municipalidades de Chile: mejores condiciones laborales, estabilidad funcionaria y reconocimiento
                 del trabajo municipal como servicio esencial para la comunidad.
               </p>
               <p>
-                La <strong>Sede Regional de Coquimbo</strong> representa a los funcionarios municipales de las
-                15 comunas de la IV Región, desde Illapel y Los Vilos en el sur, hasta La Higuera en el norte.
-                Nuestra sede trabaja de manera coordinada con la Confederación Nacional, adaptando las políticas
-                gremiales a las realidades específicas de los municipios de la región.
+                La <strong>Asociación Comunal de Funcionarios Municipales de la Municipalidad de Coquimbo</strong>
+                {" "}es la rama local de ASEMUCH, afiliada formalmente a la Confederación Nacional desde el 11 de
+                noviembre de 1911. Trabaja de manera coordinada con la organización nacional para adaptar las
+                políticas gremiales a las realidades específicas de los funcionarios municipales de Coquimbo.
               </p>
               <p>
                 A lo largo de los años, hemos logrado avances concretos: mejoras salariales, estabilidad en la

@@ -240,7 +240,7 @@ export default function ContactoPage() {
               {/* Google Maps embed */}
               <div className="rounded-2xl overflow-hidden border border-[#e3e9f1]" style={{ height: "220px" }}>
                 <iframe
-                  src="https://maps.google.com/maps?q=Los+Carrera+199+La+Serena+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=Varela+1090+Coquimbo+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="220"
                   style={{ border: 0 }}
