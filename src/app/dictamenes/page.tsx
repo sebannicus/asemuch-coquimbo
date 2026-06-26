@@ -20,14 +20,22 @@ export default function DictamenesPage() {
 
       <section className="py-16 bg-white">
         <div className="container-site">
-          {/* Aviso demo */}
+          {/* Aviso Contraloría */}
           <div className="mb-8 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
             <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
               <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
             <p className="text-sm text-[#5d6675]">
-              <strong className="text-[#0c2340]">Contenido de demostración.</strong>{" "}
-              En la versión definitiva, este módulo permitirá buscar y filtrar dictámenes en tiempo real desde una base de datos administrable.
+              Los dictámenes están disponibles en el portal oficial de la{" "}
+              <a
+                href="https://www.contraloria.cl/dictamenes/busqueda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-[#0c71c3] hover:underline"
+              >
+                Contraloría General de la República
+              </a>
+              . Haz clic en <strong className="text-[#0c2340]">Ver</strong> para acceder al buscador oficial.
             </p>
           </div>
 
@@ -91,14 +99,16 @@ export default function DictamenesPage() {
                     <td className="px-5 py-4 text-right">
                       <a
                         href={d.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-semibold text-[#0c71c3] hover:text-[#2ea3f2] transition-colors"
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                          <polyline points="15 3 21 3 21 9" />
+                          <line x1="10" y1="14" x2="21" y2="3" />
                         </svg>
-                        Ver
+                        CGR
                       </a>
                     </td>
                   </tr>

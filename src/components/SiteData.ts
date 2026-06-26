@@ -164,15 +164,17 @@ export const DIRECTIVA = [
 ];
 
 // ─── Dictámenes ───────────────────────────────────────────────────────────────
+// Los números son referenciales; cada href apunta a búsqueda en Contraloría CGR
+const CGR = "https://www.contraloria.cl/dictamenes/busqueda";
 export const DICTAMENES = [
   {
     id: 1,
     numero: "E123.456/2026",
     año: "2026",
     materia: "Asignación Municipal — Procedimiento de cálculo ante ausencia temporal del funcionario",
-    organismo: "Municipio de La Serena",
+    organismo: "Municipio de Coquimbo",
     categoria: "Remuneraciones",
-    href: "#",
+    href: CGR,
   },
   {
     id: 2,
@@ -181,7 +183,7 @@ export const DICTAMENES = [
     materia: "Horas extraordinarias del personal municipal a contrata — Límites y condiciones de pago",
     organismo: "Consulta general",
     categoria: "Remuneraciones",
-    href: "#",
+    href: CGR,
   },
   {
     id: 3,
@@ -190,7 +192,7 @@ export const DICTAMENES = [
     materia: "Proceso de calificaciones: plazos, notificaciones y recursos del funcionario municipal",
     organismo: "Consulta general",
     categoria: "Calificaciones",
-    href: "#",
+    href: CGR,
   },
   {
     id: 4,
@@ -199,7 +201,7 @@ export const DICTAMENES = [
     materia: "Inamovilidad funcionaria y causales de cese en cargo municipal — Estatuto art. 89",
     organismo: "Consulta general",
     categoria: "Carrera Funcionaria",
-    href: "#",
+    href: CGR,
   },
   {
     id: 5,
@@ -208,7 +210,7 @@ export const DICTAMENES = [
     materia: "Feriado legal en municipalidades — Cómputo de días hábiles y derecho a descanso",
     organismo: "Consulta general",
     categoria: "Derechos",
-    href: "#",
+    href: CGR,
   },
 ];
 

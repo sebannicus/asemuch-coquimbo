@@ -142,11 +142,17 @@ export default function AfiliarPage() {
               <div className="p-5 rounded-2xl" style={{ backgroundColor: "#e7edf5" }}>
                 <p className="text-sm font-bold text-[#0c2340] mb-1">¿Tienes dudas antes de afiliarte?</p>
                 <p className="text-sm text-[#5d6675] mb-3">
-                  Escríbenos directamente y te orientamos sin compromiso.
+                  Contáctanos directamente y te orientamos sin compromiso.
                 </p>
                 <a
+                  href={`tel:${CONTACT_INFO.telefono.replace(/\s/g, "")}`}
+                  className="block text-sm font-semibold text-[#0c71c3] hover:underline mb-1"
+                >
+                  {CONTACT_INFO.telefono}
+                </a>
+                <a
                   href={`mailto:${CONTACT_INFO.email}?subject=Consulta%20afiliaci%C3%B3n%20ASEMUCH%20Coquimbo`}
-                  className="text-sm font-semibold text-[#0c71c3] hover:underline"
+                  className="block text-sm text-[#5d6675] hover:text-[#0c71c3] hover:underline transition-colors"
                 >
                   {CONTACT_INFO.email}
                 </a>
