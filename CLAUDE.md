@@ -5,10 +5,10 @@
 ## Contexto
 Sitio web institucional para ASEMUCH Coquimbo (Asociación Comunal de Funcionarios Municipales de la Ilustre Municipalidad de Coquimbo), afiliada a la Confederación Nacional ASEMUCH desde 1911.
 
-Proyecto de Gautama Digital (Sebastián Morales). Estado: **demo funcional enviado al cliente — pendiente aprobación y contrato**.
+Proyecto de Gautama Digital (Sebastián Morales). Estado: **en producción, cliente activo, ajustes en curso.**
 
 ## URLs
-- **Producción/Demo:** https://asemuch-coquimbo.vercel.app
+- **Producción:** https://asemuch-coquimbo.vercel.app
 - **Repo:** https://github.com/sebannicus/asemuch-coquimbo
 - **Local:** D:\dev\clientes\asemuch-coquimbo
 - **Scope Vercel:** gautamadigital33-9252s-projects
@@ -18,17 +18,17 @@ Proyecto de Gautama Digital (Sebastián Morales). Estado: **demo funcional envia
 - Next.js 16.2.1 + TypeScript strict + App Router
 - Tailwind v4 (oklch design tokens en globals.css)
 - Fuentes: Open Sans + Source Sans 3 (next/font/google)
-- 17 rutas estáticas (SSG) — sin DB, sin auth
-- Formularios: Formspree (`NEXT_PUBLIC_FORMSPREE_ID` — pendiente ID real)
+- 20 rutas estáticas (SSG) — sin DB, sin auth
+- Formularios: Formspree (`NEXT_PUBLIC_FORMSPREE_ID` — **PENDIENTE ID REAL**)
 - shadcn/ui (Radix primitives)
 
-## Datos reales del cliente (integrados 2026-06-25)
+## Datos reales del cliente
 - **Razón social:** Asociación Comunal de Funcionarios Municipales de la Ilustre Municipalidad de Coquimbo
 - **Teléfono:** +56 9 9189 9920
 - **Email:** coquimbo.asemuch@gmail.com
 - **Dirección:** Varela 1090, Coquimbo
 - **Horario:** Lunes a Viernes, 09:00 – 17:30 hrs.
-- **Logo:** `/public/images/logo.png` (aplicado en Header y Footer)
+- **Logo:** `/public/images/logo.png` (Cruz del Tercer Milenio circular badge, aplicado en Header y Footer)
 
 ## Directiva real (Certificado N°404/2025/436 Dirección del Trabajo)
 Período: 31/03/2025 – 31/03/2027
@@ -41,53 +41,108 @@ Período: 31/03/2025 – 31/03/2027
 
 ## Propuesta comercial
 - **Cotización:** `D:\dev\agencia\Cotizacion_Gautama_Digital_Asociacion.pdf`
-- **Script fuente:** `C:\Users\crman\AppData\Local\Temp\...\scratchpad\cotizacion_v3.py`
 - **Valor:** $180.000 neto + IVA 19% = **$214.200 CLP total**
 - **Plazo:** 30 días corridos desde aprobación y entrega de contenidos
 - **Hosting:** 1er año incluido; renovación $18.000 CLP neto/año desde el 2do año
-- **Correo de envío enviado a:** coquimbo.asemuch@gmail.com (Cristian Tapia)
+- **Estado (2026-07-02):** cliente activo, entregando ajustes por correo
 
 ## Fuente de verdad del código
 - `src/components/SiteData.ts` — todos los datos del sitio (nav, hero, stats, noticias, directiva, dictámenes, documentos, contacto)
-- `src/types/index.ts` — interfaces TypeScript (NavItem con `highlight?: boolean`)
-- `src/app/layout.tsx` — metadata global + fonts + Header/Footer
+- `src/app/layout.tsx` — metadata global + JSON-LD Organization schema + fonts + Header/Footer
+- `src/types/index.ts` — interfaces TypeScript
 
-## Páginas disponibles (17 rutas SSG)
-| Ruta | Descripción |
+## Navegación actual (SiteData.ts NAV_ITEMS)
+Inicio | Quiénes Somos | Directiva | Noticias | Convenios | Comunicados | Documentos | Contacto | Afiliarse
+
+## Páginas disponibles (20 rutas SSG)
+| Ruta | Estado |
 |---|---|
-| `/` | Home: Hero + StatsBar + QuickAccess + BeneficiosSection + NewsSection |
-| `/quienes-somos` | Historia (desde 1911), Misión/Visión, Valores, CTA afiliación |
-| `/directiva` | 3 miembros reales con iniciales |
-| `/noticias` | 6 noticias demo con imágenes picsum estables |
-| `/noticias/[slug]` | Detalle de noticia (6 rutas SSG) |
-| `/dictamenes` | Tabla con filtros por categoría (5 dictámenes demo) |
-| `/documentos` | Lista con badges tipo (5 documentos demo) |
-| `/contacto` | Form Formspree + info contacto + Google Maps (Varela 1090) |
-| `/afiliarse` | Pasos + requisitos + form Formspree |
-| `/_not-found` | 404 institucional |
+| `/` | ✅ Home con Hero (Cruz fondo grande + badge 80 años) |
+| `/quienes-somos` | ✅ Historia 1911, Misión/Visión, Valores, CTA |
+| `/directiva` | ✅ 3 miembros reales |
+| `/noticias` | ✅ 6 noticias genéricas (reemplazar con reales) |
+| `/noticias/[slug]` | ✅ 6 páginas de detalle |
+| `/convenios` | ✅ WP API cat=19 (revalidate 1d) + tarjeta Skype (% pendiente) |
+| `/comunicados` | ✅ WP API cat=12, últimos 20 (revalidate 1d) |
+| `/documentos` | ✅ Hub: Leyes y Guías (WP cat=9) + Dictámenes (WP cat=10 + CGR) |
+| `/biblioteca` | ✅ URL preservada — hub con links a sub-secciones asemuch.cl |
+| `/dictamenes` | ✅ Tabla CGR (números referenciales, reemplazar con reales) |
+| `/contacto` | ✅ Form Formspree + mapa Varela 1090 |
+| `/afiliarse` | ✅ Pasos + requisitos + form |
+| `/_not-found` | ✅ 404 institucional |
 
-## Contenido demo (pendiente reemplazo con datos reales)
-- Noticias: 6 artículos ficticios pero temáticamente correctos
-- Dictámenes: 5 registros demo (números ficticios, materias reales del Estatuto Municipal)
-- Documentos: 5 documentos demo (sin PDF real — href="#")
-- Redes sociales: apuntan a cuentas nacionales ASEMUCH (no hay sede regional propia)
+## WP REST API — IDs de categorías asemuch.cl
+| Categoría | ID | Count | Parent |
+|---|---|---|---|
+| Convenios | 19 | 15 | 0 |
+| Comunicados | 12 | 363 | 0 |
+| Biblioteca | 8 | 49 | 0 |
+| Leyes | 9 | 51 | 8 |
+| Dictamenes | 10 | 5 | 8 |
+| Noticias | 18 | 23 | 0 |
+| Estudios | 22 | 4 | 8 |
+- API base: `https://asemuch.cl/wp-json/wp/v2/posts?categories=X&per_page=N&_fields=id,date,title,excerpt,link`
+- API pública, sin autenticación. revalidate: 86400 en todas las páginas que la usan.
 
-## Pendientes para entrega final
-1. **Formspree ID real** → crear en formspree.io → `NEXT_PUBLIC_FORMSPREE_ID` en Vercel env vars
-2. **Noticias reales** del cliente → reemplazar en `SiteData.ts → NEWS_CARDS`
-3. **Documentos con PDF** → subir PDFs a hosting y actualizar href en `DOCUMENTOS`
-4. **Redes sociales propias** de la sede (si existen)
-5. **Dominio propio** (asemuchcoquimbo.cl o similar) → configurar en Vercel
-6. **WA_NUMBER en /afiliarse** actualmente apunta al placeholder de Formspree — revisar si quieren agregar WhatsApp
+## Hero (Hero.tsx)
+- Fondo: gradiente navy + dot pattern
+- Cruz del Tercer Milenio: `/images/logo.png` a 480px, opacity 0.18, posición absoluta derecha
+- Badge "80 AÑOS · ASEMUCH CHILE": absoluto bottom-right, temporal — reemplazar con años de ASEMUCH Coquimbo cuando el cliente confirme fecha de fundación
+- 3 slides con auto-rotate 5s
+- ⚠️ Slide 3 dice "2024–2026" → corregir a "2025–2027" (período real directiva)
+
+## SEO implementado
+- ✅ JSON-LD Organization schema (Google Knowledge Panel)
+- ✅ Metadata: title, description, keywords, og:image (logo local)
+- ✅ Twitter card
+- ✅ robots: index/follow
+- ✅ Sitemap automático (Next.js)
+- ✅ Favicon SVG + PNG
+
+## ⚠️ PENDIENTES PARA ENTREGA FINAL
+
+### 1. Formspree — BLOQUEANTE (formularios no envían)
+- Crear form en formspree.io con email destino `coquimbo.asemuch@gmail.com`
+- Obtener el ID (formato `xabcdefg`)
+- Configurar: `vercel env add NEXT_PUBLIC_FORMSPREE_ID production`
+- Aplica a: `/contacto` y `/afiliarse` (ambos usan el mismo ID en `FORMSPREE_ID`)
+
+### 2. Dominio propio
+- Registrar `asemuchcoquimbo.cl` en nic.cl (~$8.000 CLP/año, requiere RUT organización)
+- Agregar en Vercel → Project → Settings → Domains
+- Actualizar `NEXT_PUBLIC_SITE_URL` en Vercel env vars
+
+## Pendientes de información del cliente
+| Elemento | Dónde va | Qué esperar |
+|---|---|---|
+| % exacto descuento Skype | `/convenios` tarjeta Skype | Entre 15–20%, cliente lo confirmará |
+| Fecha fundación ASEMUCH Coquimbo | Badge Hero + Hero slide | Para reemplazar "80 AÑOS ASEMUCH CHILE" |
+| Noticias reales | `/noticias` y SiteData.ts | 6 artículos ficticios actuales |
+| PDFs reales | `/documentos` sección DOCUMENTOS (href="#") | Circulares, actas, resoluciones reales |
+| Números reales dictámenes CGR | SiteData.ts DICTAMENES | Números E123.456 son ficticios |
+| Redes sociales propias | SiteData.ts CONTACT_INFO | Instagram/Facebook de ASEMUCH Coquimbo si existe |
+| Período directiva en Hero | SiteData.ts HERO_SLIDES[2] | Corregir "2024–2026" → "2025–2027" |
+
+## Contenido genérico activo (reemplazar cuando el cliente provea)
+- Noticias: 6 artículos temáticamente correctos pero ficticios
+- Dictámenes CGR: números referenciales (E123.456/2026) todos van al buscador CGR
+- Documentos institucionales: 5 registros demo sin PDF (href="#")
+- Redes sociales: apuntan a cuentas nacionales ASEMUCH
+- Stats: "+1.200 funcionarios, 15 comunas" — confirmar si son los números reales de Coquimbo
 
 ## Historial de fases completadas
-- **Fase A (2026-06-24):** Clone de asemuch.cl → MVP 8 páginas, identidad propia
-- **Fase B (2026-06-24):** Formspree, metadata SEO, favicon SVG, og-image, deploy inicial
-- **Fase C (2026-06-24):** /afiliarse, BeneficiosSection, Header CTA destacado, Maps embed, CTA dark QuiénesSomos, 404
-- **Fase D (2026-06-25):** Datos reales (teléfono, email, dirección, directiva), logo, historia corregida (1911), deploy a prod
+- **Fase A (2026-06-24):** Clone asemuch.cl → MVP 8 páginas, identidad propia
+- **Fase B (2026-06-24):** Formspree, metadata SEO, favicon, og-image, deploy inicial
+- **Fase C (2026-06-24):** /afiliarse, BeneficiosSection, Header CTA, Maps, 404
+- **Fase D (2026-06-25):** Datos reales (teléfono, email, dirección, directiva), logo, historia 1911, deploy
+- **Fase E (2026-06-29):** JSON-LD schema, keywords SEO, dictámenes → CGR real, metadata og:image → logo, teléfono en /afiliarse, deploy
+- **Fase F (2026-06-30):** Integración WP REST API — /convenios (cat=19), /comunicados (cat=12), /biblioteca (hub), nav actualizado
+- **Fase G (2026-07-01):** Ajustes cliente — /documentos hub unificado (Leyes y Guías + Dictámenes), tarjeta Skype en convenios, Hero con Cruz fondo + badge 80 años, deploy ✅
+- **Fase H (2026-07-02):** QA funcional + lista de pedido contenido real — periodo directiva corregido (2024–2026 → 2025–2027), deploy fix ✅, lista formal de pedido al cliente generada para las 7 categorías pendientes (noticias, PDFs, dictámenes CGR, redes sociales, % Skype, año fundación, stats)
 
 ## Reglas de desarrollo
-- Rama activa: `main` (este proyecto no usa rama dev separada)
+- Rama activa: `main`
 - Deploy: `vercel --prod` desde `D:\dev\clientes\asemuch-coquimbo`
-- No usar imágenes de asemuch.cl (externas) — usar solo `/public/images/`
+- No usar imágenes externas de asemuch.cl — solo `/public/images/`
 - Todos los datos del sitio van en `SiteData.ts`, no hardcodeados en componentes
+- Dev lento: agregar `D:\dev\` a exclusiones de Windows Defender para acelerar `.next/`

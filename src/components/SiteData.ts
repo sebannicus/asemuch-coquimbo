@@ -6,7 +6,8 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Quiénes Somos", href: "/quienes-somos" },
   { label: "Directiva", href: "/directiva" },
   { label: "Noticias", href: "/noticias" },
-  { label: "Dictámenes", href: "/dictamenes" },
+  { label: "Convenios", href: "/convenios" },
+  { label: "Comunicados", href: "/comunicados" },
   { label: "Documentos", href: "/documentos" },
   { label: "Contacto", href: "/contacto" },
   { label: "Afiliarse", href: "/afiliarse", highlight: true },
@@ -29,17 +30,8 @@ export const HERO_SLIDES: HeroSlide[] = [
     subheading: "Centro de documentación regional",
     description:
       "Resoluciones de Contraloría, circulares, actas y guías prácticas sobre el Estatuto Municipal — organizados y buscables para ti.",
-    href: "/dictamenes",
-    cta: "Ir a Dictámenes",
-  },
-  {
-    type: "caja",
-    heading: "Tu directiva regional trabaja por ti",
-    subheading: "Directiva ASEMUCH Coquimbo 2024–2026",
-    description:
-      "Un equipo comprometido con la representación y defensa de todos los funcionarios municipales de la Región de Coquimbo.",
-    href: "/directiva",
-    cta: "Conoce a la directiva",
+    href: "/documentos",
+    cta: "Ir a Documentos",
   },
 ];
 

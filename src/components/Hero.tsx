@@ -36,9 +36,9 @@ export default function Hero() {
         }}
       />
 
-      {/* Slides */}
-      <div className="relative z-10 container-site flex flex-col lg:flex-row items-center min-h-[520px] py-16 gap-8">
-        {/* Text content */}
+      {/* Slides — Dos columnas: texto izquierda, logo derecha */}
+      <div className="relative z-10 container-site flex flex-col lg:flex-row items-center justify-between min-h-[520px] py-16 gap-8">
+        {/* Text content — Columna izquierda */}
         <div className="flex-1 text-white max-w-2xl">
           <p
             className="text-[#2ea3f2] text-sm font-semibold uppercase tracking-widest mb-3 transition-all duration-500"
@@ -69,36 +69,43 @@ export default function Hero() {
           )}
         </div>
 
-        {/* Caja variant: card visual */}
-        {slide.type === "caja" && (
-          <div className="hidden lg:block flex-shrink-0 w-80">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-white">
-              <div className="w-12 h-12 bg-[#0c71c3] rounded-xl flex items-center justify-center mb-4">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-lg mb-2" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
-                Seminario Nacional
-              </h3>
-              <p className="text-white/70 text-sm">
-                Modernización, Probidad y Defensa Funcionaria
-              </p>
-              <div className="mt-4 pt-4 border-t border-white/20 flex items-center gap-2 text-[#2ea3f2] text-sm font-medium">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Frutillar, Chile
-              </div>
-            </div>
+        {/* Logo — Columna derecha — PROTAGONISTA */}
+        <div className="flex-1 flex items-center justify-center relative">
+          {/* Logo principal */}
+          <div className="relative w-64 h-64 lg:w-96 lg:h-96 flex items-center justify-center drop-shadow-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo.png"
+              alt="ASEMUCH Coquimbo"
+              className="w-full h-full object-contain"
+              style={{ opacity: 0.95 }}
+            />
           </div>
-        )}
+
+          {/* Badge 80 años — sobre el logo */}
+          <div
+            className="absolute bottom-8 right-0 lg:bottom-12 lg:right-4 z-20 flex flex-col items-center gap-0.5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl"
+            style={{
+              background: "rgba(12,35,64,0.75)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.2)",
+            }}
+            aria-hidden="true"
+          >
+            <span
+              className="text-2xl lg:text-4xl font-extrabold text-white leading-none"
+              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+            >
+              80
+            </span>
+            <span className="text-[9px] lg:text-[10px] font-bold text-[#2ea3f2] uppercase tracking-widest leading-none">
+              AÑOS
+            </span>
+            <span className="text-[8px] lg:text-[9px] text-white/60 uppercase tracking-wider leading-snug text-center mt-0.5">
+              ASEMUCH<br />CHILE
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Slide dots */}

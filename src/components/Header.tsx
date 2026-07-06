@@ -43,11 +43,14 @@ export default function Header() {
               className="h-12 w-12 object-contain rounded-full"
             />
             <div className="hidden sm:block border-l border-[#e3e9f1] pl-3">
-              <p className="text-xs font-bold text-[#0c2340] leading-tight">
-                Asociación Comunal de
+              <p
+                className="text-xs font-bold text-[#0c2340] leading-tight"
+                style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+              >
+                ASEMUCH
               </p>
               <p className="text-xs text-[#0c71c3] font-semibold leading-tight">
-                Funcionarios Municipales
+                Coquimbo
               </p>
             </div>
           </Link>
