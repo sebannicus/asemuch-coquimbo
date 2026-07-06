@@ -139,6 +139,7 @@ Inicio | Quiénes Somos | Directiva | Noticias | Convenios | Comunicados | Docum
 - **Fase F (2026-06-30):** Integración WP REST API — /convenios (cat=19), /comunicados (cat=12), /biblioteca (hub), nav actualizado
 - **Fase G (2026-07-01):** Ajustes cliente — /documentos hub unificado (Leyes y Guías + Dictámenes), tarjeta Skype en convenios, Hero con Cruz fondo + badge 80 años, deploy ✅
 - **Fase H (2026-07-02):** QA funcional + lista de pedido contenido real — periodo directiva corregido (2024–2026 → 2025–2027), deploy fix ✅, lista formal de pedido al cliente generada para las 7 categorías pendientes (noticias, PDFs, dictámenes CGR, redes sociales, % Skype, año fundación, stats)
+- **Fase I (2026-07-02):** Rediseño Hero — logo como protagonista visual principal, visible en desktop y mobile sin recortes, eliminada tarjeta "Seminario Nacional", header simplificado a "ASEMUCH / Coquimbo", commit f0f6553 pusheado a GitHub ✅
 
 ## Reglas de desarrollo
 - Rama activa: `main`
