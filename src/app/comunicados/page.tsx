@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-
-export const metadata: Metadata = {
-  title: "Comunicados",
-  description: "Comunicados oficiales de la Confederación Nacional ASEMUCH sobre temas laborales, legislativos y gremiales relevantes para los funcionarios municipales.",
-};
-
-export const revalidate = 86400;
 
 interface WPPost {
   id: number;
@@ -49,8 +44,29 @@ function formatDate(iso: string) {
   });
 }
 
-export default async function ComunicadosPage() {
-  const comunicados = await getComunicados();
+export default function ComunicadosPage() {
+  const [comunicados, setComunicados] = useState<WPPost[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      const data = await getComunicados();
+      setComunicados(data);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  const filteredComunicados = useMemo(() => {
+    if (!searchQuery) return comunicados;
+    const q = searchQuery.toLowerCase();
+    return comunicados.filter((c) =>
+      stripHtml(c.title.rendered).toLowerCase().includes(q) ||
+      stripHtml(c.excerpt.rendered).toLowerCase().includes(q)
+    );
+  }, [comunicados, searchQuery]);
 
   return (
     <main>
@@ -59,6 +75,38 @@ export default async function ComunicadosPage() {
         subtitle="Pronunciamientos y comunicados oficiales de la Confederación Nacional ASEMUCH sobre temas laborales, legislativos y gremiales."
         breadcrumbs={[{ label: "Comunicados" }]}
       />
+
+      {/* Buscador sticky */}
+      <div className="sticky top-16 z-30 bg-white border-b border-[#e3e9f1] shadow-sm">
+        <div className="container-site py-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="flex-1 relative w-full">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0c71c3"
+                strokeWidth={2}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Busca comunicado por tema..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#e3e9f1] text-sm text-[#0c2340] placeholder:text-[#5d6675]/50 focus:outline-none focus:border-[#0c71c3] focus:ring-1 focus:ring-[#0c71c3] transition"
+              />
+            </div>
+            {searchQuery && (
+              <p className="text-xs text-[#5d6675] whitespace-nowrap">
+                <strong className="text-[#0c71c3]">{filteredComunicados.length}</strong> resultado{filteredComunicados.length !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
 
       <section className="py-16" style={{ backgroundColor: "#f5f9fc" }}>
         <div className="container-site">
@@ -75,7 +123,7 @@ export default async function ComunicadosPage() {
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
             <p className="text-sm text-[#5d6675]">
-              Mostrando los últimos 20 comunicados del portal nacional{" "}
+              Mostrando los últimos comunicados del portal nacional{" "}
               <a
                 href="https://asemuch.cl/comunicados/"
                 target="_blank"
@@ -88,21 +136,39 @@ export default async function ComunicadosPage() {
             </p>
           </div>
 
-          {comunicados.length === 0 ? (
+          {loading ? (
             <div className="text-center py-16 text-[#5d6675]">
-              <p className="mb-2">No se pudieron cargar los comunicados en este momento.</p>
-              <a
-                href="https://asemuch.cl/comunicados/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#0c71c3] hover:underline font-semibold"
-              >
-                Ver comunicados en asemuch.cl →
-              </a>
+              <p>Cargando comunicados...</p>
+            </div>
+          ) : filteredComunicados.length === 0 ? (
+            <div className="text-center py-16 text-[#5d6675]">
+              {searchQuery ? (
+                <>
+                  <p className="mb-2">No se encontraron comunicados que coincidan con "{searchQuery}".</p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-[#0c71c3] hover:underline font-semibold"
+                  >
+                    Limpiar búsqueda
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="mb-2">No se pudieron cargar los comunicados en este momento.</p>
+                  <a
+                    href="https://asemuch.cl/comunicados/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#0c71c3] hover:underline font-semibold"
+                  >
+                    Ver comunicados en asemuch.cl →
+                  </a>
+                </>
+              )}
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {comunicados.map((c) => (
+              {filteredComunicados.map((c) => (
                 <a
                   key={c.id}
                   href={c.link}

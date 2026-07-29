@@ -1,13 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
 import { DICTAMENES } from "@/components/SiteData";
-
-export const metadata: Metadata = {
-  title: "Documentos",
-  description: "Leyes, guías y dictámenes de Contraloría relevantes para los funcionarios municipales de la Región de Coquimbo.",
-};
-
-export const revalidate = 86400;
 
 interface WPPost {
   id: number;
@@ -65,11 +60,56 @@ const RECURSOS_EXTRAS = [
   },
 ];
 
-export default async function DocumentosPage() {
-  const [leyes, dictamenesNacionales] = await Promise.all([
-    fetchPosts(9, 20),
-    fetchPosts(10, 10),
-  ]);
+export default function DocumentosPage() {
+  const [leyes, setLeyes] = useState<WPPost[]>([]);
+  const [dictamenesNacionales, setDictamenesNacionales] = useState<WPPost[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      const [leyesData, dictamenData] = await Promise.all([
+        fetchPosts(9, 20),
+        fetchPosts(10, 10),
+      ]);
+      setLeyes(leyesData);
+      setDictamenesNacionales(dictamenData);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  // Filtrar leyes y dictámenes nacionales según búsqueda
+  const filteredLeyes = useMemo(() => {
+    if (!searchQuery) return leyes;
+    const q = searchQuery.toLowerCase();
+    return leyes.filter((ley) =>
+      stripHtml(ley.title.rendered).toLowerCase().includes(q) ||
+      stripHtml(ley.excerpt.rendered).toLowerCase().includes(q)
+    );
+  }, [leyes, searchQuery]);
+
+  const filteredDictamenesNacionales = useMemo(() => {
+    if (!searchQuery) return dictamenesNacionales;
+    const q = searchQuery.toLowerCase();
+    return dictamenesNacionales.filter((d) =>
+      stripHtml(d.title.rendered).toLowerCase().includes(q) ||
+      stripHtml(d.excerpt.rendered).toLowerCase().includes(q)
+    );
+  }, [dictamenesNacionales, searchQuery]);
+
+  const filteredDictamenesCGR = useMemo(() => {
+    if (!searchQuery) return DICTAMENES;
+    const q = searchQuery.toLowerCase();
+    return DICTAMENES.filter((d) =>
+      d.materia.toLowerCase().includes(q) ||
+      d.numero.toLowerCase().includes(q) ||
+      d.categoria.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
+
+  const totalResultados = filteredLeyes.length + filteredDictamenesNacionales.length + filteredDictamenesCGR.length;
 
   return (
     <main>
@@ -79,8 +119,40 @@ export default async function DocumentosPage() {
         breadcrumbs={[{ label: "Documentos" }]}
       />
 
+      {/* Buscador flotante sticky */}
+      <div className="sticky top-16 z-30 bg-white border-b border-[#e3e9f1] shadow-sm">
+        <div className="container-site py-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="flex-1 relative w-full">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0c71c3"
+                strokeWidth={2}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Busca por materia, tema o palabra clave..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#e3e9f1] text-sm text-[#0c2340] placeholder:text-[#5d6675]/50 focus:outline-none focus:border-[#0c71c3] focus:ring-1 focus:ring-[#0c71c3] transition"
+              />
+            </div>
+            {searchQuery && (
+              <p className="text-xs text-[#5d6675] whitespace-nowrap">
+                <strong className="text-[#0c71c3]">{totalResultados}</strong> resultado{totalResultados !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Quick nav */}
-      <div className="bg-white border-b border-[#e3e9f1] sticky top-0 z-30">
+      <div className="bg-white border-b border-[#e3e9f1]">
         <div className="container-site flex gap-1 py-2 overflow-x-auto">
           {[
             { label: "Leyes y Guías", href: "#leyes-guias" },
@@ -116,23 +188,41 @@ export default async function DocumentosPage() {
           </div>
 
           {/* Leyes fetched from WP */}
-          {leyes.length === 0 ? (
+          {loading ? (
+            <div className="p-6 rounded-2xl bg-white border border-[#e3e9f1] text-center text-sm text-[#5d6675]">
+              Cargando leyes...
+            </div>
+          ) : filteredLeyes.length === 0 ? (
             <div className="mb-8 p-6 rounded-2xl bg-white border border-[#e3e9f1] text-center text-sm text-[#5d6675]">
-              <p>No se pudieron cargar las leyes en este momento.</p>
-              <a
-                href="https://asemuch.cl/leyes/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#0c71c3] hover:underline font-semibold mt-1 inline-block"
-              >
-                Ver leyes en asemuch.cl →
-              </a>
+              {searchQuery ? (
+                <>
+                  <p>No se encontraron leyes que coincidan con "{searchQuery}".</p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-[#0c71c3] hover:underline font-semibold mt-2"
+                  >
+                    Limpiar búsqueda
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>No se pudieron cargar las leyes en este momento.</p>
+                  <a
+                    href="https://asemuch.cl/leyes/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#0c71c3] hover:underline font-semibold mt-1 inline-block"
+                  >
+                    Ver leyes en asemuch.cl →
+                  </a>
+                </>
+              )}
             </div>
           ) : (
             <div className="mb-8 rounded-2xl border border-[#e3e9f1] overflow-hidden">
               <div className="bg-[#0c2340] px-5 py-3 flex items-center justify-between">
                 <span className="text-white font-bold text-sm" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
-                  Leyes — Normativa Municipal
+                  Leyes — Normativa Municipal ({filteredLeyes.length})
                 </span>
                 <a
                   href="https://asemuch.cl/leyes/"
@@ -144,7 +234,7 @@ export default async function DocumentosPage() {
                 </a>
               </div>
               <div className="divide-y divide-[#e3e9f1] bg-white">
-                {leyes.map((ley) => (
+                {filteredLeyes.map((ley) => (
                   <a
                     key={ley.id}
                     href={ley.link}
@@ -244,18 +334,18 @@ export default async function DocumentosPage() {
           </div>
 
           {/* Dictámenes ASEMUCH Nacional (WP) */}
-          {dictamenesNacionales.length > 0 && (
+          {filteredDictamenesNacionales.length > 0 && (
             <div className="mb-10">
               <h3
                 className="text-base font-bold text-[#0c2340] mb-4 flex items-center gap-2"
                 style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
               >
                 <span className="w-2 h-2 rounded-full bg-[#0c71c3] inline-block" />
-                ASEMUCH Nacional
+                ASEMUCH Nacional ({filteredDictamenesNacionales.length})
               </h3>
               <div className="rounded-2xl border border-[#e3e9f1] overflow-hidden">
                 <div className="divide-y divide-[#e3e9f1]">
-                  {dictamenesNacionales.map((d, i) => (
+                  {filteredDictamenesNacionales.map((d, i) => (
                     <a
                       key={d.id}
                       href={d.link}
@@ -305,7 +395,7 @@ export default async function DocumentosPage() {
               style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
             >
               <span className="w-2 h-2 rounded-full bg-[#10498a] inline-block" />
-              Contraloría General de la República
+              Contraloría General de la República ({filteredDictamenesCGR.length})
             </h3>
             <div className="mb-4 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
               <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
@@ -336,7 +426,7 @@ export default async function DocumentosPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e3e9f1]">
-                  {DICTAMENES.map((d, i) => (
+                  {filteredDictamenesCGR.map((d, i) => (
                     <tr key={d.id} className={`transition-colors hover:bg-[#f5f9fc] ${i % 2 === 0 ? "bg-white" : "bg-[#fafbfd]"}`}>
                       <td className="px-5 py-4 font-mono font-semibold text-[#0c71c3] whitespace-nowrap">{d.numero}</td>
                       <td className="px-5 py-4 text-[#0c2340] max-w-xs">
@@ -367,6 +457,11 @@ export default async function DocumentosPage() {
                 </tbody>
               </table>
             </div>
+            {filteredDictamenesCGR.length === 0 && searchQuery && (
+              <div className="mt-4 p-4 rounded-lg bg-[#f5f9fc] text-center text-sm text-[#5d6675]">
+                No se encontraron dictámenes CGR que coincidan con "{searchQuery}".
+              </div>
+            )}
           </div>
         </div>
       </section>

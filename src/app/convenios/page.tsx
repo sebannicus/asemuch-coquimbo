@@ -1,12 +1,7 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-
-export const metadata: Metadata = {
-  title: "Convenios",
-  description: "Convenios y beneficios negociados por ASEMUCH para sus afiliadas y afiliados — descuentos en salud, educación, óptica, comercio y más.",
-};
-
-export const revalidate = 86400;
 
 interface WPPost {
   id: number;
@@ -49,8 +44,29 @@ function formatDate(iso: string) {
   });
 }
 
-export default async function ConveniosPage() {
-  const convenios = await getConvenios();
+export default function ConveniosPage() {
+  const [convenios, setConvenios] = useState<WPPost[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      const data = await getConvenios();
+      setConvenios(data);
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  const filteredConvenios = useMemo(() => {
+    if (!searchQuery) return convenios;
+    const q = searchQuery.toLowerCase();
+    return convenios.filter((c) =>
+      stripHtml(c.title.rendered).toLowerCase().includes(q) ||
+      stripHtml(c.excerpt.rendered).toLowerCase().includes(q)
+    );
+  }, [convenios, searchQuery]);
 
   return (
     <main>
@@ -59,6 +75,38 @@ export default async function ConveniosPage() {
         subtitle="Beneficios y convenios negociados por la Confederación Nacional ASEMUCH para sus afiliadas y afiliados a lo largo de Chile."
         breadcrumbs={[{ label: "Convenios" }]}
       />
+
+      {/* Buscador sticky */}
+      <div className="sticky top-16 z-30 bg-white border-b border-[#e3e9f1] shadow-sm">
+        <div className="container-site py-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="flex-1 relative w-full">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0c71c3"
+                strokeWidth={2}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Busca convenio por nombre o beneficio..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#e3e9f1] text-sm text-[#0c2340] placeholder:text-[#5d6675]/50 focus:outline-none focus:border-[#0c71c3] focus:ring-1 focus:ring-[#0c71c3] transition"
+              />
+            </div>
+            {searchQuery && (
+              <p className="text-xs text-[#5d6675] whitespace-nowrap">
+                <strong className="text-[#0c71c3]">{filteredConvenios.length}</strong> resultado{filteredConvenios.length !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
 
       <section className="py-16 bg-white">
         <div className="container-site">
@@ -129,21 +177,39 @@ export default async function ConveniosPage() {
             Convenios ASEMUCH Nacional
           </h2>
 
-          {convenios.length === 0 ? (
+          {loading ? (
             <div className="text-center py-16 text-[#5d6675]">
-              <p className="mb-2">No se pudieron cargar los convenios en este momento.</p>
-              <a
-                href="https://asemuch.cl/convenios-asemuch/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#0c71c3] hover:underline font-semibold"
-              >
-                Ver convenios en asemuch.cl →
-              </a>
+              <p>Cargando convenios...</p>
+            </div>
+          ) : filteredConvenios.length === 0 ? (
+            <div className="text-center py-16 text-[#5d6675]">
+              {searchQuery ? (
+                <>
+                  <p className="mb-2">No se encontraron convenios que coincidan con "{searchQuery}".</p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-[#0c71c3] hover:underline font-semibold"
+                  >
+                    Limpiar búsqueda
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="mb-2">No se pudieron cargar los convenios en este momento.</p>
+                  <a
+                    href="https://asemuch.cl/convenios-asemuch/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#0c71c3] hover:underline font-semibold"
+                  >
+                    Ver convenios en asemuch.cl →
+                  </a>
+                </>
+              )}
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {convenios.map((c) => (
+              {filteredConvenios.map((c) => (
                 <div
                   key={c.id}
                   className="rounded-2xl border border-[#e3e9f1] bg-white p-6 flex flex-col hover:border-[#0c71c3]/40 hover:shadow-sm transition-all"
