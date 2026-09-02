@@ -1,5 +1,14 @@
 export type ContentStatus = "draft" | "published";
 
+export interface NewsImageRecord {
+  id: string;
+  news_id: string;
+  image_url: string;
+  storage_path: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
 export interface NewsRecord {
   id: string;
   title: string;
@@ -7,10 +16,16 @@ export interface NewsRecord {
   excerpt: string;
   content: string;
   featured_image_url: string | null;
+  news_images: NewsImageRecord[];
   status: ContentStatus;
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  source?: "fallback" | "supabase";
+}
+
+export interface NewsFormState {
+  error: string | null;
 }
 
 export interface DocumentRecord {

@@ -1,6 +1,6 @@
 import { NEWS_CARDS } from "@/components/SiteData";
 import type { NewsCard } from "@/types";
-import type { NewsRecord } from "@/types/admin";
+import type { NewsImageRecord, NewsRecord } from "@/types/admin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 
@@ -18,10 +18,18 @@ export interface PublicNewsItem {
   excerpt: string;
   content: string;
   imageUrl: string;
+  images: Array<{
+    id: string;
+    imageUrl: string;
+  }>;
   href: string;
   date: string;
   isoDate: string | null;
   status: "draft" | "published";
+}
+
+function sortNewsImages(images: NewsImageRecord[] | null | undefined) {
+  return [...(images ?? [])].sort((left, right) => left.sort_order - right.sort_order);
 }
 
 function formatDisplayDate(value: string | null) {
@@ -38,13 +46,27 @@ function formatDisplayDate(value: string | null) {
 }
 
 function normalizeNewsRecord(item: NewsRecord): PublicNewsItem {
+  const gallery = sortNewsImages(item.news_images);
+  const images = gallery.length
+    ? gallery.map((image) => ({
+        id: image.id,
+        imageUrl: image.image_url,
+      }))
+    : [
+        {
+          id: `${item.id}-featured`,
+          imageUrl: item.featured_image_url || DEFAULT_NEWS_IMAGE,
+        },
+      ];
+
   return {
     id: item.id,
     title: item.title,
     slug: item.slug,
     excerpt: item.excerpt,
     content: item.content,
-    imageUrl: item.featured_image_url || DEFAULT_NEWS_IMAGE,
+    imageUrl: images[0]?.imageUrl || DEFAULT_NEWS_IMAGE,
+    images,
     href: `/noticias/${item.slug}`,
     date: formatDisplayDate(item.published_at || item.created_at),
     isoDate: item.published_at || item.created_at,
@@ -62,6 +84,7 @@ function normalizeFallbackCard(card: NewsCard): PublicNewsItem {
     excerpt: card.excerpt,
     content: `${card.excerpt}\n\n${FALLBACK_NEWS_BODY}`,
     imageUrl: card.imageUrl,
+    images: [{ id: `${card.id}-fallback`, imageUrl: card.imageUrl }],
     href: `/noticias/${slug}`,
     date: card.date,
     isoDate: null,
@@ -103,7 +126,7 @@ export async function getPublishedNewsBySlug(slug: string) {
 
   const { data, error } = await supabase
     .from("news")
-    .select("*")
+    .select("*, news_images(*)")
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
@@ -126,6 +149,16 @@ export async function getAdminNewsList() {
       excerpt: item.excerpt,
       content: item.content,
       featured_image_url: item.imageUrl,
+      news_images: [
+        {
+          id: `${item.id}-fallback`,
+          news_id: item.id,
+          image_url: item.imageUrl,
+          storage_path: null,
+          sort_order: 0,
+          created_at: item.isoDate || new Date(Date.UTC(2026, 0, index + 1)).toISOString(),
+        },
+      ],
       status: item.status,
       published_at: item.isoDate,
       created_at: item.isoDate || new Date(Date.UTC(2026, 0, index + 1)).toISOString(),
@@ -136,7 +169,7 @@ export async function getAdminNewsList() {
 
   const { data, error } = await supabase
     .from("news")
-    .select("*")
+    .select("*, news_images(*)")
     .order("updated_at", { ascending: false });
 
   if (error || !data) {
@@ -145,13 +178,34 @@ export async function getAdminNewsList() {
 
   return data.map((item) => ({
     ...item,
+    news_images: sortNewsImages(item.news_images),
     source: "supabase" as const,
   }));
 }
 
 export async function getAdminNewsById(id: string) {
-  const items = await getAdminNewsList();
-  return items.find((item) => item.id === id) ?? null;
+  const supabase = createSupabaseAdminClient();
+
+  if (!supabase) {
+    const items = await getAdminNewsList();
+    return items.find((item) => item.id === id) ?? null;
+  }
+
+  const { data, error } = await supabase
+    .from("news")
+    .select("*, news_images(*)")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    ...data,
+    news_images: sortNewsImages(data.news_images),
+    source: "supabase" as const,
+  };
 }
 
 export async function getNewsSlugs() {

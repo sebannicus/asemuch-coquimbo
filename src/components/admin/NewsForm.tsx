@@ -1,13 +1,42 @@
+"use client";
+
 import Link from "next/link";
-import type { NewsRecord } from "@/types/admin";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { newsImageConfig, validateNewsImageFiles } from "@/lib/news-images";
+import type { NewsFormState, NewsImageRecord, NewsRecord } from "@/types/admin";
 import { SubmitButton } from "./SubmitButton";
 
 interface NewsFormProps {
-  action: (formData: FormData) => Promise<void>;
+  action: (state: NewsFormState, formData: FormData) => Promise<NewsFormState>;
   news?: Partial<NewsRecord> | null;
   title: string;
   description: string;
   isFallback?: boolean;
+}
+
+interface NewImagePreview {
+  key: string;
+  name: string;
+  url: string;
+}
+
+const INITIAL_FORM_STATE: NewsFormState = { error: null };
+
+function getFileKey(file: File) {
+  return `${file.name}-${file.size}-${file.lastModified}-${file.type}`;
+}
+
+function dedupeFiles(files: File[]) {
+  const seen = new Set<string>();
+  return files.filter((file) => {
+    const key = getFileKey(file);
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
 }
 
 export function NewsForm({
@@ -18,6 +47,83 @@ export function NewsForm({
   isFallback = false,
 }: NewsFormProps) {
   const isEditing = Boolean(news?.id);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const previewUrlsRef = useRef<string[]>([]);
+  const [state, formAction] = useActionState(action, INITIAL_FORM_STATE);
+  const [existingImages, setExistingImages] = useState<NewsImageRecord[]>(news?.news_images ?? []);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [newImagePreviews, setNewImagePreviews] = useState<NewImagePreview[]>([]);
+  const [clientError, setClientError] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  function syncInputFiles(files: File[]) {
+    if (!inputRef.current) {
+      return;
+    }
+
+    const transfer = new DataTransfer();
+    files.forEach((file) => transfer.items.add(file));
+    inputRef.current.files = transfer.files;
+  }
+
+  function replaceSelectedFiles(files: File[]) {
+    previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+
+    const previews = files.map((file) => ({
+      key: getFileKey(file),
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
+
+    previewUrlsRef.current = previews.map((preview) => preview.url);
+    setSelectedFiles(files);
+    setNewImagePreviews(previews);
+    syncInputFiles(files);
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const incomingFiles = Array.from(event.currentTarget.files ?? []);
+    if (!incomingFiles.length) {
+      syncInputFiles(selectedFiles);
+      return;
+    }
+
+    const nextFiles = dedupeFiles([...selectedFiles, ...incomingFiles]);
+    const validation = validateNewsImageFiles(
+      nextFiles.map((file) => ({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+      })),
+      existingImages.length,
+    );
+
+    if (!validation.success) {
+      setClientError(validation.message);
+      syncInputFiles(selectedFiles);
+      return;
+    }
+
+    setClientError(null);
+    replaceSelectedFiles(nextFiles);
+  }
+
+  function removeExistingImage(imageId: string) {
+    setClientError(null);
+    setExistingImages((current) => current.filter((image) => image.id !== imageId));
+  }
+
+  function removeSelectedFile(fileKey: string) {
+    setClientError(null);
+    replaceSelectedFiles(selectedFiles.filter((file) => getFileKey(file) !== fileKey));
+  }
+
+  const totalImageCount = existingImages.length + selectedFiles.length;
 
   return (
     <section className="space-y-6 rounded-3xl border border-[#d9e6f5] bg-white p-6">
@@ -48,7 +154,7 @@ export function NewsForm({
         </div>
       ) : null}
 
-      <form action={action} className="space-y-5">
+      <form action={formAction} className="space-y-5" encType="multipart/form-data">
         {isEditing ? <input type="hidden" name="id" defaultValue={news?.id} /> : null}
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -86,16 +192,125 @@ export function NewsForm({
           />
         </label>
 
-        <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-          Imagen destacada
-          <input
-            name="featured_image_url"
-            type="url"
-            defaultValue={news?.featured_image_url ?? ""}
-            placeholder="https://..."
-            className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-          />
-        </label>
+        <section className="space-y-4 rounded-3xl border border-[#d9e6f5] bg-[#f5f9fc] p-5">
+          <div className="space-y-1">
+            <h3
+              className="text-lg font-extrabold text-[#0c2340]"
+              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+            >
+              Imagenes de la noticia
+            </h3>
+            <p className="text-sm text-[#5d6675]">
+              Sube hasta {newsImageConfig.limit} imagenes JPG, PNG o WebP de maximo 5 MB. La primera imagen visible quedara como portada.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+            <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
+              Subir desde mi computador
+              <input
+                ref={inputRef}
+                name="news_images"
+                type="file"
+                accept={newsImageConfig.allowedTypes.join(",")}
+                multiple
+                onChange={handleFileChange}
+                className="w-full rounded-2xl border border-dashed border-[#8eb9df] bg-white px-4 py-3 text-sm font-normal text-[#0c2340] file:mr-3 file:rounded-xl file:border-0 file:bg-[#0c71c3] file:px-3 file:py-2 file:font-semibold file:text-white"
+              />
+            </label>
+
+            <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
+              Portada por enlace externo
+              <input
+                name="featured_image_url"
+                type="url"
+                defaultValue={news?.featured_image_url ?? ""}
+                placeholder="https://..."
+                className="w-full rounded-2xl border border-[#d9e6f5] bg-white px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
+              />
+              <span className="block text-xs font-normal text-[#5d6675]">
+                Se usa solo si no dejas una galeria cargada.
+              </span>
+            </label>
+          </div>
+
+          {clientError || state.error ? (
+            <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+              {clientError ?? state.error}
+            </div>
+          ) : null}
+
+          <div className="flex items-center justify-between gap-3 text-sm text-[#5d6675]">
+            <span>{totalImageCount} imagen(es) lista(s) para esta noticia.</span>
+            <span>La portada es siempre la primera miniatura visible.</span>
+          </div>
+
+          {existingImages.map((image) => (
+            <input key={image.id} type="hidden" name="existing_image_ids" value={image.id} />
+          ))}
+
+          {totalImageCount ? (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {existingImages.map((image, index) => (
+                <article
+                  key={image.id}
+                  className="overflow-hidden rounded-2xl border border-[#d9e6f5] bg-white"
+                >
+                  <div
+                    className="aspect-[4/3] w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url('${image.image_url}')` }}
+                    role="img"
+                    aria-label={`Imagen existente ${index + 1}`}
+                  />
+                  <div className="space-y-2 p-4">
+                    <p className="text-sm font-semibold text-[#0c2340]">
+                      {index === 0 ? "Portada actual" : `Galeria ${index + 1}`}
+                    </p>
+                    <p className="truncate text-xs text-[#5d6675]">{image.image_url}</p>
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage(image.id)}
+                      className="text-sm font-semibold text-rose-700 transition-colors hover:text-rose-500"
+                    >
+                      Quitar
+                    </button>
+                  </div>
+                </article>
+              ))}
+
+              {newImagePreviews.map((preview, index) => (
+                <article
+                  key={preview.key}
+                  className="overflow-hidden rounded-2xl border border-[#d9e6f5] bg-white"
+                >
+                  <div
+                    className="aspect-[4/3] w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url('${preview.url}')` }}
+                    role="img"
+                    aria-label={`Nueva imagen ${index + 1}`}
+                  />
+                  <div className="space-y-2 p-4">
+                    <p className="text-sm font-semibold text-[#0c2340]">
+                      {existingImages.length + index === 0 ? "Portada nueva" : `Nueva imagen ${existingImages.length + index + 1}`}
+                    </p>
+                    <p className="truncate text-xs text-[#5d6675]">{preview.name}</p>
+                    <button
+                      type="button"
+                      onClick={() => removeSelectedFile(preview.key)}
+                      className="text-sm font-semibold text-rose-700 transition-colors hover:text-rose-500"
+                    >
+                      Quitar
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-[#c7dbef] bg-white px-4 py-5 text-sm text-[#5d6675]">
+              Aun no has agregado imagenes. Si publicas sin galeria, se usara solo la portada por enlace externo.
+            </div>
+          )}
+        </section>
 
         <div className="grid gap-5 md:grid-cols-[1fr_220px]">
           <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
@@ -131,7 +346,7 @@ export function NewsForm({
           <p className="text-sm text-[#5d6675]">
             {isFallback
               ? "Esta vista deja listo el formulario y la estructura de trabajo."
-              : "Al publicar, la noticia quedará disponible también en la portada y en la sección de noticias."}
+              : "Al publicar, la noticia quedara disponible tambien en la portada y en la seccion de noticias."}
           </p>
         </div>
       </form>

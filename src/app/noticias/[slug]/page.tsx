@@ -45,11 +45,25 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
 
             {/* Image */}
             <div
-              className="w-full rounded-2xl bg-cover bg-center mb-8"
+              className="w-full rounded-2xl bg-cover bg-center mb-4"
               style={{ backgroundImage: `url('${article.imageUrl}')`, aspectRatio: "16/7" }}
               role="img"
               aria-label={article.title}
             />
+
+            {article.images.length > 1 ? (
+              <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {article.images.slice(1).map((image, index) => (
+                  <div
+                    key={image.id}
+                    className="overflow-hidden rounded-2xl border border-[#e3e9f1] bg-cover bg-center"
+                    style={{ backgroundImage: `url('${image.imageUrl}')`, aspectRatio: "4/3" }}
+                    role="img"
+                    aria-label={`${article.title} imagen ${index + 2}`}
+                  />
+                ))}
+              </div>
+            ) : null}
 
             {/* Content */}
             <div className="prose prose-sm max-w-none text-[#5d6675] space-y-4">
