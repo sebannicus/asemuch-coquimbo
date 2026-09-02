@@ -1,5 +1,8 @@
 import Image from "next/image";
-import { ArrowDownRight, Download, FileText, HeartHandshake, Landmark, Megaphone, ShieldCheck, Users } from "lucide-react";
+import Link from "next/link";
+import { ArrowDownRight, BookOpenCheck, Download, FileText, HeartHandshake, Landmark, Scale, ShieldCheck, Users } from "lucide-react";
+import HeroCarousel from "@/components/HeroCarousel";
+import NewsSection from "@/components/NewsSection";
 
 const stats = [
   { value: "+100", label: "años de historia gremial" },
@@ -27,99 +30,50 @@ const directors = [
   },
 ];
 
-const newsCards = [
-  {
-    title: "Noticias ASEMÚCH Coquimbo",
-    text: "Últimas novedades, comunicados y actividades de ASEMÚCH Coquimbo, junto a noticias locales y nacionales relevantes para funcionarios municipales.",
-    icon: Megaphone,
-  },
-  {
-    title: "Comunicados y actividades",
-    text: "Espacio para difundir acuerdos, convocatorias, jornadas y participación gremial con foco directo en la Municipalidad de Coquimbo.",
-    icon: FileText,
-  },
-];
-
 const benefits = [
   {
-    title: "Acompañamiento gremial",
-    text: "Orientación y respaldo para resguardar derechos laborales de funcionarios municipales de Coquimbo.",
+    title: "Asesoría legal gratuita",
+    text: "Acceso a orientación jurídica en materia de Estatuto Administrativo Municipal, licencias médicas, calificaciones y derechos laborales.",
     icon: ShieldCheck,
   },
   {
-    title: "Convenios y beneficios",
-    text: "Acceso a beneficios y convenios de ASEMÚCH Coquimbo y Confederación Nacional.",
+    title: "Representación gremial",
+    text: "Te representamos ante tu municipio, la Contraloría y organismos del Estado en materias laborales, administrativas y disciplinarias.",
+    icon: Scale,
+  },
+  {
+    title: "Capacitación permanente",
+    text: "Talleres, seminarios y cursos sobre derechos funcionarios, prevención, liderazgo y desarrollo profesional para todos los afiliados.",
+    icon: BookOpenCheck,
+  },
+  {
+    title: "Red de convenios",
+    text: "Descuentos en salud, óptica, farmacia, capacitación y más, a través de convenios negociados colectivamente para afiliados y grupo familiar.",
     icon: HeartHandshake,
   },
   {
-    title: "Capacitación y articulación",
-    text: "Participación en encuentros, jornadas y redes de trabajo con otras organizaciones municipales.",
+    title: "Negociación colectiva",
+    text: "Participamos activamente en la negociación de remuneraciones, beneficios y condiciones laborales a nivel municipal y regional.",
     icon: Users,
   },
-];
-
-const navItems = [
-  { href: "#quienes-somos", label: "Quiénes Somos" },
-  { href: "#directiva", label: "Directiva" },
-  { href: "#noticias", label: "Noticias" },
-  { href: "#afiliate", label: "Afíliate" },
+  {
+    title: "Solidaridad en casos urgentes",
+    text: "Apoyo y acompañamiento a afiliados que enfrentan sumarios, desvinculaciones injustificadas o vulneraciones de sus derechos.",
+    icon: HeartHandshake,
+  },
 ];
 
 export default function Home() {
   return (
     <main className="min-h-screen">
       <section className="relative isolate overflow-hidden">
-        <Image
-          src="/images/foto-hero-asemuch-coquimbo-reunion-funcionarios.webp"
-          alt="Funcionarios municipales de Coquimbo en una actividad de ASEMÚCH Coquimbo"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,26,52,0.78),rgba(7,26,52,0.62)_40%,rgba(7,26,52,0.88))]" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/25 to-transparent" />
-
-        <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 pb-10 pt-4 sm:px-6 lg:px-8">
-          <header className="sticky top-4 z-20 rounded-full border border-white/18 bg-white/12 px-4 py-3 backdrop-blur-md">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <a href="#inicio" className="flex items-center gap-4 text-white">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/30 bg-white/16 text-lg font-black tracking-[0.28em]">
-                  A
-                </div>
-                <div>
-                  <p className="font-heading text-[clamp(1.45rem,2.5vw,2.4rem)] font-black leading-none">
-                    ASEMÚCH Coquimbo
-                  </p>
-                  <p className="mt-1 text-sm text-white/78 sm:text-base">
-                    Asociación de Funcionarios Municipales de Coquimbo
-                  </p>
-                </div>
-              </a>
-
-              <nav className="flex flex-wrap items-center gap-2 text-sm text-white/90">
-                {navItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-full border border-white/18 px-4 py-2 transition hover:bg-white/10"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </header>
-
-          <div
-            id="inicio"
-            className="grid flex-1 items-end gap-10 pb-6 pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-0 lg:pt-20"
-          >
+        <HeroCarousel />
+        <div id="inicio" className="relative mx-auto grid min-h-[640px] w-full max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 lg:min-h-[680px] lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
             <div className="max-w-3xl text-white">
               <div className="mb-6 inline-flex rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-medium backdrop-blur">
                 Funcionarios municipales de Coquimbo
               </div>
-              <h1 className="font-heading text-[clamp(2.9rem,7vw,6.1rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance">
+              <h1 className="font-heading text-[clamp(2.75rem,6.2vw,5.5rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance text-white">
                 Más de 100 años de historia gremial al servicio de Coquimbo.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84 sm:text-xl">
@@ -143,35 +97,17 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-4 self-end lg:pb-8">
+            <div className="grid gap-4 lg:justify-self-end lg:pb-8">
               {stats.map((stat) => (
                 <article
                   key={stat.label}
-                  className="rounded-[2rem] border border-white/16 bg-white/14 p-6 text-white shadow-[0_30px_80px_rgba(6,16,33,0.28)] backdrop-blur-md"
+                  className="rounded-[1.6rem] border border-white/16 bg-white/14 p-5 text-white shadow-[0_30px_80px_rgba(6,16,33,0.28)] backdrop-blur-md"
                 >
                   <p className="font-heading text-4xl font-black sm:text-5xl">{stat.value}</p>
                   <p className="mt-2 max-w-xs text-sm leading-6 text-white/82 sm:text-base">{stat.label}</p>
                 </article>
               ))}
             </div>
-          </div>
-
-          <div className="relative z-10 mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-            <article className="rounded-[2rem] border border-white/14 bg-white/12 p-6 text-white backdrop-blur-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/70">Presencia gremial</p>
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-white/84">
-                Unificamos la bienvenida del sitio con la presentación institucional para que la primera
-                experiencia sea una sola pieza: clara, cercana y respaldada por imágenes reales de la organización.
-              </p>
-            </article>
-            <article className="rounded-[2rem] border border-white/14 bg-[linear-gradient(135deg,rgba(242,198,78,0.22),rgba(255,255,255,0.08))] p-6 text-white backdrop-blur-md">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/70">Enfoque exclusivo Coquimbo</p>
-              <p className="mt-4 text-lg leading-8 text-white/84">
-                Todo el relato institucional se centra en Coquimbo, en sus funcionarios municipales y en la
-                organización gremial local.
-              </p>
-            </article>
-          </div>
         </div>
       </section>
 
@@ -271,43 +207,56 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="noticias" className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="rounded-[2.25rem] border border-border bg-[linear-gradient(135deg,rgba(28,84,146,0.08),rgba(242,198,78,0.13))] p-8 sm:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Noticias y comunicados</p>
-          <h2 className="mt-4 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">
-            Últimas novedades, comunicados y actividades de ASEMÚCH Coquimbo
-          </h2>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">
-            El área Noticias ASEMÚCH Coquimbo queda abierta a noticias locales y nacionales vinculadas al
-            trabajo municipal, al quehacer gremial y a la participación de la asociación.
-          </p>
-
-          <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            {newsCards.map(({ title, text, icon: Icon }) => (
-              <article key={title} className="rounded-[1.75rem] border border-white/60 bg-white/80 p-6 shadow-sm backdrop-blur">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <Icon className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 text-2xl font-bold text-foreground">{title}</h3>
-                <p className="mt-3 leading-7 text-muted-foreground">{text}</p>
-              </article>
+      <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="rounded-[1.8rem] border border-border bg-[linear-gradient(135deg,rgba(28,84,146,0.08),rgba(242,198,78,0.13))] p-6 sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Accesos rápidos</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { href: "/afiliarse", label: "Afiliarse", text: "Únete al gremio - es gratis", icon: Users },
+              { href: "/dictamenes", label: "Dictámenes", text: "Resoluciones de Contraloría", icon: Scale },
+              { href: "/documentos", label: "Documentos", text: "Circulares, actas y guías", icon: FileText },
+              { href: "/contacto", label: "Contacto", text: "Comunícate con nosotros", icon: HeartHandshake },
+            ].map(({ href, label, text, icon: Icon }) => (
+              <Link key={href} href={href} className="group rounded-2xl border border-white/70 bg-white/85 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+                <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                <h3 className="mt-4 text-xl font-bold text-foreground group-hover:text-primary">{label}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-3">
+      <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">¿Por qué afiliarte?</p>
+            <h2 className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Beneficios de ser parte de ASEMUCH</h2>
+          </div>
+          <Link href="/afiliarse" className="inline-flex w-fit rounded-full bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-blue-light">
+            Afiliarme ahora
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {benefits.map(({ title, text, icon: Icon }) => (
-            <article key={title} className="rounded-[1.8rem] border border-border bg-card p-7 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary">
-                <Icon className="h-6 w-6" />
+            <article key={title} className="rounded-[1.6rem] border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary text-primary">
+                <Icon className="h-5 w-5" />
               </div>
-              <h3 className="mt-5 text-2xl font-bold">{title}</h3>
+              <h3 className="mt-4 text-xl font-bold">{title}</h3>
               <p className="mt-3 leading-7 text-muted-foreground">{text}</p>
             </article>
           ))}
         </div>
+      </section>
+
+      <section id="noticias" className="scroll-mt-24">
+        <div className="mx-auto w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Noticias ASEMUCH Coquimbo</p>
+          <h2 className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Últimas novedades, comunicados y actividades de ASEMUCH Coquimbo</h2>
+          <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">Noticias locales y nacionales relacionadas con el trabajo municipal y la actividad gremial.</p>
+        </div>
+        <NewsSection />
       </section>
 
       <section id="afiliate" className="mx-auto w-full max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
