@@ -12,7 +12,7 @@ const stats = [
 const highlights = [
   "Representamos a funcionarios municipales de Coquimbo con trabajo gremial activo y cercano.",
   "Integramos la historia de ASEMUCH con una proyección local enfocada en derechos, bienestar y organización.",
-  "Mantenemos vínculo con beneficios y convenios de ASEMÚCH Coquimbo y la Confederación Nacional.",
+  "Mantenemos vínculo con beneficios y convenios de ASEMUCH Coquimbo y la Confederación Nacional.",
 ];
 
 const directors = [
@@ -77,7 +77,7 @@ export default function Home() {
                 Más de 100 años de historia gremial al servicio de Coquimbo.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84 sm:text-xl">
-                ASEMÚCH Coquimbo representa, acompaña y organiza a funcionarios municipales de Coquimbo
+                ASEMUCH Coquimbo representa, acompaña y organiza a funcionarios municipales de Coquimbo
                 con una mirada local, activa y comprometida con sus derechos.
               </p>
 
@@ -117,7 +117,7 @@ export default function Home() {
             <div className="relative min-h-80 overflow-hidden rounded-[2rem] border border-border bg-card shadow-lg">
               <Image
                 src="/images/reunion-asemuch-funcionarios.webp"
-                alt="Actividad de ASEMÚCH Coquimbo con funcionarios municipales"
+                alt="Actividad de ASEMUCH Coquimbo con funcionarios municipales"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
@@ -126,7 +126,7 @@ export default function Home() {
             <div className="relative min-h-80 overflow-hidden rounded-[2rem] border border-border bg-card shadow-lg sm:translate-y-10">
               <Image
                 src="/images/junto-a-asemuch-nacional-y-hero.webp"
-                alt="Dirigentes de ASEMÚCH Coquimbo en actividad gremial"
+                alt="Dirigentes de ASEMUCH Coquimbo en actividad gremial"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
@@ -143,7 +143,7 @@ export default function Home() {
               Una organización gremial con identidad local y trayectoria histórica.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              ASEMÚCH Coquimbo reúne a funcionarios municipales de Coquimbo para defender derechos,
+              ASEMUCH Coquimbo reúne a funcionarios municipales de Coquimbo para defender derechos,
               fortalecer la organización interna y proyectar una voz gremial consistente en el ámbito local.
             </p>
             <div className="mt-8 grid gap-4">
@@ -264,7 +264,7 @@ export default function Home() {
           <div className="relative min-h-[420px]">
             <Image
               src="/images/rossa-renney-cristian-tapia-foto-para-directiva-y-hero.webp"
-              alt="Representantes de ASEMÚCH Coquimbo en actividad gremial"
+              alt="Representantes de ASEMUCH Coquimbo en actividad gremial"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover"

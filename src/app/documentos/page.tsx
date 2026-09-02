@@ -15,7 +15,7 @@ interface WPPost {
 async function fetchPosts(categoryId: number, perPage = 15): Promise<WPPost[]> {
   try {
     const res = await fetch(
-      `https://asemuch.cl/wp-json/wp/v2/posts?categories=${categoryId}&per_page=${perPage}&orderby=date&order=desc&_fields=id,date,title,excerpt,link`,
+      `/api/asemuch/posts?category=${categoryId}&perPage=${perPage}`,
       { next: { revalidate: 86400 } }
     );
     if (!res.ok) return [];

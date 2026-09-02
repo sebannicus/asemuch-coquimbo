@@ -44,12 +44,12 @@ export default function Header() {
             />
             <div className="hidden sm:block border-l border-[#e3e9f1] pl-3">
               <p
-                className="text-xs font-bold text-[#0c2340] leading-tight"
+                className="text-base font-extrabold text-[#0c2340] leading-tight"
                 style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
               >
                 ASEMUCH
               </p>
-              <p className="text-xs text-[#0c71c3] font-semibold leading-tight">
+              <p className="text-sm text-[#0c71c3] font-bold leading-tight">
                 Coquimbo
               </p>
             </div>
