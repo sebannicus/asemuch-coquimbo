@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import { DIRECTIVA } from "@/components/SiteData";
 
@@ -18,6 +19,21 @@ export default function DirectivaPage() {
 
       <section className="py-16 bg-white">
         <div className="container-site">
+          <div className="relative mb-10 min-h-72 overflow-hidden rounded-3xl border border-[#d9e6f5] bg-[#0c2340]">
+            <Image
+              src="/images/rosa-renney-cristian-tapia-asemuch-coquimbo.webp"
+              alt="Directiva de ASEMUCH Coquimbo"
+              fill
+              sizes="(max-width: 768px) 100vw, 1200px"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0c2340]/85 via-[#0c2340]/35 to-transparent" />
+            <div className="relative max-w-xl p-8 text-white sm:p-10">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/75">ASEMUCH Coquimbo</p>
+              <h2 className="mt-3 text-3xl font-extrabold">Directiva 2025 a 2027</h2>
+              <p className="mt-3 text-base leading-7 text-white/90">Equipo comprometido con la representación y defensa de los funcionarios municipales de Coquimbo.</p>
+            </div>
+          </div>
           {/* Aviso demo */}
           <div className="mb-10 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
             <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">

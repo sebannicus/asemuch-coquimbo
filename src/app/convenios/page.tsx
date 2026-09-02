@@ -14,7 +14,7 @@ interface WPPost {
 async function getConvenios(): Promise<WPPost[]> {
   try {
     const res = await fetch(
-      "https://asemuch.cl/wp-json/wp/v2/posts?categories=19&per_page=20&orderby=date&order=desc&_fields=id,date,title,excerpt,link",
+      "/api/asemuch/posts?category=19&perPage=20",
       { next: { revalidate: 86400 } }
     );
     if (!res.ok) return [];
