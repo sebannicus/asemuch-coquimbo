@@ -196,7 +196,7 @@ export default function DocumentosPage() {
             <div className="mb-8 p-6 rounded-2xl bg-white border border-[#e3e9f1] text-center text-sm text-[#5d6675]">
               {searchQuery ? (
                 <>
-                  <p>No se encontraron leyes que coincidan con "{searchQuery}".</p>
+                  <p>No se encontraron leyes que coincidan con &quot;{searchQuery}&quot;.</p>
                   <button
                     onClick={() => setSearchQuery("")}
                     className="text-[#0c71c3] hover:underline font-semibold mt-2"
@@ -459,7 +459,7 @@ export default function DocumentosPage() {
             </div>
             {filteredDictamenesCGR.length === 0 && searchQuery && (
               <div className="mt-4 p-4 rounded-lg bg-[#f5f9fc] text-center text-sm text-[#5d6675]">
-                No se encontraron dictámenes CGR que coincidan con "{searchQuery}".
+                No se encontraron dictámenes CGR que coincidan con &quot;{searchQuery}&quot;.
               </div>
             )}
           </div>

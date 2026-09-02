@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NEWS_CARDS } from "./SiteData";
+import { getPublishedNews } from "@/lib/content/news";
 
 function NewsCard({
   date,
@@ -63,7 +63,9 @@ function NewsCard({
   );
 }
 
-export default function NewsSection() {
+export default async function NewsSection() {
+  const news = await getPublishedNews(3);
+
   return (
     <section
       className="py-16"
@@ -91,7 +93,7 @@ export default function NewsSection() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {NEWS_CARDS.map((card) => (
+          {news.map((card) => (
             <NewsCard key={card.id} {...card} />
           ))}
         </div>
