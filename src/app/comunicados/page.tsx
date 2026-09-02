@@ -144,7 +144,7 @@ export default function ComunicadosPage() {
             <div className="text-center py-16 text-[#5d6675]">
               {searchQuery ? (
                 <>
-                  <p className="mb-2">No se encontraron comunicados que coincidan con "{searchQuery}".</p>
+                  <p className="mb-2">No se encontraron comunicados que coincidan con &quot;{searchQuery}&quot;.</p>
                   <button
                     onClick={() => setSearchQuery("")}
                     className="text-[#0c71c3] hover:underline font-semibold"

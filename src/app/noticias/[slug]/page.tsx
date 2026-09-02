@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import PageHeader from "@/components/PageHeader";
-import { NEWS_CARDS } from "@/components/SiteData";
+import { getNewsSlugs, getPublishedNewsBySlug } from "@/lib/content/news";
 
-export function generateStaticParams() {
-  return NEWS_CARDS.map((card) => ({
-    slug: card.href.split("/").pop() ?? card.id.toString(),
-  }));
+export async function generateStaticParams() {
+  const slugs = await getNewsSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const article = NEWS_CARDS.find((c) => c.href.split("/").pop() === slug);
+  const article = await getPublishedNewsBySlug(slug);
   return {
     title: article?.title ?? "Noticia",
     description: article?.excerpt,
@@ -20,22 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function NoticiaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = NEWS_CARDS.find((c) => c.href.split("/").pop() === slug);
+  const article = await getPublishedNewsBySlug(slug);
 
   if (!article) {
-    return (
-      <main>
-        <PageHeader title="Noticia no encontrada" breadcrumbs={[{ label: "Noticias", href: "/noticias" }, { label: "No encontrada" }]} />
-        <section className="py-16 bg-white">
-          <div className="container-site text-center">
-            <p className="text-[#5d6675]">El artículo solicitado no existe o fue eliminado.</p>
-            <Link href="/noticias" className="mt-6 inline-block text-[#0c71c3] font-semibold hover:underline">
-              ← Volver a noticias
-            </Link>
-          </div>
-        </section>
-      </main>
-    );
+    notFound();
   }
 
   return (
@@ -65,17 +53,11 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
 
             {/* Content */}
             <div className="prose prose-sm max-w-none text-[#5d6675] space-y-4">
-              <p className="text-base leading-relaxed">{article.excerpt}</p>
-              <p>
-                La directiva de ASEMUCH Coquimbo reafirma su compromiso con la defensa de los derechos laborales
-                de todos los funcionarios municipales de la región, y continuará informando sobre los avances
-                y resultados de las gestiones realizadas.
-              </p>
-              <p>
-                Para más información, los afiliados pueden comunicarse con la sede regional a través de los
-                canales de contacto disponibles en nuestro sitio web o asistir a las reuniones mensuales de
-                la directiva.
-              </p>
+              {article.content.split("\n\n").map((paragraph) => (
+                <p key={paragraph} className="text-base leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
             </div>
 
             {/* Back link */}

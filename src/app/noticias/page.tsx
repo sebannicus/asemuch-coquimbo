@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { NEWS_CARDS } from "@/components/SiteData";
+import { getPublishedNews } from "@/lib/content/news";
 
 export const metadata: Metadata = {
   title: "Noticias",
   description: "Últimas noticias y comunicados de ASEMUCH Sede Región de Coquimbo.",
 };
 
-export default function NoticiasPage() {
+export default async function NoticiasPage() {
+  const news = await getPublishedNews();
+
   return (
     <main>
       <PageHeader
@@ -20,13 +22,13 @@ export default function NoticiasPage() {
       <section className="py-16" style={{ backgroundColor: "#f5f9fc" }}>
         <div className="container-site">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {NEWS_CARDS.map((card) => (
+            {news.map((card) => (
               <article
                 key={card.id}
                 className="bg-white rounded-2xl overflow-hidden flex flex-col"
                 style={{ border: "0.8px solid #e3e9f1", boxShadow: "rgba(12,35,64,0.06) 0px 2px 10px 0px" }}
               >
-                <Link href={`/noticias/${card.href.split("/").pop()}`} className="block overflow-hidden">
+                <Link href={card.href} className="block overflow-hidden">
                   <div
                     className="w-full bg-cover bg-center transition-transform duration-300 hover:scale-105"
                     style={{ backgroundImage: `url('${card.imageUrl}')`, aspectRatio: "16/9" }}
@@ -40,13 +42,13 @@ export default function NoticiasPage() {
                     className="text-[#0c2340] font-bold text-base leading-snug"
                     style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
                   >
-                    <Link href={`/noticias/${card.href.split("/").pop()}`} className="hover:text-[#0c71c3] transition-colors">
+                    <Link href={card.href} className="hover:text-[#0c71c3] transition-colors">
                       {card.title}
                     </Link>
                   </h2>
                   <p className="text-[#5d6675] text-sm leading-relaxed flex-1 line-clamp-3">{card.excerpt}</p>
                   <Link
-                    href={`/noticias/${card.href.split("/").pop()}`}
+                    href={card.href}
                     className="mt-auto inline-flex items-center gap-1 text-[#0c71c3] text-sm font-semibold hover:gap-2 transition-all"
                   >
                     Leer más
