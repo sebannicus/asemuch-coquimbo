@@ -5,14 +5,14 @@ import { DIRECTIVA } from "@/components/SiteData";
 
 export const metadata: Metadata = {
   title: "Directiva",
-  description: "Conoce a la directiva de ASEMUCH Sede Región de Coquimbo, período 2024–2026.",
+  description: "Conoce a la directiva de ASEMUCH Sede Región de Coquimbo, período 2025–2027.",
 };
 
 export default function DirectivaPage() {
   return (
     <main>
       <PageHeader
-        title="Directiva Regional 2024–2026"
+        title="Directiva Regional 2025–2027"
         subtitle="El equipo que representa y defiende a los funcionarios municipales de la Región de Coquimbo."
         breadcrumbs={[{ label: "Directiva" }]}
       />
@@ -29,9 +29,9 @@ export default function DirectivaPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0c2340]/85 via-[#0c2340]/35 to-transparent" />
             <div className="relative max-w-xl p-8 text-white sm:p-10">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/75">ASEMUCH Coquimbo</p>
-              <h2 className="mt-3 text-3xl font-extrabold">Directiva 2025 a 2027</h2>
-              <p className="mt-3 text-base leading-7 text-white/90">Equipo comprometido con la representación y defensa de los funcionarios municipales de Coquimbo.</p>
+              <p className="motion-enter text-sm font-bold uppercase tracking-[0.2em] text-white">ASEMUCH Coquimbo</p>
+              <h2 className="motion-enter motion-enter-delay-1 mt-3 text-3xl font-extrabold text-white">Directiva 2025 a 2027</h2>
+              <p className="motion-enter motion-enter-delay-2 mt-3 text-base leading-7 text-white">Equipo comprometido con la representación y defensa de los funcionarios municipales de Coquimbo.</p>
             </div>
           </div>
           {/* Aviso demo */}
@@ -83,7 +83,7 @@ export default function DirectivaPage() {
           {/* Período */}
           <div className="mt-12 pt-8 border-t border-[#e3e9f1] text-center">
             <p className="text-sm text-[#5d6675]">
-              Directiva electa para el período <strong className="text-[#0c2340]">2024 – 2026</strong>
+              Directiva electa para el período <strong className="text-[#0c2340]">2025 – 2027</strong>
               {" "}conforme a lo establecido en los estatutos de ASEMUCH.
             </p>
           </div>

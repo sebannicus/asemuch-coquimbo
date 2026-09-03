@@ -8,6 +8,11 @@ const cards = [
     description: "Crear y publicar noticias regionales.",
   },
   {
+    href: "/admin/comunicados",
+    title: "Comunicados",
+    description: "Publicar comunicados con texto y archivos adjuntos.",
+  },
+  {
     href: "/admin/documentos",
     title: "Documentos",
     description: "Subir PDFs y gestionar documentos internos.",
@@ -32,11 +37,11 @@ export default async function AdminHomePage() {
             Panel de contenidos
           </h2>
           <p className="mt-2 text-sm text-[#5d6675]">
-            Desde aquí podrás administrar noticias, documentos y convenios en una sola cuenta.
+            Desde aquí podrás administrar noticias, comunicados, documentos y convenios en una sola cuenta.
           </p>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {cards.map((card) => (
             <Link
               key={card.href}

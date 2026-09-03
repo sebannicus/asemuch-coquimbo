@@ -54,10 +54,26 @@ create table if not exists public.agreements (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.communications (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  slug text not null unique,
+  excerpt text not null,
+  content text not null default '',
+  attachment_url text,
+  attachment_name text,
+  attachment_storage_path text,
+  status content_status not null default 'draft',
+  published_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 alter table public.news enable row level security;
 alter table public.news_images enable row level security;
 alter table public.documents enable row level security;
 alter table public.agreements enable row level security;
+alter table public.communications enable row level security;
 
 create policy "Published news is publicly readable"
 on public.news for select to anon, authenticated
@@ -82,9 +98,14 @@ create policy "Published agreements are publicly readable"
 on public.agreements for select to anon, authenticated
 using (status = 'published');
 
+create policy "Published communications are publicly readable"
+on public.communications for select to anon, authenticated
+using (status = 'published');
+
 insert into storage.buckets (id, name, public)
 values
   ('news-images', 'news-images', true),
   ('documents-files', 'documents-files', true),
   ('agreement-assets', 'agreement-assets', true)
+  ,('communications-files', 'communications-files', true)
 on conflict (id) do nothing;

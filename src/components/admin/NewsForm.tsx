@@ -61,16 +61,6 @@ export function NewsForm({
     };
   }, []);
 
-  function syncInputFiles(files: File[]) {
-    if (!inputRef.current) {
-      return;
-    }
-
-    const transfer = new DataTransfer();
-    files.forEach((file) => transfer.items.add(file));
-    inputRef.current.files = transfer.files;
-  }
-
   function replaceSelectedFiles(files: File[]) {
     previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
 
@@ -83,17 +73,15 @@ export function NewsForm({
     previewUrlsRef.current = previews.map((preview) => preview.url);
     setSelectedFiles(files);
     setNewImagePreviews(previews);
-    syncInputFiles(files);
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const incomingFiles = Array.from(event.currentTarget.files ?? []);
     if (!incomingFiles.length) {
-      syncInputFiles(selectedFiles);
       return;
     }
 
-    const nextFiles = dedupeFiles([...selectedFiles, ...incomingFiles]);
+    const nextFiles = dedupeFiles(incomingFiles);
     const validation = validateNewsImageFiles(
       nextFiles.map((file) => ({
         name: file.name,
@@ -105,7 +93,8 @@ export function NewsForm({
 
     if (!validation.success) {
       setClientError(validation.message);
-      syncInputFiles(selectedFiles);
+      event.currentTarget.value = "";
+      replaceSelectedFiles([]);
       return;
     }
 
@@ -118,9 +107,12 @@ export function NewsForm({
     setExistingImages((current) => current.filter((image) => image.id !== imageId));
   }
 
-  function removeSelectedFile(fileKey: string) {
+  function clearSelectedFiles() {
     setClientError(null);
-    replaceSelectedFiles(selectedFiles.filter((file) => getFileKey(file) !== fileKey));
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+    replaceSelectedFiles([]);
   }
 
   const totalImageCount = existingImages.length + selectedFiles.length;
@@ -242,7 +234,7 @@ export function NewsForm({
 
           <div className="flex items-center justify-between gap-3 text-sm text-[#5d6675]">
             <span>{totalImageCount} imagen(es) lista(s) para esta noticia.</span>
-            <span>La portada es siempre la primera miniatura visible.</span>
+            <span>Al elegir otra vez, reemplazas la selección anterior.</span>
           </div>
 
           {existingImages.map((image) => (
@@ -296,10 +288,10 @@ export function NewsForm({
                     <p className="truncate text-xs text-[#5d6675]">{preview.name}</p>
                     <button
                       type="button"
-                      onClick={() => removeSelectedFile(preview.key)}
+                      onClick={clearSelectedFiles}
                       className="text-sm font-semibold text-rose-700 transition-colors hover:text-rose-500"
                     >
-                      Quitar
+                      Quitar selección
                     </button>
                   </div>
                 </article>

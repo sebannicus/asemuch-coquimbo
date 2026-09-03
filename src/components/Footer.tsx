@@ -27,7 +27,7 @@ export default function Footer() {
               <p className="text-sm leading-relaxed text-[#cdd8e6]/80 mt-2 max-w-xs">
                 Representamos y defendemos los derechos laborales de los
                 funcionarios municipales de la IV Región de Coquimbo, con más
-                de 100 años de historia gremial.
+                de 80 años de historia gremial.
               </p>
             </div>
           </div>

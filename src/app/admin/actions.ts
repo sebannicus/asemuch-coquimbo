@@ -12,10 +12,13 @@ import {
   type UploadedNewsImage,
   validateNewsImageFiles,
 } from "@/lib/news-images";
+import { buildCommunicationFileStoragePath, validateCommunicationFile } from "@/lib/communication-files";
+import { buildDocumentStoragePath, validateDocumentFile } from "@/lib/document-files";
+import { buildAgreementAssetPath, validateAgreementImage } from "@/lib/agreement-assets";
 import { slugify } from "@/lib/slug";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { NewsFormState } from "@/types/admin";
+import type { CommunicationFormState, CommunicationRecord, NewsFormState } from "@/types/admin";
 
 export async function loginAdmin(formData: FormData) {
   const supabase = await createSupabaseServerClient();
@@ -53,6 +56,15 @@ const newsSchema = z.object({
   excerpt: z.string().min(10),
   content: z.string().min(20),
   featured_image_url: z.string().url().optional().or(z.literal("")),
+  status: z.enum(["draft", "published"]),
+});
+
+const communicationSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(3),
+  slug: z.string().optional(),
+  excerpt: z.string().min(10),
+  content: z.string().max(20_000),
   status: z.enum(["draft", "published"]),
 });
 
@@ -322,4 +334,185 @@ export async function deleteNews(formData: FormData) {
   revalidatePath("/admin/noticias");
   revalidatePath("/noticias");
   revalidatePath("/");
+}
+
+function getUploadedCommunicationFile(formData: FormData) {
+  const entry = formData.get("attachment");
+  return entry instanceof File && entry.size > 0 ? entry : null;
+}
+
+async function removeCommunicationFile(supabaseAdmin: SupabaseClient, storagePath: string | null) {
+  if (!storagePath) {
+    return;
+  }
+
+  const { error } = await supabaseAdmin.storage.from("communications-files").remove([storagePath]);
+  if (error) {
+    throw new Error("No se pudo eliminar el archivo anterior.");
+  }
+}
+
+export async function upsertCommunication(
+  _: CommunicationFormState,
+  formData: FormData,
+): Promise<CommunicationFormState> {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const parsed = communicationSchema.safeParse({
+    id: String(formData.get("id") ?? "") || undefined,
+    title: String(formData.get("title") ?? ""),
+    slug: String(formData.get("slug") ?? "") || undefined,
+    excerpt: String(formData.get("excerpt") ?? ""),
+    content: String(formData.get("content") ?? ""),
+    status: String(formData.get("status") ?? "draft"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "No se pudo guardar el comunicado." };
+  }
+
+  const attachment = getUploadedCommunicationFile(formData);
+  const removeAttachment = formData.get("remove_attachment") === "on";
+  if (!parsed.data.content.trim() && !attachment && !parsed.data.id) {
+    return { error: "Escribe el comunicado o adjunta un archivo para poder guardarlo." };
+  }
+
+  if (attachment) {
+    const validation = validateCommunicationFile(attachment);
+    if (!validation.success) {
+      return { error: validation.message };
+    }
+  }
+
+  const { id, title, slug, excerpt, content, status } = parsed.data;
+  const payload = {
+    title,
+    slug: slugify(slug || title),
+    excerpt,
+    content,
+    status,
+    published_at: status === "published" ? new Date().toISOString() : null,
+    updated_at: new Date().toISOString(),
+  };
+
+  let newStoragePath: string | null = null;
+  try {
+    const existing = id
+      ? await supabaseAdmin.from("communications").select("*").eq("id", id).maybeSingle()
+      : { data: null, error: null };
+    if (existing.error) {
+      return { error: "No se pudo cargar el comunicado actual." };
+    }
+
+    const oldAttachment = existing.data as CommunicationRecord | null;
+    if (!parsed.data.content.trim() && !attachment && (!oldAttachment?.attachment_url || removeAttachment)) {
+      return { error: "Escribe el comunicado o conserva un archivo adjunto para poder guardarlo." };
+    }
+
+    const { data: savedCommunication, error: saveError } = id
+      ? await supabaseAdmin.from("communications").update(payload).eq("id", id).select("id").single()
+      : await supabaseAdmin.from("communications").insert(payload).select("id").single();
+    if (saveError || !savedCommunication) {
+      return { error: "No se pudo guardar el comunicado. Revisa que el enlace no esté repetido." };
+    }
+
+    if (attachment) {
+      newStoragePath = buildCommunicationFileStoragePath(savedCommunication.id, attachment.name, crypto.randomUUID());
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from("communications-files")
+        .upload(newStoragePath, await attachment.arrayBuffer(), { contentType: attachment.type, upsert: false });
+      if (uploadError) {
+        throw new Error("No se pudo subir el archivo adjunto.");
+      }
+
+      const { data: publicUrl } = supabaseAdmin.storage.from("communications-files").getPublicUrl(newStoragePath);
+      const { error: attachmentError } = await supabaseAdmin
+        .from("communications")
+        .update({
+          attachment_url: publicUrl.publicUrl,
+          attachment_name: attachment.name,
+          attachment_storage_path: newStoragePath,
+        })
+        .eq("id", savedCommunication.id);
+      if (attachmentError) {
+        throw new Error("El comunicado se guardo, pero no se pudo asociar el archivo.");
+      }
+
+      await removeCommunicationFile(supabaseAdmin, oldAttachment?.attachment_storage_path ?? null).catch(() => undefined);
+    } else if (removeAttachment && oldAttachment?.attachment_storage_path) {
+      const { error: attachmentError } = await supabaseAdmin
+        .from("communications")
+        .update({ attachment_url: null, attachment_name: null, attachment_storage_path: null })
+        .eq("id", savedCommunication.id);
+      if (attachmentError) {
+        return { error: "No se pudo quitar el archivo adjunto." };
+      }
+      await removeCommunicationFile(supabaseAdmin, oldAttachment.attachment_storage_path).catch(() => undefined);
+    }
+  } catch (error) {
+    await removeCommunicationFile(supabaseAdmin, newStoragePath).catch(() => undefined);
+    return { error: error instanceof Error ? error.message : "No se pudo guardar el comunicado." };
+  }
+
+  revalidatePath("/admin/comunicados");
+  revalidatePath("/comunicados");
+  revalidatePath(`/comunicados/${payload.slug}`);
+  redirect("/admin/comunicados");
+}
+
+export async function deleteCommunication(formData: FormData) {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const id = String(formData.get("id") ?? "");
+  if (id) {
+    const { data } = await supabaseAdmin
+      .from("communications")
+      .select("attachment_storage_path")
+      .eq("id", id)
+      .maybeSingle();
+    await removeCommunicationFile(supabaseAdmin, data?.attachment_storage_path ?? null);
+    await supabaseAdmin.from("communications").delete().eq("id", id);
+  }
+
+  revalidatePath("/admin/comunicados");
+  revalidatePath("/comunicados");
+}
+
+const documentSchema = z.object({ id: z.string().optional(), title: z.string().min(3), slug: z.string().optional(), document_type: z.string().min(2), summary: z.string().min(10), status: z.enum(["draft", "published"]) });
+const agreementSchema = z.object({ id: z.string().optional(), title: z.string().min(3), slug: z.string().optional(), summary: z.string().min(10), details: z.string().min(10), promo_code: z.string(), valid_from: z.string(), valid_until: z.string(), status: z.enum(["draft", "published"]) });
+
+export async function upsertDocument(_: { error: string | null }, formData: FormData): Promise<{ error: string | null }> {
+  await requireAdminSession(); const supabase = createSupabaseAdminClient(); if (!supabase) redirect("/admin/login?setup=missing");
+  const parsed = documentSchema.safeParse(Object.fromEntries(["id", "title", "slug", "document_type", "summary", "status"].map((key) => [key, String(formData.get(key) ?? "")] )));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del documento." };
+  const file = formData.get("file"); const upload = file instanceof File && file.size ? file : null;
+  if (!upload && !parsed.data.id) return { error: "Debes adjuntar un archivo PDF." };
+  if (upload) { const valid = validateDocumentFile(upload); if (!valid.success) return { error: valid.message }; }
+  const payload = { ...parsed.data, id: undefined, slug: slugify(parsed.data.slug || parsed.data.title), published_at: parsed.data.status === "published" ? new Date().toISOString() : null, updated_at: new Date().toISOString() };
+  const { data, error } = parsed.data.id ? await supabase.from("documents").update(payload).eq("id", parsed.data.id).select("id").single() : await supabase.from("documents").insert(payload).select("id").single();
+  if (error || !data) return { error: "No se pudo guardar el documento." };
+  if (upload) { const path = buildDocumentStoragePath(data.id, upload.name, crypto.randomUUID()); const { error: uploadError } = await supabase.storage.from("documents-files").upload(path, await upload.arrayBuffer(), { contentType: upload.type }); if (uploadError) return { error: "No se pudo subir el PDF." }; const { data: url } = supabase.storage.from("documents-files").getPublicUrl(path); await supabase.from("documents").update({ file_url: url.publicUrl }).eq("id", data.id); }
+  revalidatePath("/admin/documentos"); revalidatePath("/documentos"); redirect("/admin/documentos");
+}
+
+export async function upsertAgreement(_: { error: string | null }, formData: FormData): Promise<{ error: string | null }> {
+  await requireAdminSession(); const supabase = createSupabaseAdminClient(); if (!supabase) redirect("/admin/login?setup=missing");
+  const parsed = agreementSchema.safeParse(Object.fromEntries(["id", "title", "slug", "summary", "details", "promo_code", "valid_from", "valid_until", "status"].map((key) => [key, String(formData.get(key) ?? "")] )));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del convenio." };
+  const image = formData.get("image"); const upload = image instanceof File && image.size ? image : null; if (upload) { const valid = validateAgreementImage(upload); if (!valid.success) return { error: valid.message }; }
+  const payload = { ...parsed.data, id: undefined, slug: slugify(parsed.data.slug || parsed.data.title), promo_code: parsed.data.promo_code || null, valid_from: parsed.data.valid_from || null, valid_until: parsed.data.valid_until || null, published_at: parsed.data.status === "published" ? new Date().toISOString() : null, updated_at: new Date().toISOString() };
+  const { data, error } = parsed.data.id ? await supabase.from("agreements").update(payload).eq("id", parsed.data.id).select("id").single() : await supabase.from("agreements").insert(payload).select("id").single();
+  if (error || !data) return { error: "No se pudo guardar el convenio." };
+  if (upload) { const path = buildAgreementAssetPath(data.id, "image", upload.name, crypto.randomUUID()); const { error: uploadError } = await supabase.storage.from("agreement-assets").upload(path, await upload.arrayBuffer(), { contentType: upload.type }); if (uploadError) return { error: "No se pudo subir la imagen." }; const { data: url } = supabase.storage.from("agreement-assets").getPublicUrl(path); await supabase.from("agreements").update({ image_url: url.publicUrl }).eq("id", data.id); }
+  revalidatePath("/admin/convenios"); revalidatePath("/convenios"); redirect("/admin/convenios");
 }

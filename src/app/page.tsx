@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { InstitutionalCarousel } from "@/components/InstitutionalCarousel";
 import Link from "next/link";
 import { ArrowDownRight, BookOpenCheck, Download, FileText, HeartHandshake, Landmark, Scale, ShieldCheck, Users } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
@@ -21,6 +22,7 @@ const directors = [
     description:
       "Equipo dirigente que articula representación, coordinación interna y presencia gremial en Coquimbo.",
     image: "/images/rosa-renney-cristian-tapia-asemuch-coquimbo.webp",
+    href: "/directiva",
   },
   {
     title: "Trabajo con organizaciones aliadas",
@@ -70,13 +72,13 @@ export default function Home() {
         <HeroCarousel />
         <div id="inicio" className="relative mx-auto grid min-h-[640px] w-full max-w-7xl items-center gap-10 px-4 py-20 sm:px-6 lg:min-h-[680px] lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
             <div className="max-w-3xl text-white">
-              <div className="mb-6 inline-flex rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-medium backdrop-blur">
+              <div className="motion-enter mb-6 inline-flex rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-medium backdrop-blur">
                 Funcionarios municipales de Coquimbo
               </div>
-              <h1 className="font-heading text-[clamp(2.75rem,6.2vw,5.5rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance text-white">
-                Más de 100 años de historia gremial al servicio de Coquimbo.
+              <h1 className="motion-enter motion-enter-delay-1 font-heading text-[clamp(2.75rem,6.2vw,5.5rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance text-white">
+                Más de 80 años de historia gremial al servicio de Coquimbo.
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84 sm:text-xl">
+              <p className="motion-enter motion-enter-delay-2 mt-6 max-w-2xl text-lg leading-8 text-white/84 sm:text-xl">
                 ASEMUCH Coquimbo representa, acompaña y organiza a funcionarios municipales de Coquimbo
                 con una mirada local, activa y comprometida con sus derechos.
               </p>
@@ -113,33 +115,14 @@ export default function Home() {
 
       <section id="quienes-somos" className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="relative min-h-80 overflow-hidden rounded-[2rem] border border-border bg-card shadow-lg">
-              <Image
-                src="/images/reunion-asemuch-funcionarios.webp"
-                alt="Actividad de ASEMUCH Coquimbo con funcionarios municipales"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="relative min-h-80 overflow-hidden rounded-[2rem] border border-border bg-card shadow-lg sm:translate-y-10">
-              <Image
-                src="/images/junto-a-asemuch-nacional-y-hero.webp"
-                alt="Dirigentes de ASEMUCH Coquimbo en actividad gremial"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
+          <InstitutionalCarousel />
 
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground">
               <Landmark className="h-4 w-4" />
               Quiénes Somos
             </div>
-            <h2 className="mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-balance sm:text-5xl">
+            <h2 className="motion-enter mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-balance sm:text-5xl">
               Una organización gremial con identidad local y trayectoria histórica.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
@@ -183,27 +166,47 @@ export default function Home() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Directiva</p>
-            <h2 className="mt-4 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Representación activa en el período 2025 a 2027</h2>
+            <h2 className="motion-enter mt-4 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Representación activa en el período 2025 a 2027</h2>
           </div>
         </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {directors.map((item) => (
-            <article key={item.title} className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
-              <div className="relative min-h-80">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-heading text-2xl font-black">{item.title}</h3>
-                <p className="mt-3 leading-7 text-muted-foreground">{item.description}</p>
-              </div>
-            </article>
-          ))}
+          {directors.map((item) => {
+            const content = (
+              <>
+                <div className="relative min-h-80">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-heading text-2xl font-black">{item.title}</h3>
+                  <p className="mt-3 leading-7 text-muted-foreground">{item.description}</p>
+                </div>
+              </>
+            );
+
+            if (item.href) {
+              return (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
+                >
+                  {content}
+                </Link>
+              );
+            }
+
+            return (
+              <article key={item.title} className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm">
+                {content}
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -231,7 +234,7 @@ export default function Home() {
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">¿Por qué afiliarte?</p>
-            <h2 className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Beneficios de ser parte de ASEMUCH</h2>
+            <h2 className="motion-enter mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Beneficios de ser parte de ASEMUCH</h2>
           </div>
           <Link href="/afiliarse" className="inline-flex w-fit rounded-full bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-blue-light">
             Afiliarme ahora
@@ -253,7 +256,7 @@ export default function Home() {
       <section id="noticias" className="scroll-mt-24">
         <div className="mx-auto w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Noticias ASEMUCH Coquimbo</p>
-          <h2 className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Últimas novedades, comunicados y actividades de ASEMUCH Coquimbo</h2>
+          <h2 className="motion-enter mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Últimas novedades, comunicados y actividades de ASEMUCH Coquimbo</h2>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">Noticias locales y nacionales relacionadas con el trabajo municipal y la actividad gremial.</p>
         </div>
         <NewsSection />
@@ -277,10 +280,10 @@ export default function Home() {
               <ArrowDownRight className="h-4 w-4" />
               Afiliación
             </div>
-            <h2 className="mt-5 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">
+            <h2 className="motion-enter motion-enter-delay-1 mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-white sm:text-5xl">
               Si trabajas en la Municipalidad de Coquimbo puedes afiliarte a ASEMUCH
             </h2>
-            <p className="mt-5 text-lg leading-8 text-white/78">
+            <p className="motion-enter motion-enter-delay-2 mt-5 text-lg leading-8 text-white">
               La afiliación permite fortalecer la organización y defender los derechos de funcionarios
               municipales de Coquimbo mediante una representación gremial activa.
             </p>

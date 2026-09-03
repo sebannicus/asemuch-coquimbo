@@ -20,7 +20,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     heading: "Representando a los funcionarios municipales de la Municipalidad de Coquimbo",
     subheading: "ASEMUCH Coquimbo",
     description:
-      "Defendemos los derechos laborales de los funcionarios municipales de Coquimbo, con más de 100 años de historia gremial afiliada a la Confederación Nacional ASEMUCH.",
+      "Defendemos los derechos laborales de los funcionarios municipales de Coquimbo, con más de 80 años de historia gremial afiliada a la Confederación Nacional ASEMUCH.",
     href: "/quienes-somos",
     cta: "Conócenos",
   },

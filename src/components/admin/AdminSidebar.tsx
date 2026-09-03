@@ -3,6 +3,7 @@ import Link from "next/link";
 const NAV_ITEMS = [
   { href: "/admin", label: "Inicio" },
   { href: "/admin/noticias", label: "Noticias" },
+  { href: "/admin/comunicados", label: "Comunicados" },
   { href: "/admin/documentos", label: "Documentos" },
   { href: "/admin/convenios", label: "Convenios" },
 ];

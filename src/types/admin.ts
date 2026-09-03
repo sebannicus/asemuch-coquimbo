@@ -57,3 +57,22 @@ export interface AgreementRecord {
   created_at: string;
   updated_at: string;
 }
+
+export interface CommunicationRecord {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  attachment_url: string | null;
+  attachment_name: string | null;
+  attachment_storage_path: string | null;
+  status: ContentStatus;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CommunicationFormState {
+  error: string | null;
+}

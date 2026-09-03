@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
+import { stripHtml } from "@/lib/strip-html";
 
 export const metadata: Metadata = {
   title: "Biblioteca",
@@ -78,18 +79,6 @@ async function getBibliotecaPosts(): Promise<WPPost[]> {
   } catch {
     return [];
   }
-}
-
-function stripHtml(html: string) {
-  return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&amp;/g, "&")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8230;/g, "…")
-    .replace(/&#8220;/g, '"')
-    .replace(/&#8221;/g, '"')
-    .trim();
 }
 
 function formatDate(iso: string) {

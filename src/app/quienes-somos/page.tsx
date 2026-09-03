@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Quiénes Somos",
@@ -26,13 +27,14 @@ export default function QuienesSomosPage() {
       {/* Historia */}
       <section className="py-16 bg-white">
         <div className="container-site">
+          <div className="relative mb-10 min-h-72 overflow-hidden rounded-3xl"><Image src="/images/reunion-asemuch-funcionarios.webp" alt="Encuentro de ASEMUCH Coquimbo" fill sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" /></div>
           <div className="max-w-3xl">
             <span className="text-xs font-bold text-[#0c71c3] uppercase tracking-widest">Historia</span>
             <h2
               className="mt-2 text-3xl font-extrabold text-[#0c2340]"
               style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
             >
-              Más de 100 años representando a los funcionarios municipales
+              Más de 80 años representando a los funcionarios municipales
             </h2>
             <div className="mt-6 prose prose-sm max-w-none text-[#5d6675] space-y-4">
               <p>
