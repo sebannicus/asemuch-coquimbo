@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const slides = [
-  { src: "/images/reunion-asemuch-funcionarios.webp", alt: "Actividad de ASEMUCH Coquimbo con funcionarios municipales" },
+  { src: "/images/directiva-junto-a-achs.webp", alt: "Directiva de ASEMUCH Coquimbo junto a ACHS" },
+  { src: "/images/foto-hero-asemuch-junto-a-caja-los-andes.webp", alt: "ASEMUCH Coquimbo junto a Caja Los Andes" },
   { src: "/images/junto-a-asemuch-nacional-y-hero.webp", alt: "Dirigentes de ASEMUCH Coquimbo en actividad gremial" },
-  { src: "/images/rosa-renney-cristian-tapia-asemuch-coquimbo.webp", alt: "Directiva de ASEMUCH Coquimbo" },
+  { src: "/images/reunion.webp", alt: "Reunión de funcionarios municipales de Coquimbo" },
 ];
 
 export function InstitutionalCarousel() {

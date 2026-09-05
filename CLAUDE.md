@@ -122,6 +122,7 @@ Inicio | Quiénes Somos | Directiva | Noticias | Convenios | Comunicados | Docum
 | Números reales dictámenes CGR | SiteData.ts DICTAMENES | Números E123.456 son ficticios |
 | Redes sociales propias | SiteData.ts CONTACT_INFO | Instagram/Facebook de ASEMUCH Coquimbo si existe |
 | Período directiva en Hero | SiteData.ts HERO_SLIDES[2] | Corregir "2024–2026" → "2025–2027" |
+| Detalle convenios destacados | SiteData.ts CONVENIOS_DESTACADOS | Clínica Dental Jade, Rosa Agustina, Petrobras, Centro Oftalmológico Integral del Norte: falta % descuento, condiciones y rubro de Rosa Agustina |
 
 ## Contenido genérico activo (reemplazar cuando el cliente provea)
 - Noticias: 6 artículos temáticamente correctos pero ficticios
@@ -141,6 +142,7 @@ Inicio | Quiénes Somos | Directiva | Noticias | Convenios | Comunicados | Docum
 - **Fase H (2026-07-02):** QA funcional + lista de pedido contenido real — periodo directiva corregido (2024–2026 → 2025–2027), deploy fix ✅, lista formal de pedido al cliente generada para las 7 categorías pendientes (noticias, PDFs, dictámenes CGR, redes sociales, % Skype, año fundación, stats)
 - **Fase I (2026-07-02):** Rediseño Hero — logo como protagonista visual principal, visible en desktop y mobile sin recortes, eliminada tarjeta "Seminario Nacional", header simplificado a "ASEMUCH / Coquimbo", commit f0f6553 pusheado a GitHub ✅
 - **Fase J (2026-07-02):** Buscadores en tiempo real — /documentos (Leyes + Dictámenes), /convenios, /comunicados con filtrado sticky y contador de resultados, commit b157386 pusheado a GitHub ✅
+- **Fase K (2026-09-03):** Banner de convenios destacados en /convenios — marquee infinito clickeable (ConveniosDestacadosBanner.tsx) con 4 convenios reales (Clínica Dental Jade, Rosa Agustina, Petrobras, Centro Oftalmológico Integral del Norte), modal de detalle por convenio, datos en CONVENIOS_DESTACADOS (SiteData.ts) marcados infoPendiente:true hasta que el cliente confirme % y condiciones
 
 ## Reglas de desarrollo
 - Rama activa: `main`

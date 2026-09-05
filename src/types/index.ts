@@ -51,3 +51,14 @@ export interface Documento {
   formato: string;
   href: string;
 }
+
+export interface ConvenioDestacado {
+  id: string;
+  nombre: string;
+  categoria: string;
+  icono: string;
+  beneficio: string;
+  descripcion: string;
+  colorAcento: string;
+  infoPendiente?: boolean;
+}

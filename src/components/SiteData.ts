@@ -1,4 +1,4 @@
-import type { NavItem, NewsCard, HeroSlide } from "@/types";
+import type { NavItem, NewsCard, HeroSlide, ConvenioDestacado } from "@/types";
 
 // ─── Navegación ────────────────────────────────────────────────────────────────
 export const NAV_ITEMS: NavItem[] = [
@@ -68,6 +68,57 @@ export const QUICK_ACCESS_ITEMS = [
     href: "/contacto",
     description: "Comunícate con nosotros",
     icon: "✉️",
+  },
+];
+
+// ─── Convenios destacados ──────────────────────────────────────────────────────
+// Nombres reales entregados por el cliente (2026-09-03). Categoría, beneficio y
+// descripción son referenciales — infoPendiente:true marca los que faltan por
+// confirmar (% descuento, condiciones, contacto directo del convenio).
+export const CONVENIOS_DESTACADOS: ConvenioDestacado[] = [
+  {
+    id: "clinica-dental-jade",
+    nombre: "Clínica Dental Jade",
+    categoria: "Salud dental",
+    icono: "🦷",
+    beneficio: "Descuento en prestaciones dentales",
+    descripcion:
+      "Convenio de salud dental para afiliadas, afiliados y su grupo familiar directo. El porcentaje de descuento y las prestaciones cubiertas serán confirmados por ASEMUCH Coquimbo próximamente.",
+    colorAcento: "#0c71c3",
+    infoPendiente: true,
+  },
+  {
+    id: "rosa-agustina",
+    nombre: "Rosa Agustina",
+    categoria: "Convenio comercial",
+    icono: "🏬",
+    beneficio: "Beneficio exclusivo para socios",
+    descripcion:
+      "Convenio disponible para afiliadas y afiliados de ASEMUCH Coquimbo. El detalle del beneficio y las condiciones de uso serán confirmados por ASEMUCH Coquimbo próximamente.",
+    colorAcento: "#10498a",
+    infoPendiente: true,
+  },
+  {
+    id: "petrobras",
+    nombre: "Petrobras",
+    categoria: "Combustible",
+    icono: "⛽",
+    beneficio: "Descuento en estaciones de servicio",
+    descripcion:
+      "Convenio para descuento en combustible en estaciones de servicio Petrobras de la región. El porcentaje exacto y los puntos de venta adheridos serán confirmados por ASEMUCH Coquimbo próximamente.",
+    colorAcento: "#0c2340",
+    infoPendiente: true,
+  },
+  {
+    id: "centro-oftalmologico-integral-del-norte",
+    nombre: "Centro Oftalmológico Integral del Norte",
+    categoria: "Salud visual",
+    icono: "👁️",
+    beneficio: "Descuento en atenciones oftalmológicas",
+    descripcion:
+      "Convenio de salud visual para afiliadas, afiliados y su grupo familiar directo. El porcentaje de descuento y las prestaciones cubiertas serán confirmados por ASEMUCH Coquimbo próximamente.",
+    colorAcento: "#2ea3f2",
+    infoPendiente: true,
   },
 ];
 

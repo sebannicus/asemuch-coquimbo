@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
+import ConveniosDestacadosBanner from "@/components/ConveniosDestacadosBanner";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { stripHtml } from "@/lib/strip-html";
 import type { AgreementRecord } from "@/types/admin";
@@ -76,6 +77,8 @@ export default function ConveniosClient() {
         subtitle="Beneficios y convenios negociados por la Confederación Nacional ASEMUCH para sus afiliadas y afiliados a lo largo de Chile."
         breadcrumbs={[{ label: "Convenios" }]}
       />
+
+      <ConveniosDestacadosBanner />
 
       {/* Buscador sticky */}
       <div className="sticky top-16 z-30 bg-white border-b border-[#e3e9f1] shadow-sm">

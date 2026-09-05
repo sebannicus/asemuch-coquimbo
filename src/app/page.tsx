@@ -266,13 +266,17 @@ export default function Home() {
         <div className="grid gap-8 overflow-hidden rounded-[2.25rem] border border-border bg-slate-950 text-white shadow-[0_32px_80px_rgba(15,23,42,0.16)] lg:grid-cols-[0.92fr_1.08fr]">
           <div className="relative min-h-[420px]">
             <Image
-              src="/images/rossa-renney-cristian-tapia-foto-para-directiva-y-hero.webp"
-              alt="Representantes de ASEMUCH Coquimbo en actividad gremial"
+              src="/images/directiva-junto-a-achs.webp"
+              alt="Directiva de ASEMUCH Coquimbo junto a ACHS"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
+            <div className="absolute bottom-5 left-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/95 p-2 shadow-lg backdrop-blur">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/logo.png" alt="ASEMUCH Coquimbo" className="h-full w-full object-contain" />
+            </div>
           </div>
 
           <div className="p-8 sm:p-10">
