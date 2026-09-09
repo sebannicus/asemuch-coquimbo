@@ -3,6 +3,7 @@ import { Open_Sans, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import TitleReveal from "@/components/TitleReveal";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -120,6 +121,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
+        <TitleReveal />
         <Header />
         <div className="flex-1">{children}</div>
         <Footer />

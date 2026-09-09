@@ -72,31 +72,42 @@ export const QUICK_ACCESS_ITEMS = [
 ];
 
 // ─── Convenios destacados ──────────────────────────────────────────────────────
-// Nombres reales entregados por el cliente (2026-09-03). Categoría, beneficio y
-// descripción son referenciales — infoPendiente:true marca los que faltan por
-// confirmar (% descuento, condiciones, contacto directo del convenio).
+// Nombres reales entregados por el cliente (2026-09-03). Detalle completo
+// (direcciones, tarifas, contactos) extraído de documentos de convenio y
+// capturas provistas por el cliente (2026-09-08). Solo Petrobras sigue
+// infoPendiente:true — ASEMUCH Coquimbo debe confirmar % y puntos de venta.
 export const CONVENIOS_DESTACADOS: ConvenioDestacado[] = [
   {
     id: "clinica-dental-jade",
     nombre: "Clínica Dental Jade",
     categoria: "Salud dental",
     icono: "🦷",
-    beneficio: "Descuento en prestaciones dentales",
+    beneficio: "Tarifas preferenciales en prestaciones dentales",
     descripcion:
-      "Convenio de salud dental para afiliadas, afiliados y su grupo familiar directo. El porcentaje de descuento y las prestaciones cubiertas serán confirmados por ASEMUCH Coquimbo próximamente.",
+      "Convenio de salud dental con Clínica Dental Jade para afiliadas, afiliados y su grupo familiar directo. Tarifas preferenciales en restauraciones, prótesis, coronas, limpiezas, endodoncias y exodoncias. Agenda tu hora directamente por WhatsApp.",
     colorAcento: "#0c71c3",
-    infoPendiente: true,
+    direccion: "Av. El Libertador 1401, local 1614, La Serena",
+    contacto: "Instagram @clinica_dental_jade — agenda de hora por WhatsApp",
   },
   {
     id: "rosa-agustina",
-    nombre: "Rosa Agustina",
-    categoria: "Convenio comercial",
-    icono: "🏬",
-    beneficio: "Beneficio exclusivo para socios",
+    nombre: "Resort Rosa Agustina",
+    categoria: "Alojamiento All Inclusive",
+    icono: "🏖️",
+    beneficio: "10% de descuento en estadías All Inclusive",
     descripcion:
-      "Convenio disponible para afiliadas y afiliados de ASEMUCH Coquimbo. El detalle del beneficio y las condiciones de uso serán confirmados por ASEMUCH Coquimbo próximamente.",
+      "Convenio con Resort Rosa Agustina (Guanaqueros) para afiliadas y afiliados de ASEMUCH Coquimbo: 10% de descuento en la tarifa por persona en modalidad All Inclusive, en cualquiera de las categorías de habitación disponibles al momento de la reserva. No aplica en fines de semana largos, feriados nacionales ni fechas de temporada alta.",
     colorAcento: "#10498a",
-    infoPendiente: true,
+    contacto:
+      "Reservas con al menos 10 días hábiles de anticipación — Vicente Correa Juliet, vicente.correa@rosaagutina.cl, +56 9 9019 2132",
+    tarifas: [
+      { label: "Superior", valor: "$129.900 pp" },
+      { label: "Superior Plus", valor: "$134.900 pp" },
+      { label: "Suite", valor: "$139.900 pp" },
+      { label: "Grand Superior", valor: "$149.900 pp" },
+      { label: "Master Suite", valor: "$149.900 pp" },
+      { label: "Niños 4–11 años", valor: "$39.900 pp" },
+    ],
   },
   {
     id: "petrobras",
@@ -114,11 +125,36 @@ export const CONVENIOS_DESTACADOS: ConvenioDestacado[] = [
     nombre: "Centro Oftalmológico Integral del Norte",
     categoria: "Salud visual",
     icono: "👁️",
-    beneficio: "Descuento en atenciones oftalmológicas",
+    beneficio: "Programas de salud visual con tarifas preferenciales",
     descripcion:
-      "Convenio de salud visual para afiliadas, afiliados y su grupo familiar directo. El porcentaje de descuento y las prestaciones cubiertas serán confirmados por ASEMUCH Coquimbo próximamente.",
+      "Convenio de colaboración en salud visual con Centro Oftalmológico Integral del Norte para afiliadas, afiliados y sus cargas familiares directas: acceso preferencial a programas de detección de glaucoma y patologías retinianas, control visual infantil y descuento en lentes. Posibilidad de operativos en dependencias de ASEMUCH según planificación conjunta.",
     colorAcento: "#2ea3f2",
-    infoPendiente: true,
+    direccion: "Dr. Marín 60, Clínica Imagen Salud, Coquimbo",
+    contacto: "+56 9 2985 8495 — nidelcoin@gmail.com",
+    tarifas: [
+      { label: "Detección glaucoma y patologías retinianas (Fonasa)", valor: "$20.230" },
+      { label: "Detección glaucoma y patologías retinianas (Particular)", valor: "$50.000" },
+      { label: "Programa \"Ojos Jóvenes, Futuro Claro\" (4–18 años)", valor: "$25.000" },
+      { label: "Descuento en lentes ópticos y de sol", valor: "15%" },
+    ],
+  },
+  {
+    id: "apart-hotel-plaza-centro",
+    nombre: "Apart Hotel Plaza Centro",
+    categoria: "Alojamiento en Santiago",
+    icono: "🏨",
+    beneficio: "Tarifa especial para socios en Santiago Centro",
+    descripcion:
+      "Convenio con Apart Hotel Plaza Centro S.A. para alojamiento en Santiago Centro, a pasos del Metro Bellas Artes y el Barrio Lastarrias, y cercano a clínicas y hospitales. Departamentos de uno y dos dormitorios, completamente equipados, con TV cable, wifi, lavandería y servicio de mucama.",
+    colorAcento: "#3d7ab8",
+    direccion:
+      "Miraflores 455 (entre Merced y Monjitas) y Mosqueto 552 (entre Monjitas y Santo Domingo), Santiago Centro",
+    contacto:
+      "Nancy Pizarro H., Gerenta General — +56 9 9824 8609 / +56 9 7958 4672 / +56 9 7659 5683 — nancyp@apartplazacentro.cl — Oficina: Monjitas 527, of. 815, Santiago Centro (Lun a Vie, 9:30–16:00 hrs)",
+    tarifas: [
+      { label: "1 dormitorio, 1 baño (1–2 personas)", valor: "$50.000/día IVA incl." },
+      { label: "2 dormitorios, 2 baños (hasta 4 personas)", valor: "$60.000/día IVA incl." },
+    ],
   },
 ];
 

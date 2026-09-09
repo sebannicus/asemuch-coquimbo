@@ -4,10 +4,12 @@ import Link from "next/link";
 import { ArrowDownRight, BookOpenCheck, Download, FileText, HeartHandshake, Landmark, Scale, ShieldCheck, Users } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
 import NewsSection from "@/components/NewsSection";
+import CountUp from "@/components/CountUp";
 
 const stats = [
-  { value: "+100", label: "años de historia gremial" },
-  { value: "+300", label: "organizaciones comunales de base a nivel nacional" },
+  { value: 80, label: "años de historia gremial" },
+  { value: 100, label: "convenios a nivel nacional para funcionarios" },
+  { value: 300, label: "organizaciones comunales de base a nivel nacional" },
 ];
 
 const highlights = [
@@ -75,7 +77,7 @@ export default function Home() {
               <div className="motion-enter mb-6 inline-flex rounded-full border border-white/16 bg-white/12 px-4 py-2 text-sm font-medium backdrop-blur">
                 Funcionarios municipales de Coquimbo
               </div>
-              <h1 className="motion-enter motion-enter-delay-1 font-heading text-[clamp(2.75rem,6.2vw,5.5rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance text-white">
+              <h1 data-title-reveal className="font-heading text-[clamp(2.75rem,6.2vw,5.5rem)] font-black leading-[0.94] tracking-[-0.03em] text-balance text-white">
                 Más de 80 años de historia gremial al servicio de Coquimbo.
               </h1>
               <p className="motion-enter motion-enter-delay-2 mt-6 max-w-2xl text-lg leading-8 text-white/84 sm:text-xl">
@@ -86,13 +88,13 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="#afiliate"
-                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-accent)] px-6 py-3 text-base font-bold text-slate-900 transition hover:translate-y-[-1px]"
+                  className="btn-gradient-border inline-flex items-center justify-center rounded-full bg-[color:var(--color-accent)] px-6 py-3 text-base font-bold text-slate-900 transition hover:translate-y-[-1px]"
                 >
                   Quiero afiliarme
                 </a>
                 <a
                   href="#noticias"
-                  className="inline-flex items-center justify-center rounded-full border border-white/22 bg-white/8 px-6 py-3 text-base font-semibold text-white backdrop-blur transition hover:bg-white/14"
+                  className="btn-gradient-border inline-flex items-center justify-center rounded-full bg-white/8 px-6 py-3 text-base font-semibold text-white backdrop-blur transition hover:bg-white/14"
                 >
                   Ver noticias y comunicados
                 </a>
@@ -105,7 +107,9 @@ export default function Home() {
                   key={stat.label}
                   className="rounded-[1.6rem] border border-white/16 bg-white/14 p-5 text-white shadow-[0_30px_80px_rgba(6,16,33,0.28)] backdrop-blur-md"
                 >
-                  <p className="font-heading text-4xl font-black sm:text-5xl">{stat.value}</p>
+                  <p className="font-heading text-4xl font-black sm:text-5xl">
+                    <CountUp value={stat.value} prefix="+" />
+                  </p>
                   <p className="mt-2 max-w-xs text-sm leading-6 text-white/82 sm:text-base">{stat.label}</p>
                 </article>
               ))}
@@ -122,7 +126,7 @@ export default function Home() {
               <Landmark className="h-4 w-4" />
               Quiénes Somos
             </div>
-            <h2 className="motion-enter mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-balance sm:text-5xl">
+            <h2 data-title-reveal className="mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-balance sm:text-5xl">
               Una organización gremial con identidad local y trayectoria histórica.
             </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
@@ -166,7 +170,7 @@ export default function Home() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Directiva</p>
-            <h2 className="motion-enter mt-4 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Representación activa en el período 2025 a 2027</h2>
+            <h2 data-title-reveal className="mt-4 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Representación activa en el período 2025 a 2027</h2>
           </div>
         </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -234,9 +238,9 @@ export default function Home() {
         <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">¿Por qué afiliarte?</p>
-            <h2 className="motion-enter mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Beneficios de ser parte de ASEMUCH</h2>
+            <h2 data-title-reveal className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Beneficios de ser parte de ASEMUCH</h2>
           </div>
-          <Link href="/afiliarse" className="inline-flex w-fit rounded-full bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-blue-light">
+          <Link href="/afiliarse" className="btn-gradient-border inline-flex w-fit rounded-full bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:-translate-y-0.5 hover:bg-blue-light">
             Afiliarme ahora
           </Link>
         </div>
@@ -256,7 +260,7 @@ export default function Home() {
       <section id="noticias" className="scroll-mt-24">
         <div className="mx-auto w-full max-w-7xl px-4 pt-2 sm:px-6 lg:px-8">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Noticias ASEMUCH Coquimbo</p>
-          <h2 className="motion-enter mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Últimas novedades, comunicados y actividades de ASEMUCH Coquimbo</h2>
+          <h2 data-title-reveal className="mt-3 font-heading text-4xl font-black tracking-[-0.02em] sm:text-5xl">Últimas novedades, comunicados y actividades de ASEMUCH Coquimbo</h2>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">Noticias locales y nacionales relacionadas con el trabajo municipal y la actividad gremial.</p>
         </div>
         <NewsSection />
@@ -284,7 +288,7 @@ export default function Home() {
               <ArrowDownRight className="h-4 w-4" />
               Afiliación
             </div>
-            <h2 className="motion-enter motion-enter-delay-1 mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-white sm:text-5xl">
+            <h2 data-title-reveal className="mt-5 font-heading text-4xl font-black tracking-[-0.02em] text-white sm:text-5xl">
               Si trabajas en la Municipalidad de Coquimbo puedes afiliarte a ASEMUCH
             </h2>
             <p className="motion-enter motion-enter-delay-2 mt-5 text-lg leading-8 text-white">
@@ -304,14 +308,14 @@ export default function Home() {
               <a
                 href="/FORMULARIO%20ASEMUCH%20COQUIMBO.docx"
                 download
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-accent)] px-6 py-3 text-base font-bold text-slate-950 transition hover:translate-y-[-1px]"
+                className="btn-gradient-border inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-accent)] px-6 py-3 text-base font-bold text-slate-950 transition hover:translate-y-[-1px]"
               >
                 <Download className="h-4 w-4" />
                 Descargar formulario
               </a>
               <a
                 href="/FORMULARIO%20ASEMUCH%20COQUIMBO.docx"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/18 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10"
+                className="btn-gradient-border inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-white transition hover:bg-white/10"
               >
                 <FileText className="h-4 w-4" />
                 Ver documento adjunto

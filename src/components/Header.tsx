@@ -33,23 +33,25 @@ export default function Header() {
       {/* Logo bar */}
       <div className="bg-white border-b border-[#e3e9f1]">
         <div className="container-site flex items-center justify-between py-3">
-          <Link href="/" className="flex items-center gap-3 group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/logo.png"
-              alt="ASEMUCH Coquimbo"
-              width={48}
-              height={48}
-              className="h-12 w-12 object-contain rounded-full"
-            />
-            <div className="hidden sm:block border-l border-[#e3e9f1] pl-3">
+          <Link href="/" className="flex items-center gap-4 group">
+            <span className="relative flex shrink-0 items-center justify-center rounded-full bg-white p-1 ring-2 ring-[#0c71c3]/30 shadow-[0_6px_20px_rgba(12,35,64,0.22)] transition-transform duration-300 group-hover:scale-105">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt="ASEMUCH Coquimbo"
+                width={64}
+                height={64}
+                className="h-14 w-14 sm:h-16 sm:w-16 object-contain rounded-full"
+              />
+            </span>
+            <div className="hidden sm:block border-l border-[#e3e9f1] pl-4">
               <p
-                className="text-base font-extrabold text-[#0c2340] leading-tight"
+                className="text-xl font-extrabold text-[#0c2340] leading-tight tracking-tight"
                 style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
               >
                 ASEMUCH
               </p>
-              <p className="text-sm text-[#0c71c3] font-bold leading-tight">
+              <p className="text-base text-[#0c71c3] font-bold leading-tight">
                 Coquimbo
               </p>
             </div>
@@ -109,7 +111,7 @@ export default function Header() {
                   <li key={item.href} className="ml-2">
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-1.5 my-1.5 px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                      className={`btn-gradient-border flex items-center gap-1.5 my-1.5 px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${
                         isActive
                           ? "bg-white text-[#0c71c3]"
                           : "bg-[#0c71c3] text-white hover:bg-[#2ea3f2]"
@@ -155,7 +157,7 @@ export default function Header() {
                     <li key={item.href} className="px-4 py-2">
                       <Link
                         href={item.href}
-                        className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0c71c3] text-white text-sm font-bold"
+                        className="btn-gradient-border flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0c71c3] text-white text-sm font-bold"
                         onClick={() => setMenuOpen(false)}
                       >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">

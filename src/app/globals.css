@@ -168,6 +168,58 @@
   animation: accent-reveal 800ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
 }
 
+/* Títulos: entrada con letter-spacing gradual.
+   Sin bloque "to": la animación termina en los valores propios del elemento,
+   así cada título conserva su tracking original. */
+@keyframes title-spacing {
+  from {
+    opacity: 0;
+    letter-spacing: 0.24em;
+    transform: translateY(0.35rem);
+  }
+}
+
+/* La clase js-reveal la agrega TitleReveal al montar: sin JS los títulos
+   se ven normales en vez de quedar invisibles. */
+html.js-reveal [data-title-reveal]:not(.title-reveal) {
+  opacity: 0;
+}
+
+.title-reveal {
+  animation: title-spacing 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Borde con gradiente. La máscara recorta el centro del pseudo-elemento, así
+   solo queda pintado el anillo y el fondo propio del botón (sólido o glass)
+   se mantiene intacto. */
+.btn-gradient-border {
+  position: relative;
+}
+
+.btn-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(120deg, #0c71c3 0%, #2ea3f2 45%, #f2c64e 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-reveal [data-title-reveal]:not(.title-reveal) {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

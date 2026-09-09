@@ -53,7 +53,8 @@ export default function PageHeader({ title, subtitle, breadcrumbs }: PageHeaderP
 
         {/* Title */}
         <h1
-          className="motion-enter motion-enter-delay-1 text-3xl lg:text-4xl font-extrabold text-white"
+          data-title-reveal
+          className="text-3xl lg:text-4xl font-extrabold text-white"
           style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
         >
           {title}

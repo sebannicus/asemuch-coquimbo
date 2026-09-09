@@ -27,7 +27,7 @@ export default function QuienesSomosPage() {
       {/* Historia */}
       <section className="py-16 bg-white">
         <div className="container-site">
-          <div className="relative mb-10 min-h-72 overflow-hidden rounded-3xl"><Image src="/images/reunion-asemuch-funcionarios.webp" alt="Encuentro de ASEMUCH Coquimbo" fill sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" /></div>
+          <div className="relative mb-10 min-h-72 overflow-hidden rounded-3xl"><Image src="/images/asemuch-junto-a-la-cut-y-hero.webp" alt="Encuentro de ASEMUCH Coquimbo" fill sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" /></div>
           <div className="max-w-3xl">
             <span className="text-xs font-bold text-[#0c71c3] uppercase tracking-widest">Historia</span>
             <h2

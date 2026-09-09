@@ -26,8 +26,8 @@ export default function Footer() {
               <p className="text-xs text-[#0c71c3] font-semibold mt-0.5">Municipalidad de Coquimbo</p>
               <p className="text-sm leading-relaxed text-[#cdd8e6]/80 mt-2 max-w-xs">
                 Representamos y defendemos los derechos laborales de los
-                funcionarios municipales de la IV Región de Coquimbo, con más
-                de 80 años de historia gremial.
+                funcionarios de la Municipalidad de Coquimbo, con más de 80
+                años de historia gremial.
               </p>
             </div>
           </div>

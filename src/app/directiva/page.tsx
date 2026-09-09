@@ -21,7 +21,7 @@ export default function DirectivaPage() {
         <div className="container-site">
           <div className="relative mb-10 min-h-72 overflow-hidden rounded-3xl border border-[#d9e6f5] bg-[#0c2340]">
             <Image
-              src="/images/rosa-renney-cristian-tapia-asemuch-coquimbo.webp"
+              src="/images/rossa-renney-cristian-tapia-foto-para-directiva-y-hero.webp"
               alt="Directiva de ASEMUCH Coquimbo"
               fill
               sizes="(max-width: 768px) 100vw, 1200px"

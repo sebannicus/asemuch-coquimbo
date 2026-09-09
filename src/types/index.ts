@@ -52,6 +52,11 @@ export interface Documento {
   href: string;
 }
 
+export interface ConvenioTarifa {
+  label: string;
+  valor: string;
+}
+
 export interface ConvenioDestacado {
   id: string;
   nombre: string;
@@ -61,4 +66,7 @@ export interface ConvenioDestacado {
   descripcion: string;
   colorAcento: string;
   infoPendiente?: boolean;
+  direccion?: string;
+  contacto?: string;
+  tarifas?: ConvenioTarifa[];
 }
