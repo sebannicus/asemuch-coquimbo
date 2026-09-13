@@ -75,7 +75,7 @@ export default function Hero() {
           <div className="relative w-64 h-64 lg:w-96 lg:h-96 flex items-center justify-center drop-shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="ASEMUCH Coquimbo"
               className="w-full h-full object-contain"
               style={{ opacity: 0.95 }}

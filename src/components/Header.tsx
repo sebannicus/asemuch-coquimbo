@@ -37,7 +37,7 @@ export default function Header() {
             <span className="relative flex shrink-0 items-center justify-center rounded-full bg-white p-1 ring-2 ring-[#0c71c3]/30 shadow-[0_6px_20px_rgba(12,35,64,0.22)] transition-transform duration-300 group-hover:scale-105">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
+                src="/images/logo.webp"
                 alt="ASEMUCH Coquimbo"
                 width={64}
                 height={64}

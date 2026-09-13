@@ -31,7 +31,7 @@ const JSON_LD = {
   name: "ASEMUCH Coquimbo",
   alternateName: "Asociación Comunal de Funcionarios Municipales de la Municipalidad de Coquimbo",
   url: SITE_URL,
-  logo: `${SITE_URL}/images/logo.png`,
+  logo: `${SITE_URL}/images/logo.webp`,
   foundingDate: "1911",
   email: "coquimbo.asemuch@gmail.com",
   telephone: "+56991899920",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/images/logo.png",
+        url: "/images/logo.webp",
         width: 600,
         height: 600,
         alt: "ASEMUCH Coquimbo — Asociación Comunal de Funcionarios Municipales",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "ASEMUCH Coquimbo | Asociación de Funcionarios Municipales",
     description: SITE_DESCRIPTION,
-    images: ["/images/logo.png"],
+    images: ["/images/logo.webp"],
   },
   icons: {
     icon: [

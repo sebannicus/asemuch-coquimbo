@@ -17,7 +17,7 @@ export const heroSlides: HeroSlide[] = [
     alt: "Dirigentes de ASEMUCH Coquimbo en una actividad gremial",
   },
   {
-    src: "/images/logo.png",
+    src: "/images/logo.webp",
     alt: "ASEMUCH Coquimbo",
   },
 ];

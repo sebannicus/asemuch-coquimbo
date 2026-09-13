@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="ASEMUCH Coquimbo"
               width={64}
               height={64}

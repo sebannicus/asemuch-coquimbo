@@ -279,7 +279,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
             <div className="absolute bottom-5 left-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/95 p-2 shadow-lg backdrop-blur">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo.png" alt="ASEMUCH Coquimbo" className="h-full w-full object-contain" />
+              <img src="/images/logo.webp" alt="ASEMUCH Coquimbo" className="h-full w-full object-contain" />
             </div>
           </div>
 
