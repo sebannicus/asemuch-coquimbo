@@ -5,6 +5,7 @@ import { DICTAMENES } from "@/components/SiteData";
 export const metadata: Metadata = {
   title: "Dictámenes",
   description: "Resoluciones y dictámenes de Contraloría General de la República relevantes para funcionarios municipales.",
+  alternates: { canonical: "/dictamenes" },
 };
 
 const CATEGORIAS = ["Todos", "Remuneraciones", "Calificaciones", "Carrera Funcionaria", "Derechos"];

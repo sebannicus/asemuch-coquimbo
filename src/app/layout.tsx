@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Open_Sans, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TitleReveal from "@/components/TitleReveal";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -103,6 +106,10 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
+  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION }
+    : undefined,
 };
 
 export default function RootLayout({
@@ -121,10 +128,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
+        <GoogleAnalytics />
         <TitleReveal />
         <Header />
         <div className="flex-1">{children}</div>
         <Footer />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

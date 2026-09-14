@@ -6,6 +6,7 @@ import { DIRECTIVA } from "@/components/SiteData";
 export const metadata: Metadata = {
   title: "Directiva",
   description: "Conoce a la directiva de ASEMUCH Sede Región de Coquimbo, período 2025–2027.",
+  alternates: { canonical: "/directiva" },
 };
 
 export default function DirectivaPage() {

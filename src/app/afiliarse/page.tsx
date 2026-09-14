@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Afiliarse",
   description:
     "Afíliate a ASEMUCH Coquimbo: revisa los requisitos y completa el formulario para unirte al gremio que representa y defiende a los funcionarios municipales de la Región de Coquimbo.",
+  alternates: { canonical: "/afiliarse" },
 };
 
 export default function AfiliarsePage() {

@@ -6,6 +6,7 @@ import { getPublishedNews } from "@/lib/content/news";
 export const metadata: Metadata = {
   title: "Noticias",
   description: "Últimas noticias y comunicados de ASEMUCH Sede Región de Coquimbo.",
+  alternates: { canonical: "/noticias" },
 };
 
 export default async function NoticiasPage() {

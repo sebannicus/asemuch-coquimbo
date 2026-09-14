@@ -6,6 +6,7 @@ import Image from "next/image";
 export const metadata: Metadata = {
   title: "Quiénes Somos",
   description: "Conoce la historia, misión y visión de ASEMUCH Sede Región de Coquimbo.",
+  alternates: { canonical: "/quienes-somos" },
 };
 
 const VALORES = [

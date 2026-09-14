@@ -6,6 +6,7 @@ import { getPublishedCommunications } from "@/lib/content/communications";
 export const metadata: Metadata = {
   title: "Comunicados",
   description: "Comunicados oficiales de ASEMUCH Sede Región de Coquimbo.",
+  alternates: { canonical: "/comunicados" },
 };
 
 export default async function ComunicadosPage() {

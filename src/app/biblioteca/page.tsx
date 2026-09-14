@@ -5,6 +5,7 @@ import { stripHtml } from "@/lib/strip-html";
 export const metadata: Metadata = {
   title: "Biblioteca",
   description: "Centro de documentación ASEMUCH — dictámenes de Contraloría, guías, leyes, manuales y recursos legales para funcionarios municipales.",
+  alternates: { canonical: "/biblioteca" },
 };
 
 export const revalidate = 86400;
