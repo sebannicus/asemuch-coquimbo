@@ -23,7 +23,15 @@ export function isSupabaseConfigured() {
   return getSupabaseEnv() !== null;
 }
 
+export function getAdminEmails(): string[] {
+  const raw = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || "";
+  return raw
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}
+
 export function isAdminConfigured() {
   const env = getSupabaseEnv();
-  return Boolean(env?.serviceRoleKey && process.env.ADMIN_EMAIL);
+  return Boolean(env?.serviceRoleKey && getAdminEmails().length > 0);
 }

@@ -40,7 +40,7 @@ export default async function AdminLoginPage({
         {params.setup ? (
           <div className="mt-6 rounded-2xl border border-[#d9e6f5] bg-[#f5f9fc] p-4 text-sm text-[#5d6675]">
             Variables esperadas: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-            `SUPABASE_SERVICE_ROLE_KEY` y `ADMIN_EMAIL`.
+            `SUPABASE_SERVICE_ROLE_KEY` y `ADMIN_EMAILS` (uno o más emails separados por coma).
           </div>
         ) : null}
 
@@ -71,6 +71,13 @@ export default async function AdminLoginPage({
             Entrar al panel
           </button>
         </form>
+
+        <a
+          href="/admin/forgot-password"
+          className="mt-4 block text-center text-sm font-semibold text-[#0c71c3] hover:underline"
+        >
+          ¿Olvidaste tu contraseña?
+        </a>
       </div>
     </main>
   );

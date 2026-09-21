@@ -76,3 +76,8 @@ export interface CommunicationRecord {
 export interface CommunicationFormState {
   error: string | null;
 }
+
+export interface AuthFormState {
+  error: string | null;
+  success?: boolean;
+}

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isAdminConfigured as hasAdminConfig } from "@/lib/supabase/config";
+import { getAdminEmails, isAdminConfigured as hasAdminConfig } from "@/lib/supabase/config";
 
 export async function getAdminSession() {
   if (!hasAdminConfig()) {
@@ -17,9 +17,12 @@ export async function getAdminSession() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const allowedEmails = getAdminEmails();
+  const isAllowed = Boolean(user?.email && allowedEmails.includes(user.email.toLowerCase()));
+
   return {
     supabase,
-    user: user?.email === process.env.ADMIN_EMAIL ? user : null,
+    user: isAllowed ? user : null,
     configured: true as const,
   };
 }

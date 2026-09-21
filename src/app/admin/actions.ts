@@ -18,7 +18,11 @@ import { buildAgreementAssetPath, validateAgreementImage } from "@/lib/agreement
 import { slugify } from "@/lib/slug";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { CommunicationFormState, CommunicationRecord, NewsFormState } from "@/types/admin";
+import type { AuthFormState, CommunicationFormState, CommunicationRecord, NewsFormState } from "@/types/admin";
+
+function getSiteUrl() {
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://asemuch-coquimbo.vercel.app";
+}
 
 export async function loginAdmin(formData: FormData) {
   const supabase = await createSupabaseServerClient();
@@ -47,6 +51,56 @@ export async function logoutAdmin() {
   }
 
   redirect("/admin/login");
+}
+
+export async function requestPasswordReset(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+
+  if (!email) {
+    return { error: "Ingresa tu email." };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) {
+    return { error: "Supabase no está configurado." };
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${getSiteUrl()}/auth/callback?next=/admin/perfil`,
+  });
+
+  if (error) {
+    return { error: "No se pudo enviar el correo de recuperación. Intenta nuevamente." };
+  }
+
+  return { error: null, success: true };
+}
+
+export async function changePassword(_: AuthFormState, formData: FormData): Promise<AuthFormState> {
+  const session = await requireAdminSession();
+
+  const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirm_password") ?? "");
+
+  if (password.length < 8) {
+    return { error: "La contraseña debe tener al menos 8 caracteres." };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "Las contraseñas no coinciden." };
+  }
+
+  if (!session.supabase) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const { error } = await session.supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { error: "No se pudo actualizar la contraseña." };
+  }
+
+  return { error: null, success: true };
 }
 
 const newsSchema = z.object({

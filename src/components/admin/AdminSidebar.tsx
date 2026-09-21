@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { href: "/admin/comunicados", label: "Comunicados" },
   { href: "/admin/documentos", label: "Documentos" },
   { href: "/admin/convenios", label: "Convenios" },
+  { href: "/admin/perfil", label: "Mi cuenta" },
 ];
 
 export function AdminSidebar() {
