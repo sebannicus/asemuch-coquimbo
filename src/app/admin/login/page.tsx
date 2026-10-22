@@ -39,7 +39,11 @@ export default async function AdminLoginPage({
           </div>
         ) : null}
 
-        {params.error ? (
+        {params.error === "link" ? (
+          <div role="alert" className="mt-6 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-lg font-semibold text-amber-900">
+            ⚠️ El enlace del correo ya se usó o venció. Presiona “Olvidé mi contraseña” para recibir uno nuevo.
+          </div>
+        ) : params.error ? (
           <div role="alert" className="mt-6 rounded-2xl border-2 border-rose-300 bg-rose-50 p-4 text-lg font-semibold text-rose-900">
             ⚠️ El correo o la contraseña no son correctos. Revísalos e intenta otra vez. Usa “Mostrar” para ver lo que escribiste.
           </div>
