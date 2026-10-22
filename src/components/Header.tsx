@@ -46,7 +46,7 @@ export default function Header() {
       {/* Logo bar */}
       <div className="bg-white border-b border-[#e3e9f1]">
         <div className="container-site flex items-center justify-between py-2">
-          <Link href="/" className="flex items-center gap-4 group">
+          <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
             <span className="relative flex shrink-0 items-center justify-center rounded-full bg-white p-1 ring-2 ring-[#0c71c3]/30 shadow-[0_6px_20px_rgba(12,35,64,0.22)] transition-transform duration-300 group-hover:scale-105">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -57,14 +57,14 @@ export default function Header() {
                 className="h-14 w-14 sm:h-[58px] sm:w-[58px] object-contain rounded-full"
               />
             </span>
-            <div className="hidden sm:block border-l border-[#e3e9f1] pl-4">
+            <div className="border-l border-[#e3e9f1] pl-3 sm:pl-4">
               <p
-                className="text-xl font-extrabold text-[#0c2340] leading-tight tracking-tight"
+                className="text-lg sm:text-xl font-extrabold text-[#0c2340] leading-tight tracking-tight"
                 style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
               >
                 ASEMUCH
               </p>
-              <p className="text-base text-[#0c71c3] font-bold leading-tight">
+              <p className="text-sm sm:text-base text-[#0c71c3] font-bold leading-tight">
                 Coquimbo
               </p>
             </div>

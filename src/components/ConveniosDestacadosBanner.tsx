@@ -82,9 +82,12 @@ export default function ConveniosDestacadosBanner() {
               </p>
               <h3 className="text-base lg:text-lg font-bold text-[#0c2340] leading-snug mb-1">{convenio.nombre}</h3>
               <p className="text-sm text-[#5d6675] leading-relaxed">{convenio.beneficio}</p>
+              <span className="sm:hidden mt-3 inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[#0c71c3] px-3 py-1.5 text-xs font-bold text-white">
+                👆 Toca para ver el detalle
+              </span>
             </div>
-            <span className="hidden sm:inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-[#0c71c3] group-hover:text-[#2ea3f2] transition-colors">
-              Ver detalle
+            <span className="hidden sm:inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#0c71c3]/30 bg-white px-3 py-1.5 text-xs font-bold text-[#0c71c3] group-hover:border-[#0c71c3] group-hover:text-[#2ea3f2] transition-colors">
+              Haz clic para ver el detalle
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3.5 h-3.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />

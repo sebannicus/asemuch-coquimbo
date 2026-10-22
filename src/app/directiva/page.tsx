@@ -35,16 +35,6 @@ export default function DirectivaPage() {
               <p className="motion-enter motion-enter-delay-2 mt-3 text-base leading-7 text-white">Equipo comprometido con la representación y defensa de los funcionarios municipales de Coquimbo.</p>
             </div>
           </div>
-          {/* Aviso demo */}
-          <div className="mb-10 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
-              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <p className="text-sm text-[#5d6675]">
-              <strong className="text-[#0c2340]">Contenido de demostración.</strong> Los nombres y cargos mostrados son ficticios y se reemplazarán con la información real de la directiva antes del lanzamiento.
-            </p>
-          </div>
-
           {/* Grid directiva */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {DIRECTIVA.map((miembro) => (
