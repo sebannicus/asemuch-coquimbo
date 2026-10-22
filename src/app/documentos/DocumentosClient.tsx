@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
-import { DICTAMENES } from "@/components/SiteData";
 import { stripHtml } from "@/lib/strip-html";
 import type { PublicDocumentItem } from "@/lib/content/documents";
 
@@ -99,17 +98,7 @@ export default function DocumentosClient({ localDocuments }: { localDocuments: P
     );
   }, [dictamenesNacionales, searchQuery]);
 
-  const filteredDictamenesCGR = useMemo(() => {
-    if (!searchQuery) return DICTAMENES;
-    const q = searchQuery.toLowerCase();
-    return DICTAMENES.filter((d) =>
-      d.materia.toLowerCase().includes(q) ||
-      d.numero.toLowerCase().includes(q) ||
-      d.categoria.toLowerCase().includes(q)
-    );
-  }, [searchQuery]);
-
-  const totalResultados = filteredLocalDocuments.length + filteredLeyes.length + filteredDictamenesNacionales.length + filteredDictamenesCGR.length;
+  const totalResultados = filteredLocalDocuments.length + filteredLeyes.length + filteredDictamenesNacionales.length;
 
   return (
     <main>
@@ -452,80 +441,33 @@ export default function DocumentosClient({ localDocuments }: { localDocuments: P
             </div>
           )}
 
-          {/* Dictámenes CGR (locales) */}
-          <div>
-            <h3
-              className="text-base font-bold text-[#0c2340] mb-4 flex items-center gap-2"
-              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
-            >
-              <span className="w-2 h-2 rounded-full bg-[#10498a] inline-block" />
-              Contraloría General de la República ({filteredDictamenesCGR.length})
-            </h3>
-            <div className="mb-4 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
-                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              <p className="text-sm text-[#5d6675]">
-                Los dictámenes están disponibles en el portal oficial de la{" "}
-                <a
-                  href="https://www.contraloria.cl/dictamenes/busqueda"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-[#0c71c3] hover:underline"
-                >
-                  Contraloría General de la República
-                </a>
-                .
+          {/* Contraloría: acceso al buscador oficial (sin listado propio hasta tener números reales) */}
+          <div className="flex flex-col gap-4 rounded-2xl border border-[#e3e9f1] bg-[#f5f9fc] p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3
+                className="text-base font-bold text-[#0c2340] flex items-center gap-2"
+                style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+              >
+                <span className="w-2 h-2 rounded-full bg-[#10498a] inline-block" />
+                Contraloría General de la República
+              </h3>
+              <p className="mt-1 text-sm text-[#5d6675]">
+                Busca cualquier dictamen por número, fecha o palabra clave en el portal oficial.
               </p>
             </div>
-            <div className="overflow-x-auto rounded-2xl border border-[#e3e9f1]">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-[#f5f9fc] border-b border-[#e3e9f1]">
-                    <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider">N° Dictamen</th>
-                    <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider">Materia</th>
-                    <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider hidden md:table-cell">Categoría</th>
-                    <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider hidden lg:table-cell">Año</th>
-                    <th className="px-5 py-3.5" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#e3e9f1]">
-                  {filteredDictamenesCGR.map((d, i) => (
-                    <tr key={d.id} className={`transition-colors hover:bg-[#f5f9fc] ${i % 2 === 0 ? "bg-white" : "bg-[#fafbfd]"}`}>
-                      <td className="px-5 py-4 font-mono font-semibold text-[#0c71c3] whitespace-nowrap">{d.numero}</td>
-                      <td className="px-5 py-4 text-[#0c2340] max-w-xs">
-                        <p className="font-medium leading-snug">{d.materia}</p>
-                        <p className="text-xs text-[#5d6675] mt-0.5">{d.organismo}</p>
-                      </td>
-                      <td className="px-5 py-4 hidden md:table-cell">
-                        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#e7edf5] text-[#0c2340]">{d.categoria}</span>
-                      </td>
-                      <td className="px-5 py-4 hidden lg:table-cell text-[#5d6675] font-medium">{d.año}</td>
-                      <td className="px-5 py-4 text-right">
-                        <a
-                          href={d.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#0c71c3] hover:text-[#2ea3f2] transition-colors"
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                            <polyline points="15 3 21 3 21 9" />
-                            <line x1="10" y1="14" x2="21" y2="3" />
-                          </svg>
-                          CGR
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {filteredDictamenesCGR.length === 0 && searchQuery && (
-              <div className="mt-4 p-4 rounded-lg bg-[#f5f9fc] text-center text-sm text-[#5d6675]">
-                No se encontraron dictámenes CGR que coincidan con &quot;{searchQuery}&quot;.
-              </div>
-            )}
+            <a
+              href="https://www.contraloria.cl/dictamenes/busqueda"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0c71c3] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2ea3f2]"
+            >
+              Ir al buscador oficial
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>

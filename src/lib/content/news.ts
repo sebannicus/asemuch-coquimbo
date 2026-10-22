@@ -9,7 +9,8 @@ const FALLBACK_NEWS_BODY = [
   "Seguiremos informando oportunamente sobre reuniones, avances de gestión y próximos hitos gremiales para mantener a la comunidad actualizada.",
 ].join("\n\n");
 
-const DEFAULT_NEWS_IMAGE = "https://picsum.photos/seed/asemuch-default/768/432";
+// Imagen institucional para noticias publicadas sin fotos.
+const DEFAULT_NEWS_IMAGE = "/images/reunion-asemuch-funcionarios.webp";
 
 export interface PublicNewsItem {
   id: string;

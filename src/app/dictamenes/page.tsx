@@ -1,121 +1,96 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { DICTAMENES } from "@/components/SiteData";
 
 export const metadata: Metadata = {
   title: "Dictámenes",
-  description: "Resoluciones y dictámenes de Contraloría General de la República relevantes para funcionarios municipales.",
+  description: "Acceso al buscador oficial de dictámenes de la Contraloría General de la República y dictámenes publicados por ASEMUCH Nacional.",
   alternates: { canonical: "/dictamenes" },
 };
 
-const CATEGORIAS = ["Todos", "Remuneraciones", "Calificaciones", "Carrera Funcionaria", "Derechos"];
+const CGR_SEARCH_URL = "https://www.contraloria.cl/dictamenes/busqueda";
+
+// Temas frecuentes para orientar la búsqueda en el portal oficial (no son dictámenes).
+const SUGERENCIAS = [
+  "Asignación municipal",
+  "Calificaciones funcionarios municipales",
+  "Feriado legal",
+  "Carrera funcionaria",
+  "Sumario administrativo",
+  "Horas extraordinarias",
+];
 
 export default function DictamenesPage() {
   return (
     <main>
       <PageHeader
         title="Dictámenes de Contraloría"
-        subtitle="Resoluciones y pronunciamientos de la Contraloría General de la República relevantes para los funcionarios municipales de la región."
+        subtitle="Resoluciones y pronunciamientos de la Contraloría General de la República relevantes para los funcionarios municipales."
         breadcrumbs={[{ label: "Dictámenes" }]}
       />
 
-      <section className="py-16 bg-white">
-        <div className="container-site">
-          {/* Aviso Contraloría */}
-          <div className="mb-8 flex items-start gap-3 p-4 rounded-xl bg-[#f5f9fc] border border-[#0c71c3]/20">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
-              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <p className="text-sm text-[#5d6675]">
-              Los dictámenes están disponibles en el portal oficial de la{" "}
-              <a
-                href="https://www.contraloria.cl/dictamenes/busqueda"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-[#0c71c3] hover:underline"
-              >
-                Contraloría General de la República
-              </a>
-              . Haz clic en <strong className="text-[#0c2340]">Ver</strong> para acceder al buscador oficial.
+      <section className="py-12 bg-white">
+        <div className="container-site grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+          <div className="rounded-2xl border border-[#e3e9f1] bg-[#f5f9fc] p-6 sm:p-8">
+            <span className="text-xs font-bold text-[#0c71c3] uppercase tracking-widest">Fuente oficial</span>
+            <h2
+              className="mt-2 text-2xl font-extrabold text-[#0c2340]"
+              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+            >
+              Buscador de dictámenes de la Contraloría
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#5d6675]">
+              La Contraloría General de la República publica todos sus dictámenes en su portal oficial. Puedes buscarlos por
+              número, fecha o palabras clave relacionadas con tu consulta.
             </p>
+            <a
+              href={CGR_SEARCH_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#0c71c3] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2ea3f2]"
+            >
+              Ir al buscador oficial de la Contraloría
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+
+            <p className="mt-8 text-sm font-semibold text-[#0c2340]">Temas que puedes buscar:</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {SUGERENCIAS.map((tema) => (
+                <li key={tema} className="rounded-full border border-[#e3e9f1] bg-white px-3 py-1 text-xs font-semibold text-[#5d6675]">
+                  {tema}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Filtros */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {CATEGORIAS.map((cat) => (
-              <span
-                key={cat}
-                className={`px-4 py-1.5 rounded-full text-sm font-semibold cursor-pointer transition-colors ${
-                  cat === "Todos"
-                    ? "bg-[#0c71c3] text-white"
-                    : "bg-[#f5f9fc] text-[#5d6675] border border-[#e3e9f1] hover:border-[#0c71c3] hover:text-[#0c71c3]"
-                }`}
-              >
-                {cat}
-              </span>
-            ))}
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto rounded-2xl border border-[#e3e9f1]">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[#f5f9fc] border-b border-[#e3e9f1]">
-                  <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider">
-                    N° Dictamen
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider">
-                    Materia
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider hidden md:table-cell">
-                    Categoría
-                  </th>
-                  <th className="text-left px-5 py-3.5 text-xs font-bold text-[#0c2340] uppercase tracking-wider hidden lg:table-cell">
-                    Año
-                  </th>
-                  <th className="px-5 py-3.5" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#e3e9f1]">
-                {DICTAMENES.map((d, i) => (
-                  <tr
-                    key={d.id}
-                    className={`transition-colors hover:bg-[#f5f9fc] ${i % 2 === 0 ? "bg-white" : "bg-[#fafbfd]"}`}
-                  >
-                    <td className="px-5 py-4 font-mono font-semibold text-[#0c71c3] whitespace-nowrap">
-                      {d.numero}
-                    </td>
-                    <td className="px-5 py-4 text-[#0c2340] max-w-xs">
-                      <p className="font-medium leading-snug">{d.materia}</p>
-                      <p className="text-xs text-[#5d6675] mt-0.5">{d.organismo}</p>
-                    </td>
-                    <td className="px-5 py-4 hidden md:table-cell">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#e7edf5] text-[#0c2340]">
-                        {d.categoria}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 hidden lg:table-cell text-[#5d6675] font-medium">
-                      {d.año}
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <a
-                        href={d.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#0c71c3] hover:text-[#2ea3f2] transition-colors"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                          <polyline points="15 3 21 3 21 9" />
-                          <line x1="10" y1="14" x2="21" y2="3" />
-                        </svg>
-                        CGR
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="rounded-2xl border border-[#e3e9f1] bg-white p-6 sm:p-8">
+            <span className="text-xs font-bold text-[#0c71c3] uppercase tracking-widest">ASEMUCH Nacional</span>
+            <h2
+              className="mt-2 text-xl font-extrabold text-[#0c2340]"
+              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+            >
+              Dictámenes publicados por la Confederación
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#5d6675]">
+              Revisa los dictámenes que ASEMUCH Nacional ha destacado para los funcionarios municipales.
+            </p>
+            <Link
+              href="/documentos#dictamenes"
+              className="mt-6 inline-flex items-center gap-1 text-sm font-bold text-[#0c71c3] hover:text-[#2ea3f2]"
+            >
+              Ver dictámenes en Documentos →
+            </Link>
+            <p className="mt-6 text-xs leading-relaxed text-[#5d6675]">
+              ¿Tienes dudas sobre un dictamen? Escríbenos desde{" "}
+              <Link href="/contacto" className="font-semibold text-[#0c71c3] hover:underline">
+                Contacto
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>
