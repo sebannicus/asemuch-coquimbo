@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPublishedDocuments } from "@/lib/content/documents";
 import DocumentosClient from "./DocumentosClient";
 
 export const metadata: Metadata = {
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/documentos" },
 };
 
-export default function DocumentosPage() {
-  return <DocumentosClient />;
+export default async function DocumentosPage() {
+  const localDocuments = await getPublishedDocuments();
+  return <DocumentosClient localDocuments={localDocuments} />;
 }

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildDocumentStoragePath, validateDocumentFile } from "../src/lib/document-files.ts";
 
-test("validateDocumentFile accepts PDFs up to 10 MB", () => {
+test("validateDocumentFile accepts PDFs up to 4 MB", () => {
   assert.deepEqual(validateDocumentFile({ name: "acta.pdf", size: 1024, type: "application/pdf" }), { success: true });
 });
 

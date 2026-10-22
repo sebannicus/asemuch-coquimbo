@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
 import { DICTAMENES } from "@/components/SiteData";
 import { stripHtml } from "@/lib/strip-html";
+import type { PublicDocumentItem } from "@/lib/content/documents";
 
 interface WPPost {
   id: number;
@@ -49,7 +50,7 @@ const RECURSOS_EXTRAS = [
   },
 ];
 
-export default function DocumentosClient() {
+export default function DocumentosClient({ localDocuments }: { localDocuments: PublicDocumentItem[] }) {
   const [leyes, setLeyes] = useState<WPPost[]>([]);
   const [dictamenesNacionales, setDictamenesNacionales] = useState<WPPost[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,6 +69,16 @@ export default function DocumentosClient() {
     }
     loadData();
   }, []);
+
+  const filteredLocalDocuments = useMemo(() => {
+    if (!searchQuery) return localDocuments;
+    const q = searchQuery.toLowerCase();
+    return localDocuments.filter((doc) =>
+      doc.title.toLowerCase().includes(q) ||
+      doc.summary.toLowerCase().includes(q) ||
+      doc.documentType.toLowerCase().includes(q)
+    );
+  }, [localDocuments, searchQuery]);
 
   // Filtrar leyes y dictámenes nacionales según búsqueda
   const filteredLeyes = useMemo(() => {
@@ -98,7 +109,7 @@ export default function DocumentosClient() {
     );
   }, [searchQuery]);
 
-  const totalResultados = filteredLeyes.length + filteredDictamenesNacionales.length + filteredDictamenesCGR.length;
+  const totalResultados = filteredLocalDocuments.length + filteredLeyes.length + filteredDictamenesNacionales.length + filteredDictamenesCGR.length;
 
   return (
     <main>
@@ -144,6 +155,7 @@ export default function DocumentosClient() {
       <div className="bg-white border-b border-[#e3e9f1]">
         <div className="container-site flex gap-1 py-2 overflow-x-auto">
           {[
+            ...(localDocuments.length ? [{ label: "ASEMUCH Coquimbo", href: "#documentos-coquimbo" }] : []),
             { label: "Leyes y Guías", href: "#leyes-guias" },
             { label: "Dictámenes", href: "#dictamenes" },
           ].map((item) => (
@@ -157,6 +169,69 @@ export default function DocumentosClient() {
           ))}
         </div>
       </div>
+
+      {/* ── DOCUMENTOS PROPIOS (panel admin) ──────────────────────── */}
+      {localDocuments.length ? (
+        <section id="documentos-coquimbo" className="py-16 bg-white">
+          <div className="container-site">
+            <div className="mb-8">
+              <span className="text-xs font-bold text-[#0c71c3] uppercase tracking-widest">
+                Documentos institucionales
+              </span>
+              <h2
+                className="mt-2 text-2xl font-extrabold text-[#0c2340]"
+                style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+              >
+                ASEMUCH Coquimbo
+              </h2>
+              <p className="mt-1 text-sm text-[#5d6675]">
+                Actas, circulares y documentos oficiales de nuestra asociación.
+              </p>
+            </div>
+
+            {filteredLocalDocuments.length ? (
+              <div className="rounded-2xl border border-[#e3e9f1] overflow-hidden divide-y divide-[#e3e9f1]">
+                {filteredLocalDocuments.map((doc) => (
+                  <a
+                    key={doc.id}
+                    href={doc.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-4 px-5 py-4 bg-white hover:bg-[#f5f9fc] transition-colors"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#0c71c3" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e7edf5] text-[#0c2340]">
+                          {doc.documentType}
+                        </span>
+                        <span className="text-xs text-[#5d6675]">{doc.date}</span>
+                      </div>
+                      <p
+                        className="text-sm font-semibold text-[#0c2340] group-hover:text-[#0c71c3] transition-colors leading-snug"
+                        style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
+                      >
+                        {doc.title}
+                      </p>
+                      <p className="text-xs text-[#5d6675] mt-0.5 line-clamp-2">{doc.summary}</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-semibold text-[#0c71c3] group-hover:text-[#2ea3f2] mt-1">
+                      Descargar PDF
+                    </span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 rounded-2xl bg-[#f5f9fc] border border-[#e3e9f1] text-center text-sm text-[#5d6675]">
+                No se encontraron documentos que coincidan con &quot;{searchQuery}&quot;.
+              </div>
+            )}
+          </div>
+        </section>
+      ) : null}
 
       {/* ── LEYES Y GUÍAS ─────────────────────────────────────────── */}
       <section id="leyes-guias" className="py-16" style={{ backgroundColor: "#f5f9fc" }}>

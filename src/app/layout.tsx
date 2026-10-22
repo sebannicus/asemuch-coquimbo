@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PublicChrome from "@/components/PublicChrome";
 import TitleReveal from "@/components/TitleReveal";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
@@ -130,9 +131,13 @@ export default function RootLayout({
         />
         <GoogleAnalytics />
         <TitleReveal />
-        <Header />
+        <PublicChrome>
+          <Header />
+        </PublicChrome>
         <div className="flex-1">{children}</div>
-        <Footer />
+        <PublicChrome>
+          <Footer />
+        </PublicChrome>
         <Analytics />
         <SpeedInsights />
       </body>

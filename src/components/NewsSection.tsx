@@ -66,6 +66,10 @@ function NewsCard({
 export default async function NewsSection() {
   const news = await getPublishedNews(3);
 
+  if (!news.length) {
+    return null;
+  }
+
   return (
     <section
       className="py-16"

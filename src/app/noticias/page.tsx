@@ -22,6 +22,11 @@ export default async function NoticiasPage() {
 
       <section className="py-16" style={{ backgroundColor: "#f5f9fc" }}>
         <div className="container-site">
+          {news.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-[#c7dbef] bg-white px-6 py-14 text-center text-sm text-[#5d6675]">
+              Aún no hay noticias publicadas.
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {news.map((card) => (
               <article

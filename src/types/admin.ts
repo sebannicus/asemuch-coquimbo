@@ -35,6 +35,8 @@ export interface DocumentRecord {
   document_type: string;
   summary: string;
   file_url: string | null;
+  file_name: string | null;
+  file_storage_path: string | null;
   status: ContentStatus;
   published_at: string | null;
   created_at: string;
@@ -48,6 +50,7 @@ export interface AgreementRecord {
   summary: string;
   details: string;
   image_url: string | null;
+  image_storage_path: string | null;
   file_url: string | null;
   promo_code: string | null;
   valid_from: string | null;
@@ -74,6 +77,10 @@ export interface CommunicationRecord {
 }
 
 export interface CommunicationFormState {
+  error: string | null;
+}
+
+export interface ContentFormState {
   error: string | null;
 }
 

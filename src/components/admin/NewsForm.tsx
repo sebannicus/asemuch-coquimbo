@@ -1,16 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
+import { compressImages, setInputFiles } from "@/lib/compress-image";
 import { newsImageConfig, validateNewsImageFiles } from "@/lib/news-images";
 import type { NewsFormState, NewsImageRecord, NewsRecord } from "@/types/admin";
-import { SubmitButton } from "./SubmitButton";
+import { PublishButtons } from "./PublishButtons";
+import { AdminPageHeader, FormError, FormStep, adminFileInputClassName, adminInputClassName } from "./ui";
 
 interface NewsFormProps {
   action: (state: NewsFormState, formData: FormData) => Promise<NewsFormState>;
   news?: Partial<NewsRecord> | null;
-  title: string;
-  description: string;
   isFallback?: boolean;
 }
 
@@ -39,13 +38,7 @@ function dedupeFiles(files: File[]) {
   });
 }
 
-export function NewsForm({
-  action,
-  news,
-  title,
-  description,
-  isFallback = false,
-}: NewsFormProps) {
+export function NewsForm({ action, news, isFallback = false }: NewsFormProps) {
   const isEditing = Boolean(news?.id);
   const inputRef = useRef<HTMLInputElement>(null);
   const previewUrlsRef = useRef<string[]>([]);
@@ -54,6 +47,7 @@ export function NewsForm({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [newImagePreviews, setNewImagePreviews] = useState<NewImagePreview[]>([]);
   const [clientError, setClientError] = useState<string | null>(null);
+  const [isOptimizing, setIsOptimizing] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -75,13 +69,18 @@ export function NewsForm({
     setNewImagePreviews(previews);
   }
 
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const incomingFiles = Array.from(event.currentTarget.files ?? []);
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const incomingFiles = Array.from(input.files ?? []);
     if (!incomingFiles.length) {
       return;
     }
 
-    const nextFiles = dedupeFiles(incomingFiles);
+    setIsOptimizing(true);
+    const nextFiles = await compressImages(dedupeFiles(incomingFiles));
+    setInputFiles(input, nextFiles);
+    setIsOptimizing(false);
+
     const validation = validateNewsImageFiles(
       nextFiles.map((file) => ({
         name: file.name,
@@ -93,7 +92,7 @@ export function NewsForm({
 
     if (!validation.success) {
       setClientError(validation.message);
-      event.currentTarget.value = "";
+      input.value = "";
       replaceSelectedFiles([]);
       return;
     }
@@ -107,240 +106,124 @@ export function NewsForm({
     setExistingImages((current) => current.filter((image) => image.id !== imageId));
   }
 
-  function clearSelectedFiles() {
+  function removeNewFile(key: string) {
     setClientError(null);
+    const nextFiles = selectedFiles.filter((file) => getFileKey(file) !== key);
     if (inputRef.current) {
-      inputRef.current.value = "";
+      setInputFiles(inputRef.current, nextFiles);
     }
-    replaceSelectedFiles([]);
+    replaceSelectedFiles(nextFiles);
   }
 
-  const totalImageCount = existingImages.length + selectedFiles.length;
+  const gallery = [
+    ...existingImages.map((image) => ({ key: image.id, url: image.image_url, onRemove: () => removeExistingImage(image.id) })),
+    ...newImagePreviews.map((preview) => ({ key: preview.key, url: preview.url, onRemove: () => removeNewFile(preview.key) })),
+  ];
 
   return (
-    <section className="space-y-6 rounded-3xl border border-[#d9e6f5] bg-white p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-[#0c71c3]">
-            Noticias
-          </p>
-          <h2
-            className="mt-2 text-3xl font-extrabold text-[#0c2340]"
-            style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
-          >
-            {title}
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm text-[#5d6675]">{description}</p>
-        </div>
-        <Link
-          href="/admin/noticias"
-          className="inline-flex rounded-xl border border-[#d9e6f5] px-4 py-2 text-sm font-semibold text-[#0c2340] transition-colors hover:border-[#0c71c3] hover:text-[#0c71c3]"
-        >
-          Volver al listado
-        </Link>
-      </div>
+    <section className="space-y-6">
+      <AdminPageHeader
+        backHref="/admin/noticias"
+        backLabel="← Volver a mis noticias"
+        title={isEditing ? "Editar noticia" : "Escribir una noticia"}
+        description="Completa los pasos de arriba hacia abajo. Al final elige si la publicas o la guardas para después."
+      />
 
       {isFallback ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          La noticia que ves es una referencia temporal del sitio actual. Para editar y guardar cambios reales, primero hay que conectar Supabase y crear la tabla.
+        <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 px-5 py-4 text-lg text-amber-900">
+          Esta noticia es solo de ejemplo: el panel todavía no está conectado a la base de datos.
         </div>
       ) : null}
 
       <form action={formAction} className="space-y-5" encType="multipart/form-data">
-        {isEditing ? <input type="hidden" name="id" defaultValue={news?.id} /> : null}
+        {isEditing ? <input type="hidden" name="id" value={news?.id} /> : null}
+        {isEditing ? <input type="hidden" name="slug" value={news?.slug ?? ""} /> : null}
+        {existingImages.map((image) => (
+          <input key={image.id} type="hidden" name="existing_image_ids" value={image.id} />
+        ))}
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-            Título
+        <FormStep number={1} title="Título de la noticia" hint="Una frase corta que diga de qué se trata.">
+          <input name="title" required minLength={3} defaultValue={news?.title ?? ""} className={adminInputClassName} aria-label="Título de la noticia" />
+        </FormStep>
+
+        <FormStep
+          number={2}
+          title="Fotos"
+          optional
+          hint={`Puedes elegir hasta ${newsImageConfig.limit} fotos. La primera será la portada. Se achican solas para que suban rápido.`}
+        >
+          <label className="block">
+            <span className="sr-only">Elegir fotos</span>
             <input
-              name="title"
-              required
-              minLength={3}
-              defaultValue={news?.title ?? ""}
-              className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
+              ref={inputRef}
+              name="news_images"
+              type="file"
+              accept={newsImageConfig.allowedTypes.join(",")}
+              multiple
+              onChange={handleFileChange}
+              className={adminFileInputClassName}
             />
           </label>
 
-          <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-            Slug
-            <input
-              name="slug"
-              defaultValue={news?.slug ?? ""}
-              placeholder="se-autogenera-si-lo-dejas-vacio"
-              className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-            />
-          </label>
-        </div>
+          {isOptimizing ? <p className="mt-3 text-lg font-semibold text-[#0c71c3]">Preparando las fotos, espera un momento...</p> : null}
+          {clientError ? <div className="mt-4"><FormError message={clientError} /></div> : null}
 
-        <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-          Resumen
-          <textarea
-            name="excerpt"
-            required
-            minLength={10}
-            rows={3}
-            defaultValue={news?.excerpt ?? ""}
-            className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-          />
-        </label>
-
-        <section className="space-y-4 rounded-3xl border border-[#d9e6f5] bg-[#f5f9fc] p-5">
-          <div className="space-y-1">
-            <h3
-              className="text-lg font-extrabold text-[#0c2340]"
-              style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
-            >
-              Imagenes de la noticia
-            </h3>
-            <p className="text-sm text-[#5d6675]">
-              Sube hasta {newsImageConfig.limit} imagenes JPG, PNG o WebP de maximo 5 MB. La primera imagen visible quedara como portada.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
-            <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-              Subir desde mi computador
-              <input
-                ref={inputRef}
-                name="news_images"
-                type="file"
-                accept={newsImageConfig.allowedTypes.join(",")}
-                multiple
-                onChange={handleFileChange}
-                className="w-full rounded-2xl border border-dashed border-[#8eb9df] bg-white px-4 py-3 text-sm font-normal text-[#0c2340] file:mr-3 file:rounded-xl file:border-0 file:bg-[#0c71c3] file:px-3 file:py-2 file:font-semibold file:text-white"
-              />
-            </label>
-
-            <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-              Portada por enlace externo
-              <input
-                name="featured_image_url"
-                type="url"
-                defaultValue={news?.featured_image_url ?? ""}
-                placeholder="https://..."
-                className="w-full rounded-2xl border border-[#d9e6f5] bg-white px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-              />
-              <span className="block text-xs font-normal text-[#5d6675]">
-                Se usa solo si no dejas una galeria cargada.
-              </span>
-            </label>
-          </div>
-
-          {clientError || state.error ? (
-            <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
-              {clientError ?? state.error}
-            </div>
-          ) : null}
-
-          <div className="flex items-center justify-between gap-3 text-sm text-[#5d6675]">
-            <span>{totalImageCount} imagen(es) lista(s) para esta noticia.</span>
-            <span>Al elegir otra vez, reemplazas la selección anterior.</span>
-          </div>
-
-          {existingImages.map((image) => (
-            <input key={image.id} type="hidden" name="existing_image_ids" value={image.id} />
-          ))}
-
-          {totalImageCount ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {existingImages.map((image, index) => (
-                <article
-                  key={image.id}
-                  className="overflow-hidden rounded-2xl border border-[#d9e6f5] bg-white"
-                >
+          {gallery.length ? (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {gallery.map((image, index) => (
+                <article key={image.key} className="overflow-hidden rounded-2xl border-2 border-[#e1ebf6] bg-white">
                   <div
-                    className="aspect-[4/3] w-full bg-cover bg-center"
-                    style={{ backgroundImage: `url('${image.image_url}')` }}
+                    className="aspect-4/3 w-full bg-cover bg-center"
+                    style={{ backgroundImage: `url('${image.url}')` }}
                     role="img"
-                    aria-label={`Imagen existente ${index + 1}`}
+                    aria-label={`Foto ${index + 1}`}
                   />
-                  <div className="space-y-2 p-4">
-                    <p className="text-sm font-semibold text-[#0c2340]">
-                      {index === 0 ? "Portada actual" : `Galeria ${index + 1}`}
-                    </p>
-                    <p className="truncate text-xs text-[#5d6675]">{image.image_url}</p>
+                  <div className="flex items-center justify-between gap-3 p-4">
+                    <p className="text-lg font-bold text-[#0c2340]">{index === 0 ? "⭐ Portada" : `Foto ${index + 1}`}</p>
                     <button
                       type="button"
-                      onClick={() => removeExistingImage(image.id)}
-                      className="text-sm font-semibold text-rose-700 transition-colors hover:text-rose-500"
+                      onClick={image.onRemove}
+                      className="min-h-12 rounded-lg border-2 border-rose-200 px-4 text-base font-bold text-rose-700 hover:bg-rose-50"
                     >
                       Quitar
                     </button>
                   </div>
                 </article>
               ))}
-
-              {newImagePreviews.map((preview, index) => (
-                <article
-                  key={preview.key}
-                  className="overflow-hidden rounded-2xl border border-[#d9e6f5] bg-white"
-                >
-                  <div
-                    className="aspect-[4/3] w-full bg-cover bg-center"
-                    style={{ backgroundImage: `url('${preview.url}')` }}
-                    role="img"
-                    aria-label={`Nueva imagen ${index + 1}`}
-                  />
-                  <div className="space-y-2 p-4">
-                    <p className="text-sm font-semibold text-[#0c2340]">
-                      {existingImages.length + index === 0 ? "Portada nueva" : `Nueva imagen ${existingImages.length + index + 1}`}
-                    </p>
-                    <p className="truncate text-xs text-[#5d6675]">{preview.name}</p>
-                    <button
-                      type="button"
-                      onClick={clearSelectedFiles}
-                      className="text-sm font-semibold text-rose-700 transition-colors hover:text-rose-500"
-                    >
-                      Quitar selección
-                    </button>
-                  </div>
-                </article>
-              ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-[#c7dbef] bg-white px-4 py-5 text-sm text-[#5d6675]">
-              Aun no has agregado imagenes. Si publicas sin galeria, se usara solo la portada por enlace externo.
-            </div>
+            <p className="mt-4 text-base text-[#3d4756]">Todavía no hay fotos. Si publicas sin fotos se usará una imagen genérica.</p>
           )}
-        </section>
+        </FormStep>
 
-        <div className="grid gap-5 md:grid-cols-[1fr_220px]">
-          <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-            Contenido
-            <textarea
-              name="content"
-              required
-              minLength={20}
-              rows={14}
-              defaultValue={news?.content ?? ""}
-              className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-            />
-          </label>
-
-          <label className="space-y-2 text-sm font-semibold text-[#0c2340]">
-            Estado
-            <select
-              name="status"
-              defaultValue={news?.status ?? "draft"}
-              className="w-full rounded-2xl border border-[#d9e6f5] px-4 py-3 text-sm font-normal text-[#0c2340] outline-none transition-colors focus:border-[#0c71c3]"
-            >
-              <option value="draft">Borrador</option>
-              <option value="published">Publicado</option>
-            </select>
-          </label>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <SubmitButton
-            label={isEditing ? "Guardar noticia" : "Crear noticia"}
-            pendingLabel={isEditing ? "Guardando noticia..." : "Creando noticia..."}
+        <FormStep number={3} title="Texto de la noticia" hint="Para separar párrafos, deja una línea en blanco entre ellos (presiona Enter dos veces).">
+          <textarea
+            name="content"
+            required
+            minLength={20}
+            rows={12}
+            defaultValue={news?.content ?? ""}
+            className={`${adminInputClassName} leading-relaxed`}
+            aria-label="Texto de la noticia"
           />
-          <p className="text-sm text-[#5d6675]">
-            {isFallback
-              ? "Esta vista deja listo el formulario y la estructura de trabajo."
-              : "Al publicar, la noticia quedara disponible tambien en la portada y en la seccion de noticias."}
-          </p>
-        </div>
+        </FormStep>
+
+        <FormStep
+          number={4}
+          title="Resumen corto"
+          optional
+          hint="Una o dos frases que se ven en la portada. Si lo dejas vacío, usamos el comienzo del texto."
+        >
+          <textarea name="excerpt" rows={2} defaultValue={news?.excerpt ?? ""} className={adminInputClassName} aria-label="Resumen corto" />
+        </FormStep>
+
+        <FormError message={state.error} />
+
+        <PublishButtons
+          currentStatus={news?.status}
+          disabled={isOptimizing}
+          busyLabel={isOptimizing ? "Espera a que terminen de prepararse las fotos." : undefined}
+        />
       </form>
     </section>
   );

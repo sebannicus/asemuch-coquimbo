@@ -109,9 +109,9 @@ export async function getPublishedNews(limit?: number) {
 
   const { data, error } = typeof limit === "number" ? await query.limit(limit) : await query;
 
-  if (error || !data?.length) {
-    const fallback = NEWS_CARDS.map(normalizeFallbackCard);
-    return typeof limit === "number" ? fallback.slice(0, limit) : fallback;
+  // Con Supabase conectado nunca se muestran las noticias de ejemplo, aunque no haya publicadas.
+  if (error || !data) {
+    return [];
   }
 
   return data.map(normalizeNewsRecord);
@@ -132,7 +132,7 @@ export async function getPublishedNewsBySlug(slug: string) {
     .maybeSingle();
 
   if (error || !data) {
-    return NEWS_CARDS.map(normalizeFallbackCard).find((item) => item.slug === slug) ?? null;
+    return null;
   }
 
   return normalizeNewsRecord(data);

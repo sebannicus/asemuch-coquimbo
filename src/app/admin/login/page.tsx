@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { loginAdmin } from "@/app/admin/actions";
+import { PasswordField } from "@/components/admin/PasswordField";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { adminInputClassName } from "@/components/admin/ui";
 import { isAdminConfigured } from "@/lib/supabase/config";
 
 export const metadata: Metadata = {
-  title: "Login Admin",
+  title: "Entrar al panel",
+  robots: { index: false, follow: false },
 };
 
 export default async function AdminLoginPage({
@@ -15,69 +21,45 @@ export default async function AdminLoginPage({
   const configured = isAdminConfigured();
 
   return (
-    <main className="min-h-screen bg-[#f5f9fc] px-4 py-16">
-      <div className="mx-auto max-w-md rounded-3xl border border-[#d9e6f5] bg-white p-8 shadow-sm">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#0c71c3]">Panel Admin</p>
-        <h1
-          className="mt-2 text-3xl font-extrabold text-[#0c2340]"
-          style={{ fontFamily: "var(--font-source-sans), sans-serif" }}
-        >
-          Acceso ASEMUCH Coquimbo
-        </h1>
+    <main className="min-h-screen bg-[#f5f9fc] px-4 py-12 text-lg text-[#0c2340]">
+      <div className="mx-auto max-w-lg rounded-3xl border-2 border-[#e1ebf6] bg-white p-6 shadow-sm sm:p-10">
+        <div className="flex items-center gap-4">
+          <Image src="/images/logo.webp" alt="" width={64} height={64} className="h-16 w-16" />
+          <div>
+            <p className="text-sm font-bold uppercase tracking-widest text-[#0c71c3]">Panel de administración</p>
+            <h1 className="text-3xl font-extrabold" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
+              ASEMUCH Coquimbo
+            </h1>
+          </div>
+        </div>
 
         {!configured ? (
-          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-            Falta configurar Supabase y la cuenta admin en variables de entorno antes de usar este panel.
+          <div className="mt-6 rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 text-base text-amber-900">
+            El panel todavía no está configurado. Contacta al soporte técnico.
           </div>
         ) : null}
 
         {params.error ? (
-          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            No se pudo iniciar sesión. Revisa email y contraseña.
+          <div role="alert" className="mt-6 rounded-2xl border-2 border-rose-300 bg-rose-50 p-4 text-lg font-semibold text-rose-900">
+            ⚠️ El correo o la contraseña no son correctos. Revísalos e intenta otra vez. Usa “Mostrar” para ver lo que escribiste.
           </div>
         ) : null}
 
-        {params.setup ? (
-          <div className="mt-6 rounded-2xl border border-[#d9e6f5] bg-[#f5f9fc] p-4 text-sm text-[#5d6675]">
-            Variables esperadas: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-            `SUPABASE_SERVICE_ROLE_KEY` y `ADMIN_EMAILS` (uno o más emails separados por coma).
-          </div>
-        ) : null}
-
-        <form action={loginAdmin} className="mt-6 space-y-4">
+        <form action={loginAdmin} className="mt-8 space-y-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-[#0c2340]">Email</span>
-            <input
-              name="email"
-              type="email"
-              required
-              className="w-full rounded-xl border border-[#d9e6f5] px-4 py-3 text-sm text-[#0c2340] outline-none transition focus:border-[#0c71c3]"
-            />
+            <span className="mb-2 block text-lg font-bold">Tu correo</span>
+            <input name="email" type="email" required autoComplete="email" className={adminInputClassName} />
           </label>
-          <label className="block">
-            <span className="mb-1 block text-sm font-semibold text-[#0c2340]">Contraseña</span>
-            <input
-              name="password"
-              type="password"
-              required
-              className="w-full rounded-xl border border-[#d9e6f5] px-4 py-3 text-sm text-[#0c2340] outline-none transition focus:border-[#0c71c3]"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={!configured}
-            className="w-full rounded-xl bg-[#0c71c3] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#2ea3f2] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            Entrar al panel
-          </button>
+          <PasswordField name="password" label="Tu contraseña" />
+          <SubmitButton label="Entrar" pendingLabel="Entrando..." disabled={!configured} />
         </form>
 
-        <a
+        <Link
           href="/admin/forgot-password"
-          className="mt-4 block text-center text-sm font-semibold text-[#0c71c3] hover:underline"
+          className="mt-8 flex min-h-12 items-center justify-center text-lg font-bold text-[#0c71c3] underline"
         >
-          ¿Olvidaste tu contraseña?
-        </a>
+          Olvidé mi contraseña
+        </Link>
       </div>
     </main>
   );

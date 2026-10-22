@@ -1,4 +1,7 @@
-const COMMUNICATION_FILE_MAX_SIZE_BYTES = 10 * 1024 * 1024;
+// Vercel corta los requests sobre 4.5 MB y las Server Actions suben el archivo en el mismo request.
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+const MAX_UPLOAD_LABEL = "4 MB";
+const COMMUNICATION_FILE_MAX_SIZE_BYTES = MAX_UPLOAD_BYTES;
 
 const ALLOWED_COMMUNICATION_FILE_TYPES = new Set([
   "application/pdf",
@@ -24,7 +27,7 @@ export function validateCommunicationFile(file: CommunicationFileLike): Communic
   }
 
   if (file.size > COMMUNICATION_FILE_MAX_SIZE_BYTES) {
-    return { success: false, message: "El archivo adjunto debe pesar como maximo 10 MB." };
+    return { success: false, message: `El archivo adjunto debe pesar como maximo ${MAX_UPLOAD_LABEL}.` };
   }
 
   return { success: true };

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { requestPasswordReset } from "@/app/admin/actions";
 import type { AuthFormState } from "@/types/admin";
 import { SubmitButton } from "./SubmitButton";
+import { FormError, adminInputClassName } from "./ui";
 
 const INITIAL_STATE: AuthFormState = { error: null };
 
@@ -12,28 +13,26 @@ export function ForgotPasswordForm() {
 
   if (state.success) {
     return (
-      <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
-        Si el email está registrado, te enviamos un enlace para restablecer tu contraseña. Revisa tu bandeja de
-        entrada (y spam).
+      <div role="status" className="mt-6 space-y-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-5 text-lg text-emerald-900">
+        <p className="text-xl font-bold">✅ Te enviamos un correo.</p>
+        <p>Revisa tu bandeja de entrada (y también la carpeta de spam o correo no deseado).</p>
+        <p>
+          <strong>Importante:</strong> abre el enlace del correo <strong>en este mismo computador y navegador</strong>.
+        </p>
       </div>
     );
   }
 
   return (
-    <form action={formAction} className="mt-6 space-y-4">
+    <form action={formAction} className="mt-6 space-y-6">
       <label className="block">
-        <span className="mb-1 block text-sm font-semibold text-[#0c2340]">Email</span>
-        <input
-          name="email"
-          type="email"
-          required
-          className="w-full rounded-xl border border-[#d9e6f5] px-4 py-3 text-sm text-[#0c2340] outline-none transition focus:border-[#0c71c3]"
-        />
+        <span className="mb-2 block text-lg font-bold text-[#0c2340]">Tu correo</span>
+        <input name="email" type="email" required autoComplete="email" className={adminInputClassName} />
       </label>
 
-      {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
+      <FormError message={state.error} />
 
-      <SubmitButton label="Enviar enlace de recuperación" pendingLabel="Enviando..." />
+      <SubmitButton label="Enviarme el correo" pendingLabel="Enviando..." />
     </form>
   );
 }

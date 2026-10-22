@@ -1,5 +1,8 @@
+// Vercel corta los requests sobre 4.5 MB y las Server Actions suben el archivo en el mismo request.
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+const MAX_UPLOAD_LABEL = "4 MB";
 const NEWS_IMAGE_LIMIT = 10;
-const NEWS_IMAGE_MAX_SIZE_BYTES = 5 * 1024 * 1024;
+const NEWS_IMAGE_MAX_SIZE_BYTES = MAX_UPLOAD_BYTES;
 
 const ALLOWED_NEWS_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
@@ -47,9 +50,17 @@ export function validateNewsImageFiles(
     if (file.size > NEWS_IMAGE_MAX_SIZE_BYTES) {
       return {
         success: false,
-        message: "Cada imagen debe pesar como maximo 5 MB.",
+        message: `Cada imagen debe pesar como maximo ${MAX_UPLOAD_LABEL}.`,
       };
     }
+  }
+
+  const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+  if (totalSize > MAX_UPLOAD_BYTES) {
+    return {
+      success: false,
+      message: `Las imagenes nuevas suman mas de ${MAX_UPLOAD_LABEL}. Sube menos fotos por vez (puedes agregar mas editando la noticia) o reduce su tamano.`,
+    };
   }
 
   return { success: true };

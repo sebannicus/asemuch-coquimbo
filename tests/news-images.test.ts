@@ -56,14 +56,14 @@ test("validateNewsImageFiles rejects unsupported mime types", () => {
   });
 });
 
-test("validateNewsImageFiles rejects files larger than 5 MB", () => {
+test("validateNewsImageFiles rejects files larger than 4 MB", () => {
   const result = validateNewsImageFiles([
-    { name: "pesada.jpg", size: 5 * 1024 * 1024 + 1, type: "image/jpeg" },
+    { name: "pesada.jpg", size: 4 * 1024 * 1024 + 1, type: "image/jpeg" },
   ]);
 
   assert.deepEqual(result, {
     success: false,
-    message: "Cada imagen debe pesar como maximo 5 MB.",
+    message: "Cada imagen debe pesar como maximo 4 MB.",
   });
 });
 

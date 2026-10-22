@@ -4,9 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import PageHeader from "@/components/PageHeader";
 import ConveniosDestacadosBanner from "@/components/ConveniosDestacadosBanner";
 import ScrollReveal from "@/components/ScrollReveal";
-import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { stripHtml } from "@/lib/strip-html";
-import type { AgreementRecord } from "@/types/admin";
+import type { PublicAgreementItem } from "@/lib/content/agreements";
 
 interface WPPost {
   id: number;
@@ -37,26 +36,15 @@ function formatDate(iso: string) {
   });
 }
 
-export default function ConveniosClient() {
+export default function ConveniosClient({ localConvenios }: { localConvenios: PublicAgreementItem[] }) {
   const [convenios, setConvenios] = useState<WPPost[]>([]);
-  const [localConvenios, setLocalConvenios] = useState<AgreementRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       setLoading(true);
-      const [data, localData] = await Promise.all([
-        getConvenios(),
-        createSupabasePublicClient()
-          ?.from("agreements")
-          .select("*")
-          .eq("status", "published")
-          .order("published_at", { ascending: false, nullsFirst: false })
-          .order("created_at", { ascending: false }),
-      ]);
-      setConvenios(data);
-      setLocalConvenios((localData?.data as AgreementRecord[] | null) ?? []);
+      setConvenios(await getConvenios());
       setLoading(false);
     }
     loadData();
@@ -123,9 +111,30 @@ export default function ConveniosClient() {
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {localConvenios.map((convenio, i) => (
                   <ScrollReveal key={convenio.id} delay={i * 80}>
-                    <article className="overflow-hidden rounded-2xl border border-[#e3e9f1] bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                      {convenio.image_url ? <img src={convenio.image_url} alt="" className="h-40 w-full object-cover" /> : null}
-                      <div className="p-5"><h2 className="text-lg font-bold text-[#0c2340]">{convenio.title}</h2><p className="mt-2 text-sm text-[#5d6675]">{convenio.summary}</p>{convenio.promo_code ? <p className="mt-3 text-sm font-bold text-[#0c71c3]">Código: {convenio.promo_code}</p> : null}</div>
+                    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e3e9f1] bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
+                      {convenio.imageUrl ? (
+                        <div
+                          className="h-40 w-full bg-cover bg-center"
+                          style={{ backgroundImage: `url('${convenio.imageUrl}')` }}
+                          role="img"
+                          aria-label={convenio.title}
+                        />
+                      ) : null}
+                      <div className="flex flex-1 flex-col p-5">
+                        <h2 className="text-lg font-bold text-[#0c2340]" style={{ fontFamily: "var(--font-source-sans), sans-serif" }}>
+                          {convenio.title}
+                        </h2>
+                        <p className="mt-2 text-sm text-[#5d6675] whitespace-pre-line">{convenio.summary}</p>
+                        {convenio.promoCode ? <p className="mt-3 text-sm font-bold text-[#0c71c3]">Código: {convenio.promoCode}</p> : null}
+                        {convenio.validity ? <p className="mt-2 text-xs text-[#5d6675]">{convenio.validity}</p> : null}
+                        <details className="group mt-4 border-t border-[#e3e9f1] pt-3">
+                          <summary className="cursor-pointer list-none text-sm font-semibold text-[#0c71c3] hover:text-[#2ea3f2]">
+                            <span className="group-open:hidden">Ver detalle</span>
+                            <span className="hidden group-open:inline">Ocultar detalle</span>
+                          </summary>
+                          <p className="mt-3 text-sm leading-relaxed text-[#5d6675] whitespace-pre-line">{convenio.details}</p>
+                        </details>
+                      </div>
                     </article>
                   </ScrollReveal>
                 ))}

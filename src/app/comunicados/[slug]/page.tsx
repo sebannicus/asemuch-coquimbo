@@ -38,8 +38,8 @@ export default async function ComunicadoDetailPage({ params }: { params: Promise
             <p className="mb-6 text-sm font-semibold text-[#0c71c3]">{communication.date} · ASEMUCH Coquimbo</p>
             {communication.content ? (
               <div className="space-y-4 text-base leading-relaxed text-[#5d6675]">
-                {communication.content.split("\n\n").map((paragraph, index) => (
-                  <p key={`${index}-${paragraph}`}>{paragraph}</p>
+                {communication.content.split(/\n\s*\n/).map((paragraph, index) => (
+                  <p key={`${index}-${paragraph.slice(0, 24)}`} className="whitespace-pre-line">{paragraph}</p>
                 ))}
               </div>
             ) : (

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Por defecto Next limita las Server Actions a 1 MB; los formularios del panel suben archivos.
+    serverActions: { bodySizeLimit: "4.4mb" },
+  },
   async headers() {
     return [
       {

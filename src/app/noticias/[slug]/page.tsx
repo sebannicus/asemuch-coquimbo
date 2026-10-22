@@ -68,8 +68,8 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
 
             {/* Content */}
             <div className="prose prose-sm max-w-none text-[#5d6675] space-y-4">
-              {article.content.split("\n\n").map((paragraph) => (
-                <p key={paragraph} className="text-base leading-relaxed">
+              {article.content.split(/\n\s*\n/).map((paragraph, index) => (
+                <p key={`${index}-${paragraph.slice(0, 24)}`} className="text-base leading-relaxed whitespace-pre-line">
                   {paragraph}
                 </p>
               ))}

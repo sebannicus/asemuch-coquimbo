@@ -18,7 +18,75 @@ import { buildAgreementAssetPath, validateAgreementImage } from "@/lib/agreement
 import { slugify } from "@/lib/slug";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { AuthFormState, CommunicationFormState, CommunicationRecord, NewsFormState } from "@/types/admin";
+import type {
+  AgreementRecord,
+  AuthFormState,
+  CommunicationFormState,
+  CommunicationRecord,
+  ContentFormState,
+  DocumentRecord,
+  NewsFormState,
+} from "@/types/admin";
+
+type ContentTable = "news" | "communications" | "documents" | "agreements";
+
+// Conserva la fecha original al editar algo ya publicado; solo se fecha "hoy" la primera publicacion.
+async function resolvePublishedAt(
+  supabaseAdmin: SupabaseClient,
+  table: ContentTable,
+  id: string | undefined,
+  status: "draft" | "published",
+) {
+  if (status !== "published") {
+    return null;
+  }
+
+  if (id) {
+    const { data } = await supabaseAdmin.from(table).select("published_at").eq("id", id).maybeSingle();
+    if (data?.published_at) {
+      return data.published_at as string;
+    }
+  }
+
+  return new Date().toISOString();
+}
+
+// Si el enlace ya existe (por ejemplo, dos noticias con el mismo titulo) agrega -2, -3...
+async function resolveUniqueSlug(
+  supabaseAdmin: SupabaseClient,
+  table: ContentTable,
+  requested: string,
+  id: string | undefined,
+) {
+  const base = slugify(requested) || "publicacion";
+  const { data } = await supabaseAdmin.from(table).select("id, slug").like("slug", `${base}%`);
+  const taken = new Set((data ?? []).filter((row) => row.id !== id).map((row) => row.slug as string));
+
+  if (!taken.has(base)) {
+    return base;
+  }
+
+  let suffix = 2;
+  while (taken.has(`${base}-${suffix}`)) {
+    suffix += 1;
+  }
+
+  return `${base}-${suffix}`;
+}
+
+// Resumen automatico cuando la persona deja el campo vacio.
+function buildExcerpt(excerpt: string, text: string, fallback: string) {
+  if (excerpt) {
+    return excerpt;
+  }
+
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) {
+    return fallback;
+  }
+
+  return clean.length > 180 ? `${clean.slice(0, 177).trimEnd()}...` : clean;
+}
 
 function getSiteUrl() {
   return process.env.NEXT_PUBLIC_SITE_URL || "https://asemuch-coquimbo.vercel.app";
@@ -105,20 +173,20 @@ export async function changePassword(_: AuthFormState, formData: FormData): Prom
 
 const newsSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(3),
+  title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres."),
   slug: z.string().optional(),
-  excerpt: z.string().min(10),
-  content: z.string().min(20),
-  featured_image_url: z.string().url().optional().or(z.literal("")),
+  excerpt: z.string().trim(),
+  content: z.string().trim().min(20, "El texto de la noticia es muy corto: escribe al menos una frase completa."),
+  featured_image_url: z.string().url("El enlace de portada no es una URL válida.").optional().or(z.literal("")),
   status: z.enum(["draft", "published"]),
 });
 
 const communicationSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(3),
+  title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres."),
   slug: z.string().optional(),
-  excerpt: z.string().min(10),
-  content: z.string().max(20_000),
+  excerpt: z.string().trim(),
+  content: z.string().max(20_000, "El texto del comunicado es demasiado largo."),
   status: z.enum(["draft", "published"]),
 });
 
@@ -297,11 +365,11 @@ export async function upsertNews(_: NewsFormState, formData: FormData): Promise<
   const uploadedFiles = getUploadedNewsFiles(formData);
   const payload = {
     title,
-    slug: slugify(slug || title),
-    excerpt,
+    slug: await resolveUniqueSlug(supabaseAdmin, "news", slug || title, id),
+    excerpt: buildExcerpt(excerpt, content, title),
     content,
     status,
-    published_at: status === "published" ? new Date().toISOString() : null,
+    published_at: await resolvePublishedAt(supabaseAdmin, "news", id, status),
     updated_at: new Date().toISOString(),
   };
 
@@ -360,7 +428,7 @@ export async function upsertNews(_: NewsFormState, formData: FormData): Promise<
   revalidatePath("/noticias");
   revalidatePath("/");
   revalidatePath(`/noticias/${payload.slug}`);
-  redirect("/admin/noticias");
+  redirect("/admin/noticias?ok=guardado");
 }
 
 export async function deleteNews(formData: FormData) {
@@ -388,6 +456,7 @@ export async function deleteNews(formData: FormData) {
   revalidatePath("/admin/noticias");
   revalidatePath("/noticias");
   revalidatePath("/");
+  redirect("/admin/noticias?ok=eliminado");
 }
 
 function getUploadedCommunicationFile(formData: FormData) {
@@ -446,11 +515,11 @@ export async function upsertCommunication(
   const { id, title, slug, excerpt, content, status } = parsed.data;
   const payload = {
     title,
-    slug: slugify(slug || title),
-    excerpt,
+    slug: await resolveUniqueSlug(supabaseAdmin, "communications", slug || title, id),
+    excerpt: buildExcerpt(excerpt, content, ""),
     content,
     status,
-    published_at: status === "published" ? new Date().toISOString() : null,
+    published_at: await resolvePublishedAt(supabaseAdmin, "communications", id, status),
     updated_at: new Date().toISOString(),
   };
 
@@ -472,7 +541,7 @@ export async function upsertCommunication(
       ? await supabaseAdmin.from("communications").update(payload).eq("id", id).select("id").single()
       : await supabaseAdmin.from("communications").insert(payload).select("id").single();
     if (saveError || !savedCommunication) {
-      return { error: "No se pudo guardar el comunicado. Revisa que el enlace no esté repetido." };
+      return { error: "No se pudo guardar el comunicado. Intenta nuevamente en unos minutos." };
     }
 
     if (attachment) {
@@ -516,7 +585,7 @@ export async function upsertCommunication(
   revalidatePath("/admin/comunicados");
   revalidatePath("/comunicados");
   revalidatePath(`/comunicados/${payload.slug}`);
-  redirect("/admin/comunicados");
+  redirect("/admin/comunicados?ok=guardado");
 }
 
 export async function deleteCommunication(formData: FormData) {
@@ -540,33 +609,262 @@ export async function deleteCommunication(formData: FormData) {
 
   revalidatePath("/admin/comunicados");
   revalidatePath("/comunicados");
+  redirect("/admin/comunicados?ok=eliminado");
 }
 
-const documentSchema = z.object({ id: z.string().optional(), title: z.string().min(3), slug: z.string().optional(), document_type: z.string().min(2), summary: z.string().min(10), status: z.enum(["draft", "published"]) });
-const agreementSchema = z.object({ id: z.string().optional(), title: z.string().min(3), slug: z.string().optional(), summary: z.string().min(10), details: z.string().min(10), promo_code: z.string(), valid_from: z.string(), valid_until: z.string(), status: z.enum(["draft", "published"]) });
+const documentSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres."),
+  slug: z.string().optional(),
+  document_type: z.string().trim().min(2, "Indica el tipo de documento (acta, circular, reglamento...)."),
+  summary: z.string().trim(),
+  status: z.enum(["draft", "published"]),
+});
 
-export async function upsertDocument(_: { error: string | null }, formData: FormData): Promise<{ error: string | null }> {
-  await requireAdminSession(); const supabase = createSupabaseAdminClient(); if (!supabase) redirect("/admin/login?setup=missing");
-  const parsed = documentSchema.safeParse(Object.fromEntries(["id", "title", "slug", "document_type", "summary", "status"].map((key) => [key, String(formData.get(key) ?? "")] )));
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del documento." };
-  const file = formData.get("file"); const upload = file instanceof File && file.size ? file : null;
-  if (!upload && !parsed.data.id) return { error: "Debes adjuntar un archivo PDF." };
-  if (upload) { const valid = validateDocumentFile(upload); if (!valid.success) return { error: valid.message }; }
-  const payload = { ...parsed.data, id: undefined, slug: slugify(parsed.data.slug || parsed.data.title), published_at: parsed.data.status === "published" ? new Date().toISOString() : null, updated_at: new Date().toISOString() };
-  const { data, error } = parsed.data.id ? await supabase.from("documents").update(payload).eq("id", parsed.data.id).select("id").single() : await supabase.from("documents").insert(payload).select("id").single();
-  if (error || !data) return { error: "No se pudo guardar el documento." };
-  if (upload) { const path = buildDocumentStoragePath(data.id, upload.name, crypto.randomUUID()); const { error: uploadError } = await supabase.storage.from("documents-files").upload(path, await upload.arrayBuffer(), { contentType: upload.type }); if (uploadError) return { error: "No se pudo subir el PDF." }; const { data: url } = supabase.storage.from("documents-files").getPublicUrl(path); await supabase.from("documents").update({ file_url: url.publicUrl }).eq("id", data.id); }
-  revalidatePath("/admin/documentos"); revalidatePath("/documentos"); redirect("/admin/documentos");
+const agreementSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().trim().min(3, "El nombre del convenio debe tener al menos 3 caracteres."),
+  slug: z.string().optional(),
+  summary: z.string().trim().min(10, "El beneficio resumido debe tener al menos 10 caracteres."),
+  details: z.string().trim(),
+  promo_code: z.string().trim(),
+  valid_from: z.string(),
+  valid_until: z.string(),
+  status: z.enum(["draft", "published"]),
+});
+
+function readFormFields(formData: FormData, keys: string[]) {
+  return Object.fromEntries(keys.map((key) => [key, String(formData.get(key) ?? "")]));
 }
 
-export async function upsertAgreement(_: { error: string | null }, formData: FormData): Promise<{ error: string | null }> {
-  await requireAdminSession(); const supabase = createSupabaseAdminClient(); if (!supabase) redirect("/admin/login?setup=missing");
-  const parsed = agreementSchema.safeParse(Object.fromEntries(["id", "title", "slug", "summary", "details", "promo_code", "valid_from", "valid_until", "status"].map((key) => [key, String(formData.get(key) ?? "")] )));
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del convenio." };
-  const image = formData.get("image"); const upload = image instanceof File && image.size ? image : null; if (upload) { const valid = validateAgreementImage(upload); if (!valid.success) return { error: valid.message }; }
-  const payload = { ...parsed.data, id: undefined, slug: slugify(parsed.data.slug || parsed.data.title), promo_code: parsed.data.promo_code || null, valid_from: parsed.data.valid_from || null, valid_until: parsed.data.valid_until || null, published_at: parsed.data.status === "published" ? new Date().toISOString() : null, updated_at: new Date().toISOString() };
-  const { data, error } = parsed.data.id ? await supabase.from("agreements").update(payload).eq("id", parsed.data.id).select("id").single() : await supabase.from("agreements").insert(payload).select("id").single();
-  if (error || !data) return { error: "No se pudo guardar el convenio." };
-  if (upload) { const path = buildAgreementAssetPath(data.id, "image", upload.name, crypto.randomUUID()); const { error: uploadError } = await supabase.storage.from("agreement-assets").upload(path, await upload.arrayBuffer(), { contentType: upload.type }); if (uploadError) return { error: "No se pudo subir la imagen." }; const { data: url } = supabase.storage.from("agreement-assets").getPublicUrl(path); await supabase.from("agreements").update({ image_url: url.publicUrl }).eq("id", data.id); }
-  revalidatePath("/admin/convenios"); revalidatePath("/convenios"); redirect("/admin/convenios");
+function getUploadedFile(formData: FormData, field: string) {
+  const entry = formData.get(field);
+  return entry instanceof File && entry.size > 0 ? entry : null;
+}
+
+async function removeStorageFile(supabaseAdmin: SupabaseClient, bucket: string, storagePath: string | null) {
+  if (!storagePath) {
+    return;
+  }
+
+  await supabaseAdmin.storage.from(bucket).remove([storagePath]);
+}
+
+export async function upsertDocument(_: ContentFormState, formData: FormData): Promise<ContentFormState> {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const parsed = documentSchema.safeParse(
+    readFormFields(formData, ["id", "title", "slug", "document_type", "summary", "status"]),
+  );
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del documento." };
+  }
+
+  const { id, title, slug, document_type, summary, status } = parsed.data;
+  const upload = getUploadedFile(formData, "file");
+
+  if (upload) {
+    const validation = validateDocumentFile(upload);
+    if (!validation.success) {
+      return { error: validation.message };
+    }
+  }
+
+  const existing = id
+    ? await supabaseAdmin.from("documents").select("*").eq("id", id).maybeSingle()
+    : { data: null, error: null };
+  if (existing.error) {
+    return { error: "No se pudo cargar el documento actual." };
+  }
+
+  const previous = existing.data as DocumentRecord | null;
+  if (!upload && !previous?.file_url) {
+    return { error: "Debes adjuntar el archivo PDF del documento." };
+  }
+
+  const payload = {
+    title,
+    slug: await resolveUniqueSlug(supabaseAdmin, "documents", slug || title, id),
+    document_type,
+    summary,
+    status,
+    published_at: await resolvePublishedAt(supabaseAdmin, "documents", id, status),
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data: saved, error: saveError } = id
+    ? await supabaseAdmin.from("documents").update(payload).eq("id", id).select("id").single()
+    : await supabaseAdmin.from("documents").insert(payload).select("id").single();
+  if (saveError || !saved) {
+    return { error: "No se pudo guardar el documento. Intenta nuevamente en unos minutos." };
+  }
+
+  if (upload) {
+    const storagePath = buildDocumentStoragePath(saved.id, upload.name, crypto.randomUUID());
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from("documents-files")
+      .upload(storagePath, await upload.arrayBuffer(), { contentType: upload.type, upsert: false });
+
+    if (uploadError) {
+      if (!id) {
+        await supabaseAdmin.from("documents").delete().eq("id", saved.id);
+      }
+      return { error: "No se pudo subir el PDF. Intenta nuevamente." };
+    }
+
+    const { data: publicUrl } = supabaseAdmin.storage.from("documents-files").getPublicUrl(storagePath);
+    const { error: fileError } = await supabaseAdmin
+      .from("documents")
+      .update({ file_url: publicUrl.publicUrl, file_name: upload.name, file_storage_path: storagePath })
+      .eq("id", saved.id);
+
+    if (fileError) {
+      await removeStorageFile(supabaseAdmin, "documents-files", storagePath);
+      return { error: "El documento se guardó, pero no se pudo asociar el PDF." };
+    }
+
+    await removeStorageFile(supabaseAdmin, "documents-files", previous?.file_storage_path ?? null);
+  }
+
+  revalidatePath("/admin/documentos");
+  revalidatePath("/documentos");
+  redirect("/admin/documentos?ok=guardado");
+}
+
+export async function deleteDocument(formData: FormData) {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const id = String(formData.get("id") ?? "");
+  if (id) {
+    const { data } = await supabaseAdmin.from("documents").select("file_storage_path").eq("id", id).maybeSingle();
+    await supabaseAdmin.from("documents").delete().eq("id", id);
+    await removeStorageFile(supabaseAdmin, "documents-files", data?.file_storage_path ?? null);
+  }
+
+  revalidatePath("/admin/documentos");
+  revalidatePath("/documentos");
+  redirect("/admin/documentos?ok=eliminado");
+}
+
+export async function upsertAgreement(_: ContentFormState, formData: FormData): Promise<ContentFormState> {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const parsed = agreementSchema.safeParse(
+    readFormFields(formData, ["id", "title", "slug", "summary", "details", "promo_code", "valid_from", "valid_until", "status"]),
+  );
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Revisa los datos del convenio." };
+  }
+
+  const { id, title, slug, summary, details, promo_code, valid_from, valid_until, status } = parsed.data;
+  if (valid_from && valid_until && valid_until < valid_from) {
+    return { error: "La fecha de término no puede ser anterior a la fecha de inicio." };
+  }
+
+  const upload = getUploadedFile(formData, "image");
+  const removeImage = formData.get("remove_image") === "on";
+
+  if (upload) {
+    const validation = validateAgreementImage(upload);
+    if (!validation.success) {
+      return { error: validation.message };
+    }
+  }
+
+  const existing = id
+    ? await supabaseAdmin.from("agreements").select("*").eq("id", id).maybeSingle()
+    : { data: null, error: null };
+  if (existing.error) {
+    return { error: "No se pudo cargar el convenio actual." };
+  }
+
+  const previous = existing.data as AgreementRecord | null;
+  const payload = {
+    title,
+    slug: await resolveUniqueSlug(supabaseAdmin, "agreements", slug || title, id),
+    summary,
+    details,
+    promo_code: promo_code || null,
+    valid_from: valid_from || null,
+    valid_until: valid_until || null,
+    status,
+    published_at: await resolvePublishedAt(supabaseAdmin, "agreements", id, status),
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data: saved, error: saveError } = id
+    ? await supabaseAdmin.from("agreements").update(payload).eq("id", id).select("id").single()
+    : await supabaseAdmin.from("agreements").insert(payload).select("id").single();
+  if (saveError || !saved) {
+    return { error: "No se pudo guardar el convenio. Intenta nuevamente en unos minutos." };
+  }
+
+  if (upload) {
+    const storagePath = buildAgreementAssetPath(saved.id, "image", upload.name, crypto.randomUUID());
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from("agreement-assets")
+      .upload(storagePath, await upload.arrayBuffer(), { contentType: upload.type, upsert: false });
+
+    if (uploadError) {
+      return { error: "El convenio se guardó, pero no se pudo subir la imagen. Edítalo para intentar de nuevo." };
+    }
+
+    const { data: publicUrl } = supabaseAdmin.storage.from("agreement-assets").getPublicUrl(storagePath);
+    const { error: imageError } = await supabaseAdmin
+      .from("agreements")
+      .update({ image_url: publicUrl.publicUrl, image_storage_path: storagePath })
+      .eq("id", saved.id);
+
+    if (imageError) {
+      await removeStorageFile(supabaseAdmin, "agreement-assets", storagePath);
+      return { error: "El convenio se guardó, pero no se pudo asociar la imagen." };
+    }
+
+    await removeStorageFile(supabaseAdmin, "agreement-assets", previous?.image_storage_path ?? null);
+  } else if (removeImage && previous?.image_url) {
+    await supabaseAdmin
+      .from("agreements")
+      .update({ image_url: null, image_storage_path: null })
+      .eq("id", saved.id);
+    await removeStorageFile(supabaseAdmin, "agreement-assets", previous.image_storage_path);
+  }
+
+  revalidatePath("/admin/convenios");
+  revalidatePath("/convenios");
+  redirect("/admin/convenios?ok=guardado");
+}
+
+export async function deleteAgreement(formData: FormData) {
+  await requireAdminSession();
+
+  const supabaseAdmin = createSupabaseAdminClient();
+  if (!supabaseAdmin) {
+    redirect("/admin/login?setup=missing");
+  }
+
+  const id = String(formData.get("id") ?? "");
+  if (id) {
+    const { data } = await supabaseAdmin.from("agreements").select("image_storage_path").eq("id", id).maybeSingle();
+    await supabaseAdmin.from("agreements").delete().eq("id", id);
+    await removeStorageFile(supabaseAdmin, "agreement-assets", data?.image_storage_path ?? null);
+  }
+
+  revalidatePath("/admin/convenios");
+  revalidatePath("/convenios");
+  redirect("/admin/convenios?ok=eliminado");
 }

@@ -16,10 +16,10 @@ test("validateCommunicationFile rejects unsupported attachments", () => {
   );
 });
 
-test("validateCommunicationFile rejects attachments larger than 10 MB", () => {
+test("validateCommunicationFile rejects attachments larger than 4 MB", () => {
   assert.deepEqual(
-    validateCommunicationFile({ name: "comunicado.pdf", size: 10 * 1024 * 1024 + 1, type: "application/pdf" }),
-    { success: false, message: "El archivo adjunto debe pesar como maximo 10 MB." },
+    validateCommunicationFile({ name: "comunicado.pdf", size: 4 * 1024 * 1024 + 1, type: "application/pdf" }),
+    { success: false, message: "El archivo adjunto debe pesar como maximo 4 MB." },
   );
 });
 

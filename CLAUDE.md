@@ -8,7 +8,8 @@ Sitio web institucional para ASEMUCH Coquimbo (Asociación Comunal de Funcionari
 Proyecto de Gautama Digital (Sebastián Morales). Estado: **en producción, cliente activo, ajustes en curso.**
 
 ## URLs
-- **Producción:** https://asemuch-coquimbo.vercel.app
+- **Producción:** https://asemuchcoquimbo.cl (también www; dominio en el proyecto Vercel `asemuch-coquimbo`) — alias https://asemuch-coquimbo.vercel.app
+- **Supabase:** proyecto `qoxlzhyukvqhnihywsal` (us-east-1). Host directo de la DB es solo IPv6: conectar por pooler `aws-0-us-east-1.pooler.supabase.com:5432`, usuario `postgres.qoxlzhyukvqhnihywsal`
 - **Repo:** https://github.com/sebannicus/asemuch-coquimbo
 - **Local:** D:\dev\clientes\asemuch-coquimbo
 - **Scope Vercel:** gautamadigital33-9252s-projects
@@ -18,9 +19,21 @@ Proyecto de Gautama Digital (Sebastián Morales). Estado: **en producción, clie
 - Next.js 16.2.1 + TypeScript strict + App Router
 - Tailwind v4 (oklch design tokens en globals.css)
 - Fuentes: Open Sans + Source Sans 3 (next/font/google)
-- 20 rutas estáticas (SSG) — sin DB, sin auth
+- Supabase (Postgres + Auth + Storage) para el panel admin `/admin` — esquema completo e idempotente en `supabase/schema.sql`
 - Formularios: Formspree (`NEXT_PUBLIC_FORMSPREE_ID` — **PENDIENTE ID REAL**)
 - shadcn/ui (Radix primitives)
+
+## Panel admin (`/admin`)
+- Login email+contraseña (Supabase Auth). Acceso solo si el email está en `ADMIN_EMAILS` (Vercel env, separados por coma).
+- Módulos con crear/editar/eliminar: Noticias (galería hasta 10 fotos), Comunicados (texto y/o adjunto), Documentos (PDF → `/documentos`), Convenios (imagen, vigencia → `/convenios`, se ocultan al vencer). Mi cuenta: cambio de contraseña; recuperación por email en `/admin/forgot-password`.
+- Escrituras solo vía Server Actions con service role (`src/app/admin/actions.ts`); RLS: el público solo lee filas `published`.
+- Límite de subida: 4 MB por guardado (Vercel corta requests > 4.5 MB). `serverActions.bodySizeLimit` en `next.config.ts`.
+- Keep-alive: cron diario `vercel.json` → `/api/keep-alive` (evita que Supabase free pause el proyecto; protegido con `CRON_SECRET`).
+- Con Supabase conectado NO se muestran las noticias de ejemplo de `SiteData.ts` (solo sin Supabase, en local).
+- Env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAILS`, `CRON_SECRET`, `NEXT_PUBLIC_FORMSPREE_ID`.
+- 2026-10-21: el proyecto Supabase original quedó pausado/irrecuperable; se migra a un proyecto nuevo (el backup solo tenía un convenio de prueba).
+- UX del panel pensada para personas mayores: letra 18px, botones ≥48px, formularios por pasos numerados, botones "Publicar en el sitio" / "Guardar sin publicar" en vez de selector de estado, fotos comprimidas en el navegador (`src/lib/compress-image.ts`), ayuda en `/admin/ayuda`. Componentes base en `src/components/admin/ui.tsx`.
+- Cuentas admin (2026-10-22): coquimbo.asemuch@gmail.com (administradora) y gautamadigital33@gmail.com (soporte).
 
 ## Datos reales del cliente
 - **Razón social:** Asociación Comunal de Funcionarios Municipales de la Ilustre Municipalidad de Coquimbo

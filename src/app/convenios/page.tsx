@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { getPublishedAgreements } from "@/lib/content/agreements";
 import ConveniosClient from "./ConveniosClient";
+
+// Revalida cada hora para que los convenios vencidos desaparezcan sin intervencion.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Convenios",
@@ -8,6 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/convenios" },
 };
 
-export default function ConveniosPage() {
-  return <ConveniosClient />;
+export default async function ConveniosPage() {
+  const localConvenios = await getPublishedAgreements();
+  return <ConveniosClient localConvenios={localConvenios} />;
 }

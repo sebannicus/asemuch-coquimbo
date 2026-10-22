@@ -1,4 +1,7 @@
-const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+// Vercel corta los requests sobre 4.5 MB y las Server Actions suben el archivo en el mismo request.
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+const MAX_UPLOAD_LABEL = "4 MB";
+const MAX_IMAGE_SIZE_BYTES = MAX_UPLOAD_BYTES;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export interface AgreementImageLike {
@@ -12,7 +15,7 @@ export function validateAgreementImage(file: AgreementImageLike) {
     return { success: false as const, message: "Solo se permiten imagenes JPG, PNG o WebP." };
   }
   if (file.size > MAX_IMAGE_SIZE_BYTES) {
-    return { success: false as const, message: "La imagen debe pesar como maximo 5 MB." };
+    return { success: false as const, message: `La imagen debe pesar como maximo ${MAX_UPLOAD_LABEL}.` };
   }
   return { success: true as const };
 }
