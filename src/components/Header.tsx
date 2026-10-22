@@ -1,19 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS, CONTACT_INFO } from "./SiteData";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Publica la altura real del header en --header-h para que los elementos
+  // sticky de las páginas (buscadores) se ubiquen justo debajo y no queden tapados.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const update = () => document.documentElement.style.setProperty("--header-h", `${header.offsetHeight}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
   const pathname = usePathname();
 
   return (
-    <header className="w-full sticky top-0 z-40" role="banner">
+    <header ref={headerRef} className="w-full sticky top-0 z-40" role="banner">
       {/* Top stripe — sede regional badge */}
       <div className="bg-[#0a1f3c] border-b border-white/10">
-        <div className="container-site flex items-center justify-between py-1.5">
+        <div className="container-site flex items-center justify-between py-1">
           <p className="text-xs text-white/60">
             <span className="text-[#2ea3f2] font-semibold">ASEMUCH</span>
             {" "}· Municipalidad de Coquimbo
@@ -32,7 +45,7 @@ export default function Header() {
 
       {/* Logo bar */}
       <div className="bg-white border-b border-[#e3e9f1]">
-        <div className="container-site flex items-center justify-between py-3">
+        <div className="container-site flex items-center justify-between py-2">
           <Link href="/" className="flex items-center gap-4 group">
             <span className="relative flex shrink-0 items-center justify-center rounded-full bg-white p-1 ring-2 ring-[#0c71c3]/30 shadow-[0_6px_20px_rgba(12,35,64,0.22)] transition-transform duration-300 group-hover:scale-105">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -41,7 +54,7 @@ export default function Header() {
                 alt="ASEMUCH Coquimbo"
                 width={64}
                 height={64}
-                className="h-14 w-14 sm:h-16 sm:w-16 object-contain rounded-full"
+                className="h-14 w-14 sm:h-[58px] sm:w-[58px] object-contain rounded-full"
               />
             </span>
             <div className="hidden sm:block border-l border-[#e3e9f1] pl-4">

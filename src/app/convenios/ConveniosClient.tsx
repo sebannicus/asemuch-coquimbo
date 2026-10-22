@@ -70,7 +70,7 @@ export default function ConveniosClient({ localConvenios }: { localConvenios: Pu
       <ConveniosDestacadosBanner />
 
       {/* Buscador sticky */}
-      <div className="sticky top-16 z-30 bg-white border-b border-[#e3e9f1] shadow-sm">
+      <div className="sticky top-(--header-h,0px) z-30 bg-white border-b border-[#e3e9f1] shadow-sm">
         <div className="container-site py-4">
           <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <div className="flex-1 relative w-full">
